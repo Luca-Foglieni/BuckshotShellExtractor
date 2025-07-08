@@ -39,7 +39,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   final random = Random();
 
-  void _incrementCounter() {
+  void _nextRound() {
     setState(() {
       _shellNumber = 2 + random.nextInt(7);
 
@@ -67,7 +67,6 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-
         title: Text(widget.title),
       ),
       body: Center(
@@ -78,23 +77,36 @@ class _MyHomePageState extends State<MyHomePage> {
               '$_shellNumber',
               style: Theme.of(context).textTheme.headlineMedium,
             ),
+            SizedBox(height: 20),
             Column(
-              children: List.generate(
-                _shellNumber,
-                (index) => Icon(
-                  Icons.star, // puoi cambiare l'icona
-                  size: 30,
-                  color: _shellSequence[index] ? Colors.red : Colors.blue,
-                ),
-              ),
+              children: List.generate(_shellSequence.length, (index) {
+                return GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      _shellSequence[index] = !_shellSequence[index];
+                    });
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.all(4.0),
+                    child: Image.asset(
+                      _shellSequence[index]
+                          ? 'assets/images/live.png'
+                          : 'assets/images/blank.png',
+                    ),
+                  ),
+                );
+              }),
             ),
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
+        onPressed: _nextRound,
+        tooltip: 'Next Round',
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Image.asset('assets/images/reload.png'),
+        ),
       ),
     );
   }
