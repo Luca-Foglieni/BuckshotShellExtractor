@@ -14,9 +14,12 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Buckshot Shell Extractor',
       theme: ThemeData(
+        tooltipTheme: TooltipThemeData(
+          textStyle: TextStyle(fontFamily: 'VCR_OSD_MONO', color: Colors.white),
+        ),
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.black),
       ),
-      home: const MyHomePage(title: 'Buckshot Shell Extractor'),
+      home: const MyHomePage(title: 'BUCKSHOT SHELL EXTRACTOR'),
     );
   }
 }
@@ -37,11 +40,11 @@ class _MyHomePageState extends State<MyHomePage> {
   bool _oneLive = false;
   bool _oneBlank = false;
 
-  int? _evidenziataIndex;
+  int? _burnedShell;
 
   final random = Random();
 
-  void _nextRound() {
+  void _reload() {
     setState(() {
       _shellNumber = 2 + random.nextInt(7);
 
@@ -63,31 +66,32 @@ class _MyHomePageState extends State<MyHomePage> {
       } while (_oneLive == false || _oneBlank == false);
     });
 
-    _evidenziataIndex = -1;
+    _burnedShell = -1;
   }
 
   void _burnerPhonePrediction() {
     if (_shellSequence.length <= 2) {
-      print("How Unfortunate..");
-      SnackBar(
-        content: Text(
-          'Messaggio mostrato!',
-          style: TextStyle(color: Colors.white),
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            'HOW UNFORTUNATE...',
+            style: TextStyle(fontFamily: 'VCR_OSD_MONO', fontSize: 22),
+          ),
+          duration: Duration(seconds: 2), //snackbar duration
         ),
-        duration: Duration(seconds: 2), // quanto dura
       );
       return;
     }
 
     setState(() {
-      _evidenziataIndex = random.nextInt(_shellSequence.length);
+      _burnedShell = random.nextInt(_shellSequence.length);
     });
   }
 
   void _eject() {
     if (_shellSequence.isEmpty) return;
     _shellSequence.removeAt(0);
-    _evidenziataIndex = -1;
+    _burnedShell = -1;
 
     setState(() {});
   }
@@ -117,7 +121,7 @@ class _MyHomePageState extends State<MyHomePage> {
               SizedBox(height: 20),
               Column(
                 children: List.generate(_shellSequence.length, (index) {
-                  final bool evidenziata = index == _evidenziataIndex;
+                  final bool burnedShell = index == _burnedShell;
 
                   return GestureDetector(
                     onTap: () {
@@ -130,7 +134,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       child: Container(
                         decoration: BoxDecoration(
                           border:
-                              evidenziata
+                              burnedShell
                                   ? Border.all(color: Colors.red, width: 5)
                                   : null,
                           borderRadius: BorderRadius.circular(8),
@@ -156,9 +160,9 @@ class _MyHomePageState extends State<MyHomePage> {
             bottom: 16,
             right: 16,
             child: FloatingActionButton(
-              heroTag: 'nextRound',
-              onPressed: _nextRound,
-              tooltip: 'Next Round',
+              heroTag: 'reload',
+              onPressed: _reload,
+              tooltip: 'RELOAD',
               backgroundColor: Color.fromRGBO(255, 255, 253, 1),
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
@@ -170,9 +174,9 @@ class _MyHomePageState extends State<MyHomePage> {
             bottom: 80,
             right: 16,
             child: FloatingActionButton(
-              heroTag: 'Eject',
+              heroTag: 'eject',
               onPressed: _eject,
-              tooltip: 'Eject',
+              tooltip: 'EJECT',
               backgroundColor: Color.fromRGBO(255, 255, 253, 1),
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
@@ -186,7 +190,7 @@ class _MyHomePageState extends State<MyHomePage> {
             child: FloatingActionButton(
               heroTag: 'burnerPhone',
               onPressed: _burnerPhonePrediction,
-              tooltip: 'Burner Phone Prediction',
+              tooltip: 'BURNER PHONE',
               backgroundColor: Color.fromRGBO(255, 255, 253, 1),
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
