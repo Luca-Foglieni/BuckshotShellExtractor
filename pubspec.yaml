@@ -57,6 +57,13 @@ flutter:
         - assets/images/live.png
         - assets/images/blank.png
         - assets/images/reload.png
+        - assets/images/burnerPhone.png
+        - assets/images/eject.png
+
+    fonts:
+        - family: VCR_OSD_MONO
+          fonts:
+              - asset: assets/fonts/VCR_OSD_MONO_1.001.ttf
 
         # To add assets to your application, add an assets section, like this:
         # assets:

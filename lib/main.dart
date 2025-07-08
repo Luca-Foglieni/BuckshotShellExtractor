@@ -12,9 +12,9 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Buckshot Shell Extractor',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.black),
       ),
       home: const MyHomePage(title: 'Buckshot Shell Extractor'),
     );
@@ -36,6 +36,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
   bool _oneLive = false;
   bool _oneBlank = false;
+
+  int? _evidenziataIndex;
 
   final random = Random();
 
@@ -60,53 +62,139 @@ class _MyHomePageState extends State<MyHomePage> {
         }
       } while (_oneLive == false || _oneBlank == false);
     });
+
+    _evidenziataIndex = -1;
+  }
+
+  void _burnerPhonePrediction() {
+    if (_shellSequence.length <= 2) {
+      print("How Unfortunate..");
+      SnackBar(
+        content: Text(
+          'Messaggio mostrato!',
+          style: TextStyle(color: Colors.white),
+        ),
+        duration: Duration(seconds: 2), // quanto dura
+      );
+      return;
+    }
+
+    setState(() {
+      _evidenziataIndex = random.nextInt(_shellSequence.length);
+    });
+  }
+
+  void _eject() {
+    if (_shellSequence.isEmpty) return;
+    _shellSequence.removeAt(0);
+    _evidenziataIndex = -1;
+
+    setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        backgroundColor: Color.fromRGBO(5, 5, 3, 1),
         title: Text(widget.title),
+        titleTextStyle: TextStyle(fontFamily: 'VCR_OSD_MONO', fontSize: 22),
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              '$_shellNumber',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-            SizedBox(height: 20),
-            Column(
-              children: List.generate(_shellSequence.length, (index) {
-                return GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      _shellSequence[index] = !_shellSequence[index];
-                    });
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.all(4.0),
-                    child: Image.asset(
-                      _shellSequence[index]
-                          ? 'assets/images/live.png'
-                          : 'assets/images/blank.png',
+      body: Container(
+        color: Color.fromRGBO(5, 5, 3, 1),
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Text(
+                '$_shellNumber',
+                style: TextStyle(
+                  fontFamily: 'VCR_OSD_MONO',
+                  fontSize: 70,
+                  color: Colors.white,
+                ),
+              ),
+              SizedBox(height: 20),
+              Column(
+                children: List.generate(_shellSequence.length, (index) {
+                  final bool evidenziata = index == _evidenziataIndex;
+
+                  return GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        _shellSequence[index] = !_shellSequence[index];
+                      });
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.all(4.0),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          border:
+                              evidenziata
+                                  ? Border.all(color: Colors.red, width: 5)
+                                  : null,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Image.asset(
+                          _shellSequence[index]
+                              ? 'assets/images/live.png'
+                              : 'assets/images/blank.png',
+                        ),
+                      ),
                     ),
-                  ),
-                );
-              }),
-            ),
-          ],
+                  );
+                }),
+              ),
+            ],
+          ),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _nextRound,
-        tooltip: 'Next Round',
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Image.asset('assets/images/reload.png'),
-        ),
+
+      floatingActionButton: Stack(
+        children: <Widget>[
+          Positioned(
+            bottom: 16,
+            right: 16,
+            child: FloatingActionButton(
+              heroTag: 'nextRound',
+              onPressed: _nextRound,
+              tooltip: 'Next Round',
+              backgroundColor: Color.fromRGBO(255, 255, 253, 1),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Image.asset('assets/images/reload.png'),
+              ),
+            ),
+          ),
+          Positioned(
+            bottom: 80,
+            right: 16,
+            child: FloatingActionButton(
+              heroTag: 'Eject',
+              onPressed: _eject,
+              tooltip: 'Eject',
+              backgroundColor: Color.fromRGBO(255, 255, 253, 1),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Image.asset('assets/images/eject.png'),
+              ),
+            ),
+          ),
+          Positioned(
+            bottom: 146,
+            right: 16,
+            child: FloatingActionButton(
+              heroTag: 'burnerPhone',
+              onPressed: _burnerPhonePrediction,
+              tooltip: 'Burner Phone Prediction',
+              backgroundColor: Color.fromRGBO(255, 255, 253, 1),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Image.asset('assets/images/burnerPhone.png'),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
