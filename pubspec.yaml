@@ -59,6 +59,8 @@ flutter:
         - assets/images/reload.png
         - assets/images/burnerPhone.png
         - assets/images/eject.png
+        - assets/images/dice.png
+        - assets/images/coin.png
 
     fonts:
         - family: VCR_OSD_MONO

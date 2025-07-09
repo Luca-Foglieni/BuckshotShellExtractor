@@ -47,6 +47,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
   int? _burnedShell;
 
+  int itemsNumber = 0;
+
   final random = Random();
 
   void _reload() {
@@ -73,6 +75,20 @@ class _MyHomePageState extends State<MyHomePage> {
     });
 
     _burnedShell = -1;
+
+    itemsNumber = 1 + random.nextInt(4);
+
+    ScaffoldMessenger.of(context)
+      ..removeCurrentSnackBar()
+      ..showSnackBar(
+        SnackBar(
+          content: Text(
+            '$itemsNumber ITEMS EACH.',
+            style: TextStyle(fontFamily: 'VCR_OSD_MONO', fontSize: 22),
+          ),
+          duration: Duration(seconds: 2), //snackbar duration
+        ),
+      );
   }
 
   void _burnerPhonePrediction() {
@@ -105,6 +121,50 @@ class _MyHomePageState extends State<MyHomePage> {
 
     setState(() {});
   }
+
+  // void _diceRoll() {
+  //   HapticFeedback.mediumImpact();
+  //   if (_shellSequence.length <= 2) {
+  //     ScaffoldMessenger.of(context)
+  //       ..removeCurrentSnackBar()
+  //       ..showSnackBar(
+  //         SnackBar(
+  //           content: Text(
+  //             'HOW UNFORTUNATE...',
+  //             style: TextStyle(fontFamily: 'VCR_OSD_MONO', fontSize: 22),
+  //           ),
+  //           duration: Duration(seconds: 2), //snackbar duration
+  //         ),
+  //       );
+  //     return;
+  //   }
+
+  //   setState(() {
+  //     _burnedShell = random.nextInt(_shellSequence.length);
+  //   });
+  // }
+
+  // void _coinFlip() {
+  //   HapticFeedback.mediumImpact();
+  //   if (_shellSequence.length <= 2) {
+  //     ScaffoldMessenger.of(context)
+  //       ..removeCurrentSnackBar()
+  //       ..showSnackBar(
+  //         SnackBar(
+  //           content: Text(
+  //             'HOW UNFORTUNATE...',
+  //             style: TextStyle(fontFamily: 'VCR_OSD_MONO', fontSize: 22),
+  //           ),
+  //           duration: Duration(seconds: 2), //snackbar duration
+  //         ),
+  //       );
+  //     return;
+  //   }
+
+  //   setState(() {
+  //     _burnedShell = random.nextInt(_shellSequence.length);
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -224,3 +284,33 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 }
+
+
+          // Positioned(
+          //   bottom: 212,
+          //   right: 16,
+          //   child: FloatingActionButton(
+          //     heroTag: 'diceRoll',
+          //     onPressed: _diceRoll,
+          //     tooltip: 'DICE ROLL',
+          //     backgroundColor: Color.fromRGBO(255, 255, 253, 1),
+          //     child: Padding(
+          //       padding: const EdgeInsets.all(8.0),
+          //       child: Image.asset('assets/images/dice.png'),
+          //     ),
+          //   ),
+          // ),
+          // Positioned(
+          //   bottom: 278,
+          //   right: 16,
+          //   child: FloatingActionButton(
+          //     heroTag: 'coinFlip',
+          //     onPressed: _coinFlip,
+          //     tooltip: 'COIN FLIP',
+          //     backgroundColor: Color.fromRGBO(255, 255, 253, 1),
+          //     child: Padding(
+          //       padding: const EdgeInsets.all(8.0),
+          //       child: Image.asset('assets/images/coin.png'),
+          //     ),
+          //   ),
+          // ),
