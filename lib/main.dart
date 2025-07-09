@@ -1,8 +1,13 @@
 import 'dart:math';
-
+import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp, // blocca in verticale
+  ]);
   runApp(const MyApp());
 }
 
@@ -45,6 +50,7 @@ class _MyHomePageState extends State<MyHomePage> {
   final random = Random();
 
   void _reload() {
+    HapticFeedback.lightImpact();
     setState(() {
       _shellNumber = 2 + random.nextInt(7);
 
@@ -70,6 +76,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void _burnerPhonePrediction() {
+    HapticFeedback.mediumImpact();
     if (_shellSequence.length <= 2) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -89,6 +96,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void _eject() {
+    HapticFeedback.mediumImpact();
     if (_shellSequence.isEmpty) return;
     _shellSequence.removeAt(0);
     _burnedShell = -1;
@@ -135,14 +143,25 @@ class _MyHomePageState extends State<MyHomePage> {
                         decoration: BoxDecoration(
                           border:
                               burnedShell
-                                  ? Border.all(color: Colors.red, width: 5)
+                                  ? Border.all(
+                                    color: Colors.deepPurpleAccent,
+                                    width: 8,
+                                  )
                                   : null,
-                          borderRadius: BorderRadius.circular(8),
+                          borderRadius: BorderRadius.circular(0),
                         ),
-                        child: Image.asset(
-                          _shellSequence[index]
-                              ? 'assets/images/live.png'
-                              : 'assets/images/blank.png',
+                        child: Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: Image.asset(
+                            _shellSequence[index]
+                                ? 'assets/images/live.png'
+                                : 'assets/images/blank.png',
+                            height: 30, // aumenta l'altezza
+                            width: 90, // aumenta la larghezza
+                            fit:
+                                BoxFit
+                                    .contain, // oppure BoxFit.cover o BoxFit.fill
+                          ),
                         ),
                       ),
                     ),
