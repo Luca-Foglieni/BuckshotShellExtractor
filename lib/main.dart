@@ -86,7 +86,11 @@ class _MyHomePageState extends State<MyHomePage> {
 
     itemsNumber = 1 + random.nextInt(4);
 
-    _dealerSpeechBubble = '$itemsNumber ITEMS EACH.';
+    if (itemsNumber == 1) {
+      _dealerSpeechBubble = '$itemsNumber ITEM EACH.';
+    } else {
+      _dealerSpeechBubble = '$itemsNumber ITEMS EACH.';
+    }
 
     _shellNumberOpacity = 1;
 
