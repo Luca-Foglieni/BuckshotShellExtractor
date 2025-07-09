@@ -78,15 +78,17 @@ class _MyHomePageState extends State<MyHomePage> {
   void _burnerPhonePrediction() {
     HapticFeedback.mediumImpact();
     if (_shellSequence.length <= 2) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            'HOW UNFORTUNATE...',
-            style: TextStyle(fontFamily: 'VCR_OSD_MONO', fontSize: 22),
+      ScaffoldMessenger.of(context)
+        ..removeCurrentSnackBar()
+        ..showSnackBar(
+          SnackBar(
+            content: Text(
+              'HOW UNFORTUNATE...',
+              style: TextStyle(fontFamily: 'VCR_OSD_MONO', fontSize: 22),
+            ),
+            duration: Duration(seconds: 2), //snackbar duration
           ),
-          duration: Duration(seconds: 2), //snackbar duration
-        ),
-      );
+        );
       return;
     }
 
