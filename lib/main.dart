@@ -1,6 +1,7 @@
 import 'dart:math';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
+import 'dart:async';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -19,10 +20,11 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Buckshot Shell Extractor',
       theme: ThemeData(
+        primaryColor: Color.fromRGBO(20, 4, 1, 1),
         tooltipTheme: TooltipThemeData(
           textStyle: TextStyle(fontFamily: 'VCR_OSD_MONO', color: Colors.white),
         ),
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.black),
+        // colorScheme: ColorScheme.fromSeed(seedColor: Colors.black),
       ),
       home: const MyHomePage(title: 'BUCKSHOT SHELL EXTRACTOR'),
     );
@@ -39,17 +41,23 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  final random = Random();
+
   int _shellNumber = 0;
   final List<bool> _shellSequence = [];
 
   bool _oneLive = false;
   bool _oneBlank = false;
 
+  double _shellNumberOpacity = 0;
+
   int? _burnedShell;
 
   int itemsNumber = 0;
 
-  final random = Random();
+  String _dealerSpeechBubble = 'PLEASE SIGN THE WAIVER.';
+
+  Timer? _resetTimer;
 
   void _reload() {
     HapticFeedback.lightImpact();
@@ -78,33 +86,20 @@ class _MyHomePageState extends State<MyHomePage> {
 
     itemsNumber = 1 + random.nextInt(4);
 
-    ScaffoldMessenger.of(context)
-      ..removeCurrentSnackBar()
-      ..showSnackBar(
-        SnackBar(
-          content: Text(
-            '$itemsNumber ITEMS EACH.',
-            style: TextStyle(fontFamily: 'VCR_OSD_MONO', fontSize: 22),
-          ),
-          duration: Duration(seconds: 2), //snackbar duration
-        ),
-      );
+    _dealerSpeechBubble = '$itemsNumber ITEMS EACH.';
+
+    _shellNumberOpacity = 1;
+
+    _resetDealerSpeechBubble(20);
   }
 
   void _burnerPhonePrediction() {
     HapticFeedback.mediumImpact();
     if (_shellSequence.length <= 2) {
-      ScaffoldMessenger.of(context)
-        ..removeCurrentSnackBar()
-        ..showSnackBar(
-          SnackBar(
-            content: Text(
-              'HOW UNFORTUNATE...',
-              style: TextStyle(fontFamily: 'VCR_OSD_MONO', fontSize: 22),
-            ),
-            duration: Duration(seconds: 2), //snackbar duration
-          ),
-        );
+      setState(() {
+        _dealerSpeechBubble = 'HOW UNFORTUNATE...';
+      });
+      _resetDealerSpeechBubble(3);
       return;
     }
 
@@ -116,79 +111,55 @@ class _MyHomePageState extends State<MyHomePage> {
   void _eject() {
     HapticFeedback.mediumImpact();
     if (_shellSequence.isEmpty) return;
-    _shellSequence.removeAt(0);
-    _burnedShell = -1;
 
-    setState(() {});
+    setState(() {
+      _shellSequence.removeAt(0);
+      _burnedShell = -1;
+    });
   }
 
-  // void _diceRoll() {
-  //   HapticFeedback.mediumImpact();
-  //   if (_shellSequence.length <= 2) {
-  //     ScaffoldMessenger.of(context)
-  //       ..removeCurrentSnackBar()
-  //       ..showSnackBar(
-  //         SnackBar(
-  //           content: Text(
-  //             'HOW UNFORTUNATE...',
-  //             style: TextStyle(fontFamily: 'VCR_OSD_MONO', fontSize: 22),
-  //           ),
-  //           duration: Duration(seconds: 2), //snackbar duration
-  //         ),
-  //       );
-  //     return;
-  //   }
-
-  //   setState(() {
-  //     _burnedShell = random.nextInt(_shellSequence.length);
-  //   });
-  // }
-
-  // void _coinFlip() {
-  //   HapticFeedback.mediumImpact();
-  //   if (_shellSequence.length <= 2) {
-  //     ScaffoldMessenger.of(context)
-  //       ..removeCurrentSnackBar()
-  //       ..showSnackBar(
-  //         SnackBar(
-  //           content: Text(
-  //             'HOW UNFORTUNATE...',
-  //             style: TextStyle(fontFamily: 'VCR_OSD_MONO', fontSize: 22),
-  //           ),
-  //           duration: Duration(seconds: 2), //snackbar duration
-  //         ),
-  //       );
-  //     return;
-  //   }
-
-  //   setState(() {
-  //     _burnedShell = random.nextInt(_shellSequence.length);
-  //   });
-  // }
+  void _resetDealerSpeechBubble(int delay) {
+    _resetTimer?.cancel();
+    _resetTimer = Timer(Duration(seconds: delay), () {
+      setState(() {
+        _dealerSpeechBubble = ' ';
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color.fromRGBO(5, 5, 3, 1),
+        backgroundColor: Color.fromRGBO(5, 5, 5, 1),
         title: Text(widget.title),
         titleTextStyle: TextStyle(fontFamily: 'VCR_OSD_MONO', fontSize: 22),
       ),
       body: Container(
-        color: Color.fromRGBO(5, 5, 3, 1),
+        color: Colors.black,
         child: Center(
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
+              SizedBox(height: 40),
+              Text(
+                _dealerSpeechBubble,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontFamily: 'VCR_OSD_MONO',
+                  fontSize: 20,
+                ),
+              ),
+              SizedBox(height: 20),
               Text(
                 '$_shellNumber',
                 style: TextStyle(
                   fontFamily: 'VCR_OSD_MONO',
                   fontSize: 70,
-                  color: Colors.white,
+                  color: Color.fromRGBO(255, 255, 255, _shellNumberOpacity),
                 ),
               ),
-              SizedBox(height: 20),
+
               Column(
                 children: List.generate(_shellSequence.length, (index) {
                   final bool burnedShell = index == _burnedShell;
@@ -284,33 +255,3 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 }
-
-
-          // Positioned(
-          //   bottom: 212,
-          //   right: 16,
-          //   child: FloatingActionButton(
-          //     heroTag: 'diceRoll',
-          //     onPressed: _diceRoll,
-          //     tooltip: 'DICE ROLL',
-          //     backgroundColor: Color.fromRGBO(255, 255, 253, 1),
-          //     child: Padding(
-          //       padding: const EdgeInsets.all(8.0),
-          //       child: Image.asset('assets/images/dice.png'),
-          //     ),
-          //   ),
-          // ),
-          // Positioned(
-          //   bottom: 278,
-          //   right: 16,
-          //   child: FloatingActionButton(
-          //     heroTag: 'coinFlip',
-          //     onPressed: _coinFlip,
-          //     tooltip: 'COIN FLIP',
-          //     backgroundColor: Color.fromRGBO(255, 255, 253, 1),
-          //     child: Padding(
-          //       padding: const EdgeInsets.all(8.0),
-          //       child: Image.asset('assets/images/coin.png'),
-          //     ),
-          //   ),
-          // ),
