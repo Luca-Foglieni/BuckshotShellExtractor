@@ -66,6 +66,8 @@ flutter:
     - assets/images/burnerPhone.png
     - assets/images/eject.png
 
+    - assets/images/cards/blackItems/beer.png
+
     - assets/images/cards/inverter.png
     - assets/images/cards/beer.png
     - assets/images/cards/cigarettePack.png

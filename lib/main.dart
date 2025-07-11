@@ -97,6 +97,9 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  late final Widget _itemExtractorPage = ItemExtractor();
+  //da fixare visto che lo stato della pagina degli oggetti non viene ancora salvato
+
   final random = Random();
 
   int _shellNumber = 0;
@@ -190,7 +193,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color.fromRGBO(5, 5, 5, 1),
+        backgroundColor: Color.fromRGBO(10, 10, 10, 1),
         title: Text(widget.title),
         titleTextStyle: TextStyle(fontFamily: 'VCR_OSD_MONO', fontSize: 22),
       ),
@@ -203,17 +206,12 @@ class _MyHomePageState extends State<MyHomePage> {
               SizedBox(height: 40),
               Text(
                 _dealerSpeechBubble,
-                style: TextStyle(
-                  color: Colors.white,
-                  // fontFamily: 'VCR_OSD_MONO',
-                  fontSize: 20,
-                ),
+                style: TextStyle(color: Colors.white, fontSize: 20),
               ),
               SizedBox(height: 20),
               Text(
                 '$_shellNumber',
                 style: TextStyle(
-                  // fontFamily: 'VCR_OSD_MONO',
                   fontSize: 70,
                   color: Color.fromRGBO(255, 255, 255, _shellNumberOpacity),
                 ),
@@ -248,11 +246,9 @@ class _MyHomePageState extends State<MyHomePage> {
                             _shellSequence[index]
                                 ? 'assets/images/live.png'
                                 : 'assets/images/blank.png',
-                            height: 30, // aumenta l'altezza
-                            width: 90, // aumenta la larghezza
-                            fit:
-                                BoxFit
-                                    .contain, // oppure BoxFit.cover o BoxFit.fill
+                            height: 30,
+                            width: 90,
+                            fit: BoxFit.contain,
                           ),
                         ),
                       ),
@@ -310,21 +306,21 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
           ),
           Positioned(
-            bottom: 300,
-            right: 16,
+            bottom: 16,
+            left: 50,
             child: FloatingActionButton(
               heroTag: 'gotoCardsPage',
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => ItemExtractor()),
+                  MaterialPageRoute(builder: (context) => _itemExtractorPage),
                 );
               },
               tooltip: 'gotoCardsPage',
               backgroundColor: Color.fromRGBO(255, 255, 253, 1),
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
-                // child: Image.asset('assets/images/burnerPhone.png'),
+                child: Image.asset('assets/images/cards/blackItems/beer.png'),
               ),
             ),
           ),
@@ -548,32 +544,50 @@ class _ItemExtractorState extends State<ItemExtractor> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.black,
       appBar: AppBar(
-        backgroundColor: Color.fromRGBO(5, 5, 5, 1),
+        backgroundColor: Color.fromRGBO(10, 10, 10, 1),
         title: Text('ITEMS EXTRACTOR'),
         titleTextStyle: TextStyle(fontFamily: 'VCR_OSD_MONO', fontSize: 22),
+        iconTheme: IconThemeData(color: Colors.white),
       ),
       body: Stack(
         children: [
           Align(
             alignment: Alignment.topLeft,
-            child: SizedBox(
-              width: 160,
-              child: Wrap(
-                children: List.generate(p1.length, (index) {
-                  return insertCardImage(p1, index);
-                }),
+            child: Container(
+              decoration: BoxDecoration(
+                border: Border(
+                  right: BorderSide(color: Colors.grey, width: 2),
+                  bottom: BorderSide(color: Colors.grey, width: 2),
+                ),
+              ),
+              child: SizedBox(
+                width: 160,
+                child: Wrap(
+                  children: List.generate(p1.length, (index) {
+                    return insertCardImage(p1, index);
+                  }),
+                ),
               ),
             ),
           ),
           Align(
             alignment: Alignment.topRight,
-            child: SizedBox(
-              width: 160,
-              child: Wrap(
-                children: List.generate(p2.length, (index) {
-                  return insertCardImage(p2, index);
-                }),
+            child: Container(
+              decoration: BoxDecoration(
+                border: Border(
+                  left: BorderSide(color: Colors.grey, width: 2),
+                  bottom: BorderSide(color: Colors.grey, width: 2),
+                ),
+              ),
+              child: SizedBox(
+                width: 160,
+                child: Wrap(
+                  children: List.generate(p2.length, (index) {
+                    return insertCardImage(p2, index);
+                  }),
+                ),
               ),
             ),
           ),
@@ -581,51 +595,95 @@ class _ItemExtractorState extends State<ItemExtractor> {
             alignment: Alignment.center,
             child: Wrap(
               children: [
-                FloatingActionButton(
-                  heroTag: '1Items',
-                  onPressed:
-                      () => setState(() {
-                        itemsGenerator(1);
-                      }),
-                  child: Text('I'),
+                Padding(
+                  padding: const EdgeInsets.all(4.0),
+                  child: FloatingActionButton(
+                    heroTag: '1Items',
+                    backgroundColor: Colors.grey,
+                    onPressed:
+                        () => setState(() {
+                          itemsGenerator(1);
+                        }),
+                    child: Text(
+                      'I',
+                      style: TextStyle(fontSize: 22, color: Colors.black),
+                    ),
+                  ),
                 ),
-                FloatingActionButton(
-                  heroTag: '2Items',
-                  onPressed: () => itemsGenerator(2),
-                  child: Text('II'),
+                Padding(
+                  padding: const EdgeInsets.all(4.0),
+                  child: FloatingActionButton(
+                    heroTag: '2Items',
+                    backgroundColor: Colors.grey,
+                    onPressed: () => itemsGenerator(2),
+                    child: Text(
+                      'II',
+                      style: TextStyle(fontSize: 22, color: Colors.black),
+                    ),
+                  ),
                 ),
-                FloatingActionButton(
-                  heroTag: '3Items',
-                  onPressed: () => itemsGenerator(3),
-                  child: Text('III'),
+                Padding(
+                  padding: const EdgeInsets.all(4.0),
+                  child: FloatingActionButton(
+                    heroTag: '3Items',
+                    backgroundColor: Colors.grey,
+                    onPressed: () => itemsGenerator(3),
+                    child: Text(
+                      'III',
+                      style: TextStyle(fontSize: 22, color: Colors.black),
+                    ),
+                  ),
                 ),
-                FloatingActionButton(
-                  heroTag: '4Items',
-                  onPressed: () => itemsGenerator(4),
-                  child: Text('IV'),
+                Padding(
+                  padding: const EdgeInsets.all(4.0),
+                  child: FloatingActionButton(
+                    heroTag: '4Items',
+                    backgroundColor: Colors.grey,
+                    onPressed: () => itemsGenerator(4),
+                    child: Text(
+                      'IV',
+                      style: TextStyle(fontSize: 22, color: Colors.black),
+                    ),
+                  ),
                 ),
               ],
             ),
           ),
           Align(
             alignment: Alignment.bottomLeft,
-            child: SizedBox(
-              width: 160,
-              child: Wrap(
-                children: List.generate(p3.length, (index) {
-                  return insertCardImage(p3, index);
-                }),
+            child: Container(
+              decoration: BoxDecoration(
+                border: Border(
+                  top: BorderSide(color: Colors.grey, width: 2),
+                  right: BorderSide(color: Colors.grey, width: 2),
+                ),
+              ),
+              child: SizedBox(
+                width: 160,
+                child: Wrap(
+                  children: List.generate(p3.length, (index) {
+                    return insertCardImage(p3, index);
+                  }),
+                ),
               ),
             ),
           ),
           Align(
             alignment: Alignment.bottomRight,
-            child: SizedBox(
-              width: 160,
-              child: Wrap(
-                children: List.generate(p4.length, (index) {
-                  return insertCardImage(p4, index);
-                }),
+            child: Container(
+              decoration: BoxDecoration(
+                border: Border(
+                  left: BorderSide(color: Colors.grey, width: 2),
+                  top: BorderSide(color: Colors.grey, width: 2),
+                ),
+              ),
+              child: SizedBox(
+                width: 160,
+                child: Wrap(
+                  children: List.generate(p4.length, (index) {
+                    return insertCardImage(p4, index);
+                  }),
+                ),
               ),
             ),
           ),
