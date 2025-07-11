@@ -76,6 +76,7 @@ flutter:
     - assets/images/cards/expiredMedicine.png
     - assets/images/cards/magnifyingGlass.png
     - assets/images/cards/remote.png
+    - assets/images/cards/itemSpace.png
 
   fonts:
     - family: VCR_OSD_MONO

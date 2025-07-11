@@ -344,32 +344,50 @@ class ItemExtractor extends StatefulWidget {
 class _ItemExtractorState extends State<ItemExtractor> {
   final random = Random();
 
-  List<int> p1 = [];
-  List<int> p2 = [];
-  List<int> p3 = [];
-  List<int> p4 = [];
+  List<int> p1 = [0, 0, 0, 0, 0, 0, 0, 0];
+  List<int> p2 = [0, 0, 0, 0, 0, 0, 0, 0];
+  List<int> p3 = [0, 0, 0, 0, 0, 0, 0, 0];
+  List<int> p4 = [0, 0, 0, 0, 0, 0, 0, 0];
+
+  int itemsAddedP1 = 0;
+  int itemsAddedP2 = 0;
+  int itemsAddedP3 = 0;
+  int itemsAddedP4 = 0;
+
+  int distinctItems = 10;
 
   void itemsGenerator(int numberOfItems) {
     //funzione che aggiunge effettivamente il numero di oggetti selezionato all'inventario (list) di ogni giocatore
-    setState(() {
-      int itemsLimit = 8;
-      int distinctItems = 10;
 
-      for (var i = 0; i < numberOfItems; i++) {
-        if (p1.length < itemsLimit) {
-          p1.add(1 + random.nextInt(distinctItems));
+    itemsAddedP1 = 0;
+    itemsAddedP2 = 0;
+    itemsAddedP3 = 0;
+    itemsAddedP4 = 0;
+
+    setState(() {
+      for (var i = 0; i < 8; i++) {
+        print('ciclo');
+        if (p1.elementAt(i) == 0 && itemsAddedP1 < numberOfItems) {
+          print('if');
+          p1[i] = (1 + random.nextInt(distinctItems));
+          itemsAddedP1++;
         }
-        if (p2.length < itemsLimit) {
-          p2.add(1 + random.nextInt(distinctItems));
+        if (p2.elementAt(i) == 0 && itemsAddedP2 < numberOfItems) {
+          p2[i] = (1 + random.nextInt(distinctItems));
+          itemsAddedP2++;
         }
-        if (p3.length < itemsLimit) {
-          p3.add(1 + random.nextInt(distinctItems));
+        if (p3.elementAt(i) == 0 && itemsAddedP3 < numberOfItems) {
+          p3[i] = (1 + random.nextInt(distinctItems));
+          itemsAddedP3++;
         }
-        if (p4.length < itemsLimit) {
-          p4.add(1 + random.nextInt(distinctItems));
+        if (p4.elementAt(i) == 0 && itemsAddedP4 < numberOfItems) {
+          p4[i] = (1 + random.nextInt(distinctItems));
+          itemsAddedP4++;
         }
       }
     });
+
+    print(p1.toString());
   }
 
   IconButton insertCardImage(List<int> p, int index) {
@@ -392,7 +410,7 @@ class _ItemExtractorState extends State<ItemExtractor> {
         return IconButton(
           onPressed:
               () => setState(() {
-                p.removeAt(index);
+                p[index] = 0;
               }),
 
           icon: Image.asset(
@@ -405,7 +423,7 @@ class _ItemExtractorState extends State<ItemExtractor> {
         return IconButton(
           onPressed:
               () => setState(() {
-                p.removeAt(index);
+                p[index] = 0;
               }),
 
           icon: Image.asset(
@@ -418,7 +436,7 @@ class _ItemExtractorState extends State<ItemExtractor> {
         return IconButton(
           onPressed:
               () => setState(() {
-                p.removeAt(index);
+                p[index] = 0;
               }),
 
           icon: Image.asset(
@@ -431,7 +449,7 @@ class _ItemExtractorState extends State<ItemExtractor> {
         return IconButton(
           onPressed:
               () => setState(() {
-                p.removeAt(index);
+                p[index] = 0;
               }),
 
           icon: Image.asset(
@@ -444,7 +462,7 @@ class _ItemExtractorState extends State<ItemExtractor> {
         return IconButton(
           onPressed:
               () => setState(() {
-                p.removeAt(index);
+                p[index] = 0;
               }),
 
           icon: Image.asset(
@@ -457,7 +475,7 @@ class _ItemExtractorState extends State<ItemExtractor> {
         return IconButton(
           onPressed:
               () => setState(() {
-                p.removeAt(index);
+                p[index] = 0;
               }),
 
           icon: Image.asset(
@@ -470,7 +488,7 @@ class _ItemExtractorState extends State<ItemExtractor> {
         return IconButton(
           onPressed:
               () => setState(() {
-                p.removeAt(index);
+                p[index] = 0;
               }),
 
           icon: Image.asset(
@@ -483,7 +501,7 @@ class _ItemExtractorState extends State<ItemExtractor> {
         return IconButton(
           onPressed:
               () => setState(() {
-                p.removeAt(index);
+                p[index] = 0;
               }),
 
           icon: Image.asset(
@@ -496,7 +514,7 @@ class _ItemExtractorState extends State<ItemExtractor> {
         return IconButton(
           onPressed:
               () => setState(() {
-                p.removeAt(index);
+                p[index] = 0;
               }),
 
           icon: Image.asset(
@@ -509,7 +527,7 @@ class _ItemExtractorState extends State<ItemExtractor> {
         return IconButton(
           onPressed:
               () => setState(() {
-                p.removeAt(index);
+                p[index] = 0;
               }),
 
           icon: Image.asset(
@@ -520,13 +538,10 @@ class _ItemExtractorState extends State<ItemExtractor> {
         );
       default:
         return IconButton(
-          onPressed:
-              () => setState(() {
-                p.removeAt(index);
-              }),
+          onPressed: () => {},
 
           icon: Image.asset(
-            'assets/images/eject.png',
+            'assets/images/cards/itemSpace.png',
             height: imageHeight,
             width: imageWidth,
           ),
@@ -576,22 +591,22 @@ class _ItemExtractorState extends State<ItemExtractor> {
                       () => setState(() {
                         itemsGenerator(1);
                       }),
-                  child: Text('1'),
+                  child: Text('I'),
                 ),
                 FloatingActionButton(
                   heroTag: '2Items',
                   onPressed: () => itemsGenerator(2),
-                  child: Text('2'),
+                  child: Text('II'),
                 ),
                 FloatingActionButton(
                   heroTag: '3Items',
                   onPressed: () => itemsGenerator(3),
-                  child: Text('3'),
+                  child: Text('III'),
                 ),
                 FloatingActionButton(
                   heroTag: '4Items',
                   onPressed: () => itemsGenerator(4),
-                  child: Text('4'),
+                  child: Text('IV'),
                 ),
               ],
             ),
