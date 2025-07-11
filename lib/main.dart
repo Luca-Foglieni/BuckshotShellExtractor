@@ -451,7 +451,7 @@ class _ItemExtractorState extends State<ItemExtractor> {
           height: imageHeight,
         );
       default:
-        return Image.asset('assets/images/eject.png', height: 50, width: 50);
+        return Image.asset('assets/images/eject.png', height: imageHeight);
     }
   }
 
