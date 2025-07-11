@@ -372,16 +372,16 @@ class _ItemExtractorState extends State<ItemExtractor> {
       int distinctItems = 10;
 
       for (var i = 0; i < numberOfItems; i++) {
-        if (p1.length <= itemsLimit) {
+        if (p1.length < itemsLimit) {
           p1.add(1 + random.nextInt(distinctItems));
         }
-        if (p2.length <= itemsLimit) {
+        if (p2.length < itemsLimit) {
           p2.add(1 + random.nextInt(distinctItems));
         }
-        if (p3.length <= itemsLimit) {
+        if (p3.length < itemsLimit) {
           p3.add(1 + random.nextInt(distinctItems));
         }
-        if (p4.length <= itemsLimit) {
+        if (p4.length < itemsLimit) {
           p4.add(1 + random.nextInt(distinctItems));
         }
       }
@@ -476,62 +476,78 @@ class _ItemExtractorState extends State<ItemExtractor> {
         title: Text('ITEMS EXTRACTOR'),
         titleTextStyle: TextStyle(fontFamily: 'VCR_OSD_MONO', fontSize: 22),
       ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
+      body: Stack(
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: List.generate(p1.length, (index) {
-              return insertCardImage(p1, index);
-            }),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: List.generate(p2.length, (index) {
-              return insertCardImage(p2, index);
-            }),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              FloatingActionButton(
-                heroTag: '1Items',
-                onPressed: _itemGenerator1,
-                child: Text('1'),
+          Align(
+            alignment: Alignment.topLeft,
+            child: SizedBox(
+              width: 120,
+              child: Wrap(
+                children: List.generate(p1.length, (index) {
+                  return insertCardImage(p1, index);
+                }),
               ),
-              FloatingActionButton(
-                heroTag: '2Items',
-                onPressed: _itemsGenerator2,
-                child: Text('2'),
-              ),
-            ],
+            ),
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              FloatingActionButton(
-                heroTag: '3Items',
-                onPressed: _itemsGenerator3,
-                child: Text('3'),
+          Align(
+            alignment: Alignment.topRight,
+            child: SizedBox(
+              width: 120,
+              child: Wrap(
+                children: List.generate(p2.length, (index) {
+                  return insertCardImage(p2, index);
+                }),
               ),
-              FloatingActionButton(
-                heroTag: '4Items',
-                onPressed: _itemsGenerator4,
-                child: Text('4'),
+            ),
+          ),
+          Align(
+            alignment: Alignment.center,
+            child: Wrap(
+              children: [
+                FloatingActionButton(
+                  heroTag: '1Items',
+                  onPressed: _itemGenerator1,
+                  child: Text('1'),
+                ),
+                FloatingActionButton(
+                  heroTag: '2Items',
+                  onPressed: _itemsGenerator2,
+                  child: Text('2'),
+                ),
+                FloatingActionButton(
+                  heroTag: '3Items',
+                  onPressed: _itemsGenerator3,
+                  child: Text('3'),
+                ),
+                FloatingActionButton(
+                  heroTag: '4Items',
+                  onPressed: _itemsGenerator4,
+                  child: Text('4'),
+                ),
+              ],
+            ),
+          ),
+          Align(
+            alignment: Alignment.bottomLeft,
+            child: SizedBox(
+              width: 120,
+              child: Wrap(
+                children: List.generate(p3.length, (index) {
+                  return insertCardImage(p3, index);
+                }),
               ),
-            ],
+            ),
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: List.generate(p3.length, (index) {
-              return insertCardImage(p4, index);
-            }),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: List.generate(p4.length, (index) {
-              return insertCardImage(p4, index);
-            }),
+          Align(
+            alignment: Alignment.bottomRight,
+            child: SizedBox(
+              width: 120,
+              child: Wrap(
+                children: List.generate(p4.length, (index) {
+                  return insertCardImage(p4, index);
+                }),
+              ),
+            ),
           ),
         ],
       ),
