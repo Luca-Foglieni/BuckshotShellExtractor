@@ -400,68 +400,55 @@ class _ItemExtractorState extends State<ItemExtractor> {
     const int magnifyingGlass = 9;
     const int remote = 10;
 
-    print(p1.toString());
+    const double imageHeight = 70;
 
     switch (p[index]) {
       case inverter:
         return Image.asset(
           'assets/images/cards/inverter.png',
-          height: 50,
-          width: 50,
+          height: imageHeight,
         );
       case beer:
-        return Image.asset(
-          'assets/images/cards/beer.png',
-          height: 50,
-          width: 50,
-        );
+        return Image.asset('assets/images/cards/beer.png', height: imageHeight);
       case sigarettePack:
         return Image.asset(
           'assets/images/cards/sigarettePack.png',
-          height: 50,
-          width: 50,
+          height: imageHeight,
         );
       case adrenaline:
         return Image.asset(
           'assets/images/cards/adrenaline.png',
-          height: 50,
-          width: 50,
+          height: imageHeight,
         );
       case burnerPhone:
         return Image.asset(
           'assets/images/cards/burnerPhone.png',
-          height: 50,
-          width: 50,
+          height: imageHeight,
         );
       case handsaw:
         return Image.asset(
           'assets/images/cards/handsaw.png',
-          height: 50,
-          width: 50,
+          height: imageHeight,
         );
       case handcuffs:
         return Image.asset(
           'assets/images/cards/handcuffs.png',
-          height: 50,
-          width: 50,
+          height: imageHeight,
         );
       case expiredMedice:
         return Image.asset(
           'assets/images/cards/expiredMedicine.png',
-          height: 50,
-          width: 50,
+          height: imageHeight,
         );
       case magnifyingGlass:
         return Image.asset(
           'assets/images/cards/magnifyingGlass.png',
-          height: 50,
-          width: 50,
+          height: imageHeight,
         );
       case remote:
         return Image.asset(
           'assets/images/cards/remote.png',
-          height: 50,
-          width: 50,
+          height: imageHeight,
         );
       default:
         return Image.asset('assets/images/eject.png', height: 50, width: 50);
