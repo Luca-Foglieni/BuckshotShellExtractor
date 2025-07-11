@@ -24,7 +24,63 @@ class MyApp extends StatelessWidget {
         tooltipTheme: TooltipThemeData(
           textStyle: TextStyle(fontFamily: 'VCR_OSD_MONO', color: Colors.white),
         ),
-        // colorScheme: ColorScheme.fromSeed(seedColor: Colors.black),
+        textTheme: TextTheme(
+          headlineSmall: TextStyle(
+            fontFamily: 'VCR_OSD_MONO',
+            color: Colors.white,
+          ),
+          headlineMedium: TextStyle(
+            fontFamily: 'VCR_OSD_MONO',
+            color: Colors.white,
+          ),
+          headlineLarge: TextStyle(
+            fontFamily: 'VCR_OSD_MONO',
+            color: Colors.white,
+          ),
+          bodyLarge: TextStyle(fontFamily: 'VCR_OSD_MONO', color: Colors.white),
+          bodyMedium: TextStyle(
+            fontFamily: 'VCR_OSD_MONO',
+            color: Colors.white,
+          ),
+          bodySmall: TextStyle(fontFamily: 'VCR_OSD_MONO', color: Colors.white),
+          displayLarge: TextStyle(
+            fontFamily: 'VCR_OSD_MONO',
+            color: Colors.white,
+          ),
+          displayMedium: TextStyle(
+            fontFamily: 'VCR_OSD_MONO',
+            color: Colors.white,
+          ),
+          displaySmall: TextStyle(
+            fontFamily: 'VCR_OSD_MONO',
+            color: Colors.white,
+          ),
+          labelLarge: TextStyle(
+            fontFamily: 'VCR_OSD_MONO',
+            color: Colors.white,
+          ),
+          labelMedium: TextStyle(
+            fontFamily: 'VCR_OSD_MONO',
+            color: Colors.white,
+          ),
+          labelSmall: TextStyle(
+            fontFamily: 'VCR_OSD_MONO',
+            color: Colors.white,
+          ),
+          titleLarge: TextStyle(
+            fontFamily: 'VCR_OSD_MONO',
+            color: Colors.white,
+          ),
+          titleMedium: TextStyle(
+            fontFamily: 'VCR_OSD_MONO',
+            color: Colors.white,
+          ),
+          titleSmall: TextStyle(
+            fontFamily: 'VCR_OSD_MONO',
+            color: Colors.white,
+          ),
+        ),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.black),
       ),
       home: const MyHomePage(title: 'BUCKSHOT SHELL EXTRACTOR'),
     );
@@ -41,6 +97,9 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  late final Widget _itemExtractorPage = ItemExtractor();
+  //da fixare visto che lo stato della pagina degli oggetti non viene ancora salvato
+
   final random = Random();
 
   int _shellNumber = 0;
@@ -134,7 +193,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color.fromRGBO(5, 5, 5, 1),
+        backgroundColor: Color.fromRGBO(10, 10, 10, 1),
         title: Text(widget.title),
         titleTextStyle: TextStyle(fontFamily: 'VCR_OSD_MONO', fontSize: 22),
       ),
@@ -147,17 +206,12 @@ class _MyHomePageState extends State<MyHomePage> {
               SizedBox(height: 40),
               Text(
                 _dealerSpeechBubble,
-                style: TextStyle(
-                  color: Colors.white,
-                  fontFamily: 'VCR_OSD_MONO',
-                  fontSize: 20,
-                ),
+                style: TextStyle(color: Colors.white, fontSize: 20),
               ),
               SizedBox(height: 20),
               Text(
                 '$_shellNumber',
                 style: TextStyle(
-                  fontFamily: 'VCR_OSD_MONO',
                   fontSize: 70,
                   color: Color.fromRGBO(255, 255, 255, _shellNumberOpacity),
                 ),
@@ -192,11 +246,9 @@ class _MyHomePageState extends State<MyHomePage> {
                             _shellSequence[index]
                                 ? 'assets/images/live.png'
                                 : 'assets/images/blank.png',
-                            height: 30, // aumenta l'altezza
-                            width: 90, // aumenta la larghezza
-                            fit:
-                                BoxFit
-                                    .contain, // oppure BoxFit.cover o BoxFit.fill
+                            height: 30,
+                            width: 90,
+                            fit: BoxFit.contain,
                           ),
                         ),
                       ),
@@ -250,6 +302,388 @@ class _MyHomePageState extends State<MyHomePage> {
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Image.asset('assets/images/burnerPhone.png'),
+              ),
+            ),
+          ),
+          Positioned(
+            bottom: 16,
+            left: 50,
+            child: FloatingActionButton(
+              heroTag: 'gotoCardsPage',
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => _itemExtractorPage),
+                );
+              },
+              tooltip: 'gotoCardsPage',
+              backgroundColor: Color.fromRGBO(255, 255, 253, 1),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Image.asset('assets/images/cards/blackItems/beer.png'),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class ItemExtractor extends StatefulWidget {
+  const ItemExtractor({super.key});
+
+  @override
+  State<ItemExtractor> createState() => _ItemExtractorState();
+}
+
+class _ItemExtractorState extends State<ItemExtractor> {
+  final random = Random();
+
+  List<int> p1 = [0, 0, 0, 0, 0, 0, 0, 0];
+  List<int> p2 = [0, 0, 0, 0, 0, 0, 0, 0];
+  List<int> p3 = [0, 0, 0, 0, 0, 0, 0, 0];
+  List<int> p4 = [0, 0, 0, 0, 0, 0, 0, 0];
+
+  int itemsAddedP1 = 0;
+  int itemsAddedP2 = 0;
+  int itemsAddedP3 = 0;
+  int itemsAddedP4 = 0;
+
+  int distinctItems = 10;
+
+  void itemsGenerator(int numberOfItems) {
+    //funzione che aggiunge effettivamente il numero di oggetti selezionato all'inventario (list) di ogni giocatore
+
+    itemsAddedP1 = 0;
+    itemsAddedP2 = 0;
+    itemsAddedP3 = 0;
+    itemsAddedP4 = 0;
+
+    setState(() {
+      for (var i = 0; i < 8; i++) {
+        if (p1.elementAt(i) == 0 && itemsAddedP1 < numberOfItems) {
+          p1[i] = (1 + random.nextInt(distinctItems));
+          itemsAddedP1++;
+        }
+        if (p2.elementAt(i) == 0 && itemsAddedP2 < numberOfItems) {
+          p2[i] = (1 + random.nextInt(distinctItems));
+          itemsAddedP2++;
+        }
+        if (p3.elementAt(i) == 0 && itemsAddedP3 < numberOfItems) {
+          p3[i] = (1 + random.nextInt(distinctItems));
+          itemsAddedP3++;
+        }
+        if (p4.elementAt(i) == 0 && itemsAddedP4 < numberOfItems) {
+          p4[i] = (1 + random.nextInt(distinctItems));
+          itemsAddedP4++;
+        }
+      }
+    });
+  }
+
+  IconButton insertCardImage(List<int> p, int index) {
+    const int inverter = 1;
+    const int beer = 2;
+    const int cigarettePack = 3;
+    const int adrenaline = 4;
+    const int burnerPhone = 5;
+    const int handsaw = 6;
+    const int handcuffs = 7;
+    const int expiredMedicine = 8;
+    const int magnifyingGlass = 9;
+    const int remote = 10;
+
+    const double imageHeight = 60;
+    const double imageWidth = 60;
+
+    switch (p[index]) {
+      case inverter:
+        return IconButton(
+          onPressed:
+              () => setState(() {
+                p[index] = 0;
+              }),
+
+          icon: Image.asset(
+            'assets/images/cards/inverter.png',
+            height: imageHeight,
+            width: imageWidth,
+          ),
+        );
+      case beer:
+        return IconButton(
+          onPressed:
+              () => setState(() {
+                p[index] = 0;
+              }),
+
+          icon: Image.asset(
+            'assets/images/cards/beer.png',
+            height: imageHeight,
+            width: imageWidth,
+          ),
+        );
+      case cigarettePack:
+        return IconButton(
+          onPressed:
+              () => setState(() {
+                p[index] = 0;
+              }),
+
+          icon: Image.asset(
+            'assets/images/cards/cigarettePack.png',
+            height: imageHeight,
+            width: imageWidth,
+          ),
+        );
+      case adrenaline:
+        return IconButton(
+          onPressed:
+              () => setState(() {
+                p[index] = 0;
+              }),
+
+          icon: Image.asset(
+            'assets/images/cards/adrenaline.png',
+            height: imageHeight,
+            width: imageWidth,
+          ),
+        );
+      case burnerPhone:
+        return IconButton(
+          onPressed:
+              () => setState(() {
+                p[index] = 0;
+              }),
+
+          icon: Image.asset(
+            'assets/images/cards/burnerPhone.png',
+            height: imageHeight,
+            width: imageWidth,
+          ),
+        );
+      case handsaw:
+        return IconButton(
+          onPressed:
+              () => setState(() {
+                p[index] = 0;
+              }),
+
+          icon: Image.asset(
+            'assets/images/cards/handsaw.png',
+            height: imageHeight,
+            width: imageWidth,
+          ),
+        );
+      case handcuffs:
+        return IconButton(
+          onPressed:
+              () => setState(() {
+                p[index] = 0;
+              }),
+
+          icon: Image.asset(
+            'assets/images/cards/handcuffs.png',
+            height: imageHeight,
+            width: imageWidth,
+          ),
+        );
+      case expiredMedicine:
+        return IconButton(
+          onPressed:
+              () => setState(() {
+                p[index] = 0;
+              }),
+
+          icon: Image.asset(
+            'assets/images/cards/expiredMedicine.png',
+            height: imageHeight,
+            width: imageWidth,
+          ),
+        );
+      case magnifyingGlass:
+        return IconButton(
+          onPressed:
+              () => setState(() {
+                p[index] = 0;
+              }),
+
+          icon: Image.asset(
+            'assets/images/cards/magnifyingGlass.png',
+            height: imageHeight,
+            width: imageWidth,
+          ),
+        );
+      case remote:
+        return IconButton(
+          onPressed:
+              () => setState(() {
+                p[index] = 0;
+              }),
+
+          icon: Image.asset(
+            'assets/images/cards/remote.png',
+            height: imageHeight,
+            width: imageWidth,
+          ),
+        );
+      default:
+        return IconButton(
+          onPressed: () => {},
+
+          icon: Image.asset(
+            'assets/images/cards/itemSpace.png',
+            height: imageHeight,
+            width: imageWidth,
+          ),
+        );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.black,
+      appBar: AppBar(
+        backgroundColor: Color.fromRGBO(10, 10, 10, 1),
+        title: Text('ITEMS EXTRACTOR'),
+        titleTextStyle: TextStyle(fontFamily: 'VCR_OSD_MONO', fontSize: 22),
+        iconTheme: IconThemeData(color: Colors.white),
+      ),
+      body: Stack(
+        children: [
+          Align(
+            alignment: Alignment.topLeft,
+            child: Container(
+              decoration: BoxDecoration(
+                border: Border(
+                  right: BorderSide(color: Colors.grey, width: 2),
+                  bottom: BorderSide(color: Colors.grey, width: 2),
+                ),
+              ),
+              child: SizedBox(
+                width: 160,
+                child: Wrap(
+                  children: List.generate(p1.length, (index) {
+                    return insertCardImage(p1, index);
+                  }),
+                ),
+              ),
+            ),
+          ),
+          Align(
+            alignment: Alignment.topRight,
+            child: Container(
+              decoration: BoxDecoration(
+                border: Border(
+                  left: BorderSide(color: Colors.grey, width: 2),
+                  bottom: BorderSide(color: Colors.grey, width: 2),
+                ),
+              ),
+              child: SizedBox(
+                width: 160,
+                child: Wrap(
+                  children: List.generate(p2.length, (index) {
+                    return insertCardImage(p2, index);
+                  }),
+                ),
+              ),
+            ),
+          ),
+          Align(
+            alignment: Alignment.center,
+            child: Wrap(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(4.0),
+                  child: FloatingActionButton(
+                    heroTag: '1Items',
+                    backgroundColor: Colors.grey,
+                    onPressed:
+                        () => setState(() {
+                          itemsGenerator(1);
+                        }),
+                    child: Text(
+                      'I',
+                      style: TextStyle(fontSize: 22, color: Colors.black),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(4.0),
+                  child: FloatingActionButton(
+                    heroTag: '2Items',
+                    backgroundColor: Colors.grey,
+                    onPressed: () => itemsGenerator(2),
+                    child: Text(
+                      'II',
+                      style: TextStyle(fontSize: 22, color: Colors.black),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(4.0),
+                  child: FloatingActionButton(
+                    heroTag: '3Items',
+                    backgroundColor: Colors.grey,
+                    onPressed: () => itemsGenerator(3),
+                    child: Text(
+                      'III',
+                      style: TextStyle(fontSize: 22, color: Colors.black),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(4.0),
+                  child: FloatingActionButton(
+                    heroTag: '4Items',
+                    backgroundColor: Colors.grey,
+                    onPressed: () => itemsGenerator(4),
+                    child: Text(
+                      'IV',
+                      style: TextStyle(fontSize: 22, color: Colors.black),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Align(
+            alignment: Alignment.bottomLeft,
+            child: Container(
+              decoration: BoxDecoration(
+                border: Border(
+                  top: BorderSide(color: Colors.grey, width: 2),
+                  right: BorderSide(color: Colors.grey, width: 2),
+                ),
+              ),
+              child: SizedBox(
+                width: 160,
+                child: Wrap(
+                  children: List.generate(p3.length, (index) {
+                    return insertCardImage(p3, index);
+                  }),
+                ),
+              ),
+            ),
+          ),
+          Align(
+            alignment: Alignment.bottomRight,
+            child: Container(
+              decoration: BoxDecoration(
+                border: Border(
+                  left: BorderSide(color: Colors.grey, width: 2),
+                  top: BorderSide(color: Colors.grey, width: 2),
+                ),
+              ),
+              child: SizedBox(
+                width: 160,
+                child: Wrap(
+                  children: List.generate(p4.length, (index) {
+                    return insertCardImage(p4, index);
+                  }),
+                ),
               ),
             ),
           ),
