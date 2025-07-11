@@ -349,22 +349,6 @@ class _ItemExtractorState extends State<ItemExtractor> {
   List<int> p3 = [];
   List<int> p4 = [];
 
-  void _itemGenerator1() {
-    itemsGenerator(1);
-  }
-
-  void _itemsGenerator2() {
-    itemsGenerator(2);
-  }
-
-  void _itemsGenerator3() {
-    itemsGenerator(3);
-  }
-
-  void _itemsGenerator4() {
-    itemsGenerator(4);
-  }
-
   void itemsGenerator(int numberOfItems) {
     //funzione che aggiunge effettivamente il numero di oggetti selezionato all'inventario (list) di ogni giocatore
     setState(() {
@@ -388,70 +372,165 @@ class _ItemExtractorState extends State<ItemExtractor> {
     });
   }
 
-  Image insertCardImage(List<int> p, int index) {
+  IconButton insertCardImage(List<int> p, int index) {
     const int inverter = 1;
     const int beer = 2;
-    const int sigarettePack = 3;
+    const int cigarettePack = 3;
     const int adrenaline = 4;
     const int burnerPhone = 5;
     const int handsaw = 6;
     const int handcuffs = 7;
-    const int expiredMedice = 8;
+    const int expiredMedicine = 8;
     const int magnifyingGlass = 9;
     const int remote = 10;
 
-    const double imageHeight = 70;
+    const double imageHeight = 60;
+    const double imageWidth = 60;
 
     switch (p[index]) {
       case inverter:
-        return Image.asset(
-          'assets/images/cards/inverter.png',
-          height: imageHeight,
+        return IconButton(
+          onPressed:
+              () => setState(() {
+                p.removeAt(index);
+              }),
+
+          icon: Image.asset(
+            'assets/images/cards/inverter.png',
+            height: imageHeight,
+            width: imageWidth,
+          ),
         );
       case beer:
-        return Image.asset('assets/images/cards/beer.png', height: imageHeight);
-      case sigarettePack:
-        return Image.asset(
-          'assets/images/cards/sigarettePack.png',
-          height: imageHeight,
+        return IconButton(
+          onPressed:
+              () => setState(() {
+                p.removeAt(index);
+              }),
+
+          icon: Image.asset(
+            'assets/images/cards/beer.png',
+            height: imageHeight,
+            width: imageWidth,
+          ),
+        );
+      case cigarettePack:
+        return IconButton(
+          onPressed:
+              () => setState(() {
+                p.removeAt(index);
+              }),
+
+          icon: Image.asset(
+            'assets/images/cards/cigarettePack.png',
+            height: imageHeight,
+            width: imageWidth,
+          ),
         );
       case adrenaline:
-        return Image.asset(
-          'assets/images/cards/adrenaline.png',
-          height: imageHeight,
+        return IconButton(
+          onPressed:
+              () => setState(() {
+                p.removeAt(index);
+              }),
+
+          icon: Image.asset(
+            'assets/images/cards/adrenaline.png',
+            height: imageHeight,
+            width: imageWidth,
+          ),
         );
       case burnerPhone:
-        return Image.asset(
-          'assets/images/cards/burnerPhone.png',
-          height: imageHeight,
+        return IconButton(
+          onPressed:
+              () => setState(() {
+                p.removeAt(index);
+              }),
+
+          icon: Image.asset(
+            'assets/images/cards/burnerPhone.png',
+            height: imageHeight,
+            width: imageWidth,
+          ),
         );
       case handsaw:
-        return Image.asset(
-          'assets/images/cards/handsaw.png',
-          height: imageHeight,
+        return IconButton(
+          onPressed:
+              () => setState(() {
+                p.removeAt(index);
+              }),
+
+          icon: Image.asset(
+            'assets/images/cards/handsaw.png',
+            height: imageHeight,
+            width: imageWidth,
+          ),
         );
       case handcuffs:
-        return Image.asset(
-          'assets/images/cards/handcuffs.png',
-          height: imageHeight,
+        return IconButton(
+          onPressed:
+              () => setState(() {
+                p.removeAt(index);
+              }),
+
+          icon: Image.asset(
+            'assets/images/cards/handcuffs.png',
+            height: imageHeight,
+            width: imageWidth,
+          ),
         );
-      case expiredMedice:
-        return Image.asset(
-          'assets/images/cards/expiredMedicine.png',
-          height: imageHeight,
+      case expiredMedicine:
+        return IconButton(
+          onPressed:
+              () => setState(() {
+                p.removeAt(index);
+              }),
+
+          icon: Image.asset(
+            'assets/images/cards/expiredMedicine.png',
+            height: imageHeight,
+            width: imageWidth,
+          ),
         );
       case magnifyingGlass:
-        return Image.asset(
-          'assets/images/cards/magnifyingGlass.png',
-          height: imageHeight,
+        return IconButton(
+          onPressed:
+              () => setState(() {
+                p.removeAt(index);
+              }),
+
+          icon: Image.asset(
+            'assets/images/cards/magnifyingGlass.png',
+            height: imageHeight,
+            width: imageWidth,
+          ),
         );
       case remote:
-        return Image.asset(
-          'assets/images/cards/remote.png',
-          height: imageHeight,
+        return IconButton(
+          onPressed:
+              () => setState(() {
+                p.removeAt(index);
+              }),
+
+          icon: Image.asset(
+            'assets/images/cards/remote.png',
+            height: imageHeight,
+            width: imageWidth,
+          ),
         );
       default:
-        return Image.asset('assets/images/eject.png', height: imageHeight);
+        return IconButton(
+          onPressed:
+              () => setState(() {
+                p.removeAt(index);
+              }),
+
+          icon: Image.asset(
+            'assets/images/eject.png',
+            height: imageHeight,
+            width: imageWidth,
+          ),
+        );
     }
   }
 
@@ -468,7 +547,7 @@ class _ItemExtractorState extends State<ItemExtractor> {
           Align(
             alignment: Alignment.topLeft,
             child: SizedBox(
-              width: 120,
+              width: 160,
               child: Wrap(
                 children: List.generate(p1.length, (index) {
                   return insertCardImage(p1, index);
@@ -479,7 +558,7 @@ class _ItemExtractorState extends State<ItemExtractor> {
           Align(
             alignment: Alignment.topRight,
             child: SizedBox(
-              width: 120,
+              width: 160,
               child: Wrap(
                 children: List.generate(p2.length, (index) {
                   return insertCardImage(p2, index);
@@ -493,22 +572,25 @@ class _ItemExtractorState extends State<ItemExtractor> {
               children: [
                 FloatingActionButton(
                   heroTag: '1Items',
-                  onPressed: _itemGenerator1,
+                  onPressed:
+                      () => setState(() {
+                        itemsGenerator(1);
+                      }),
                   child: Text('1'),
                 ),
                 FloatingActionButton(
                   heroTag: '2Items',
-                  onPressed: _itemsGenerator2,
+                  onPressed: () => itemsGenerator(2),
                   child: Text('2'),
                 ),
                 FloatingActionButton(
                   heroTag: '3Items',
-                  onPressed: _itemsGenerator3,
+                  onPressed: () => itemsGenerator(3),
                   child: Text('3'),
                 ),
                 FloatingActionButton(
                   heroTag: '4Items',
-                  onPressed: _itemsGenerator4,
+                  onPressed: () => itemsGenerator(4),
                   child: Text('4'),
                 ),
               ],
@@ -517,7 +599,7 @@ class _ItemExtractorState extends State<ItemExtractor> {
           Align(
             alignment: Alignment.bottomLeft,
             child: SizedBox(
-              width: 120,
+              width: 160,
               child: Wrap(
                 children: List.generate(p3.length, (index) {
                   return insertCardImage(p3, index);
@@ -528,7 +610,7 @@ class _ItemExtractorState extends State<ItemExtractor> {
           Align(
             alignment: Alignment.bottomRight,
             child: SizedBox(
-              width: 120,
+              width: 160,
               child: Wrap(
                 children: List.generate(p4.length, (index) {
                   return insertCardImage(p4, index);
