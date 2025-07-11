@@ -366,9 +366,7 @@ class _ItemExtractorState extends State<ItemExtractor> {
 
     setState(() {
       for (var i = 0; i < 8; i++) {
-        print('ciclo');
         if (p1.elementAt(i) == 0 && itemsAddedP1 < numberOfItems) {
-          print('if');
           p1[i] = (1 + random.nextInt(distinctItems));
           itemsAddedP1++;
         }
@@ -386,8 +384,6 @@ class _ItemExtractorState extends State<ItemExtractor> {
         }
       }
     });
-
-    print(p1.toString());
   }
 
   IconButton insertCardImage(List<int> p, int index) {
