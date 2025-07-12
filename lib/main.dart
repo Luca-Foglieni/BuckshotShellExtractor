@@ -152,7 +152,7 @@ class _MyHomePageState extends State<MyHomePage> {
     }
     _shellNumberOpacity = 1;
 
-    _resetDealerSpeechBubble(20);
+    // _resetDealerSpeechBubble(120);
   }
 
   void _burnerPhonePrediction() {
@@ -178,6 +178,18 @@ class _MyHomePageState extends State<MyHomePage> {
       _shellSequence.removeAt(0);
       _burnedShell = -1;
     });
+  }
+
+  void _coinFlip() {
+    bool coin = random.nextBool();
+    setState(() {
+      if (coin) {
+        _dealerSpeechBubble = 'HEADS.';
+      } else {
+        _dealerSpeechBubble = 'TAILS.';
+      }
+    });
+    _resetDealerSpeechBubble(3);
   }
 
   void _resetDealerSpeechBubble(int delay) {
@@ -264,8 +276,8 @@ class _MyHomePageState extends State<MyHomePage> {
       floatingActionButton: Stack(
         children: <Widget>[
           Positioned(
-            bottom: 16,
-            right: 16,
+            bottom: 0,
+            right: 0,
             child: FloatingActionButton(
               heroTag: 'reload',
               onPressed: _reload,
@@ -278,8 +290,8 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
           ),
           Positioned(
-            bottom: 80,
-            right: 16,
+            bottom: 64,
+            right: 0,
             child: FloatingActionButton(
               heroTag: 'eject',
               onPressed: _eject,
@@ -292,8 +304,8 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
           ),
           Positioned(
-            bottom: 146,
-            right: 16,
+            bottom: 128,
+            right: 0,
             child: FloatingActionButton(
               heroTag: 'burnerPhone',
               onPressed: _burnerPhonePrediction,
@@ -306,8 +318,22 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
           ),
           Positioned(
-            bottom: 16,
-            left: 50,
+            bottom: 192,
+            right: 0,
+            child: FloatingActionButton(
+              heroTag: 'coinFlip',
+              onPressed: _coinFlip,
+              tooltip: 'COIN FLIP',
+              backgroundColor: Color.fromRGBO(255, 255, 253, 1),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Image.asset('assets/images/coin.png'),
+              ),
+            ),
+          ),
+          Positioned(
+            bottom: 0,
+            left: 30,
             child: FloatingActionButton(
               heroTag: 'gotoCardsPage',
               onPressed: () {
