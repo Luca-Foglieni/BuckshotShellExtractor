@@ -6,8 +6,10 @@ import 'dart:async';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
+
   await SystemChrome.setPreferredOrientations([
-    DeviceOrientation.portraitUp, // blocca in verticale
+    DeviceOrientation.portraitUp, // locks app in vertical orientation
   ]);
   runApp(const MyApp());
 }
@@ -98,7 +100,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   late final Widget _itemExtractorPage = ItemExtractor();
-  //da fixare visto che lo stato della pagina degli oggetti non viene ancora salvato
+  //to fix, the state of the items page is not saved when you go back to the homepage
 
   final random = Random();
 
@@ -364,12 +366,19 @@ class ItemExtractor extends StatefulWidget {
 }
 
 class _ItemExtractorState extends State<ItemExtractor> {
+  double playerInventoryWidth = 160;
+
   final random = Random();
 
-  List<int> p1 = [0, 0, 0, 0, 0, 0, 0, 0];
-  List<int> p2 = [0, 0, 0, 0, 0, 0, 0, 0];
-  List<int> p3 = [0, 0, 0, 0, 0, 0, 0, 0];
-  List<int> p4 = [0, 0, 0, 0, 0, 0, 0, 0];
+  List<int> p1items = [0, 0, 0, 0, 0, 0, 0, 0];
+  List<int> p2items = [0, 0, 0, 0, 0, 0, 0, 0];
+  List<int> p3items = [0, 0, 0, 0, 0, 0, 0, 0];
+  List<int> p4items = [0, 0, 0, 0, 0, 0, 0, 0];
+
+  List<bool> p1charges = [true, true, true, true, true, true];
+  List<bool> p2charges = [true, true, true, true, true, true];
+  List<bool> p3charges = [true, true, true, true, true, true];
+  List<bool> p4charges = [true, true, true, true, true, true];
 
   int itemsAddedP1 = 0;
   int itemsAddedP2 = 0;
@@ -379,7 +388,7 @@ class _ItemExtractorState extends State<ItemExtractor> {
   int distinctItems = 10;
 
   void itemsGenerator(int numberOfItems) {
-    //funzione che aggiunge effettivamente il numero di oggetti selezionato all'inventario (list) di ogni giocatore
+    //function that actually add the number of items selected in the inventory (list) of every player
 
     itemsAddedP1 = 0;
     itemsAddedP2 = 0;
@@ -388,20 +397,20 @@ class _ItemExtractorState extends State<ItemExtractor> {
 
     setState(() {
       for (var i = 0; i < 8; i++) {
-        if (p1.elementAt(i) == 0 && itemsAddedP1 < numberOfItems) {
-          p1[i] = (1 + random.nextInt(distinctItems));
+        if (p1items.elementAt(i) == 0 && itemsAddedP1 < numberOfItems) {
+          p1items[i] = (1 + random.nextInt(distinctItems));
           itemsAddedP1++;
         }
-        if (p2.elementAt(i) == 0 && itemsAddedP2 < numberOfItems) {
-          p2[i] = (1 + random.nextInt(distinctItems));
+        if (p2items.elementAt(i) == 0 && itemsAddedP2 < numberOfItems) {
+          p2items[i] = (1 + random.nextInt(distinctItems));
           itemsAddedP2++;
         }
-        if (p3.elementAt(i) == 0 && itemsAddedP3 < numberOfItems) {
-          p3[i] = (1 + random.nextInt(distinctItems));
+        if (p3items.elementAt(i) == 0 && itemsAddedP3 < numberOfItems) {
+          p3items[i] = (1 + random.nextInt(distinctItems));
           itemsAddedP3++;
         }
-        if (p4.elementAt(i) == 0 && itemsAddedP4 < numberOfItems) {
-          p4[i] = (1 + random.nextInt(distinctItems));
+        if (p4items.elementAt(i) == 0 && itemsAddedP4 < numberOfItems) {
+          p4items[i] = (1 + random.nextInt(distinctItems));
           itemsAddedP4++;
         }
       }
@@ -567,16 +576,45 @@ class _ItemExtractorState extends State<ItemExtractor> {
     }
   }
 
+  IconButton insertPlayerCharges(List<bool> pCharges, int index) {
+    if (pCharges.elementAt(index) == true) {
+      return IconButton(
+        onPressed:
+            () => setState(() {
+              pCharges[index] = false;
+            }),
+        iconSize: 16,
+        padding: EdgeInsets.zero,
+        constraints: BoxConstraints(),
+        icon: Image.asset(
+          'assets/images/cards/charge.png',
+          height: 12,
+          width: 12,
+        ),
+      );
+    } else {
+      return IconButton(
+        onPressed:
+            () => setState(() {
+              pCharges[index] = true;
+            }),
+        iconSize: 16,
+        padding: EdgeInsets.zero,
+        constraints: BoxConstraints(),
+        icon: Image.asset(
+          'assets/images/cards/itemSpace.png',
+          height: 12,
+          width: 12,
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
-      appBar: AppBar(
-        backgroundColor: Color.fromRGBO(10, 10, 10, 1),
-        title: Text('ITEMS EXTRACTOR'),
-        titleTextStyle: TextStyle(fontFamily: 'VCR_OSD_MONO', fontSize: 22),
-        iconTheme: IconThemeData(color: Colors.white),
-      ),
+
       body: Stack(
         children: [
           Align(
@@ -588,13 +626,24 @@ class _ItemExtractorState extends State<ItemExtractor> {
                   bottom: BorderSide(color: Colors.grey, width: 2),
                 ),
               ),
-              child: SizedBox(
-                width: 160,
-                child: Wrap(
-                  children: List.generate(p1.length, (index) {
-                    return insertCardImage(p1, index);
-                  }),
-                ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: List.generate(p1charges.length, (index) {
+                      return insertPlayerCharges(p1charges, index);
+                    }),
+                  ),
+                  SizedBox(
+                    width: playerInventoryWidth,
+                    child: Wrap(
+                      children: List.generate(p1items.length, (index) {
+                        return insertCardImage(p1items, index);
+                      }),
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
@@ -607,13 +656,18 @@ class _ItemExtractorState extends State<ItemExtractor> {
                   bottom: BorderSide(color: Colors.grey, width: 2),
                 ),
               ),
-              child: SizedBox(
-                width: 160,
-                child: Wrap(
-                  children: List.generate(p2.length, (index) {
-                    return insertCardImage(p2, index);
-                  }),
-                ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  SizedBox(
+                    width: playerInventoryWidth,
+                    child: Wrap(
+                      children: List.generate(p2items.length, (index) {
+                        return insertCardImage(p2items, index);
+                      }),
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
@@ -684,13 +738,18 @@ class _ItemExtractorState extends State<ItemExtractor> {
                   right: BorderSide(color: Colors.grey, width: 2),
                 ),
               ),
-              child: SizedBox(
-                width: 160,
-                child: Wrap(
-                  children: List.generate(p3.length, (index) {
-                    return insertCardImage(p3, index);
-                  }),
-                ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  SizedBox(
+                    width: playerInventoryWidth,
+                    child: Wrap(
+                      children: List.generate(p3items.length, (index) {
+                        return insertCardImage(p3items, index);
+                      }),
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
@@ -703,13 +762,18 @@ class _ItemExtractorState extends State<ItemExtractor> {
                   top: BorderSide(color: Colors.grey, width: 2),
                 ),
               ),
-              child: SizedBox(
-                width: 160,
-                child: Wrap(
-                  children: List.generate(p4.length, (index) {
-                    return insertCardImage(p4, index);
-                  }),
-                ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  SizedBox(
+                    width: playerInventoryWidth,
+                    child: Wrap(
+                      children: List.generate(p4items.length, (index) {
+                        return insertCardImage(p4items, index);
+                      }),
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
