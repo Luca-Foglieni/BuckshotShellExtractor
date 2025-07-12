@@ -387,6 +387,8 @@ class _ItemExtractorState extends State<ItemExtractor> {
 
   int distinctItems = 10;
 
+  double chargeIconize = 25;
+
   void itemsGenerator(int numberOfItems) {
     //function that actually add the number of items selected in the inventory (list) of every player
 
@@ -576,35 +578,35 @@ class _ItemExtractorState extends State<ItemExtractor> {
     }
   }
 
-  IconButton insertPlayerCharges(List<bool> pCharges, int index) {
+  GestureDetector insertPlayerCharges(List<bool> pCharges, int index) {
     if (pCharges.elementAt(index) == true) {
-      return IconButton(
-        onPressed:
+      return GestureDetector(
+        onTap:
             () => setState(() {
               pCharges[index] = false;
             }),
-        iconSize: 16,
-        padding: EdgeInsets.zero,
-        constraints: BoxConstraints(),
-        icon: Image.asset(
+        // iconSize: 16,
+        // padding: EdgeInsets.zero,
+        // constraints: BoxConstraints(),
+        child: Image.asset(
           'assets/images/cards/charge.png',
-          height: 12,
-          width: 12,
+          height: chargeIconize,
+          width: chargeIconize,
         ),
       );
     } else {
-      return IconButton(
-        onPressed:
+      return GestureDetector(
+        onTap:
             () => setState(() {
               pCharges[index] = true;
             }),
-        iconSize: 16,
-        padding: EdgeInsets.zero,
-        constraints: BoxConstraints(),
-        icon: Image.asset(
+        // iconSize: 16,
+        // padding: EdgeInsets.zero,
+        // constraints: BoxConstraints(),
+        child: Image.asset(
           'assets/images/cards/itemSpace.png',
-          height: 12,
-          width: 12,
+          height: chargeIconize,
+          width: chargeIconize,
         ),
       );
     }
@@ -629,11 +631,14 @@ class _ItemExtractorState extends State<ItemExtractor> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: List.generate(p1charges.length, (index) {
-                      return insertPlayerCharges(p1charges, index);
-                    }),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: List.generate(p1charges.length, (index) {
+                        return insertPlayerCharges(p1charges, index);
+                      }),
+                    ),
                   ),
                   SizedBox(
                     width: playerInventoryWidth,
@@ -659,6 +664,15 @@ class _ItemExtractorState extends State<ItemExtractor> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: List.generate(p2charges.length, (index) {
+                        return insertPlayerCharges(p2charges, index);
+                      }),
+                    ),
+                  ),
                   SizedBox(
                     width: playerInventoryWidth,
                     child: Wrap(
@@ -749,6 +763,15 @@ class _ItemExtractorState extends State<ItemExtractor> {
                       }),
                     ),
                   ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: List.generate(p3charges.length, (index) {
+                        return insertPlayerCharges(p3charges, index);
+                      }),
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -770,6 +793,15 @@ class _ItemExtractorState extends State<ItemExtractor> {
                     child: Wrap(
                       children: List.generate(p4items.length, (index) {
                         return insertCardImage(p4items, index);
+                      }),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: List.generate(p4charges.length, (index) {
+                        return insertPlayerCharges(p4charges, index);
                       }),
                     ),
                   ),
