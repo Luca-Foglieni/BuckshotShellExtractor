@@ -392,7 +392,7 @@ class _ItemExtractorState extends State<ItemExtractor> {
 
   int distinctItems = 10;
 
-  double chargeIconize = 25;
+  double chargeIconSize = 25;
 
   void itemsGenerator(int numberOfItems) {
     //function that actually add the number of items selected in the inventory (list) of every player
@@ -604,8 +604,8 @@ class _ItemExtractorState extends State<ItemExtractor> {
             }),
         child: Image.asset(
           'assets/images/cards/charge.png',
-          height: chargeIconize,
-          width: chargeIconize,
+          height: chargeIconSize,
+          width: chargeIconSize,
         ),
       );
     } else {
@@ -614,13 +614,10 @@ class _ItemExtractorState extends State<ItemExtractor> {
             () => setState(() {
               pCharges[index] = true;
             }),
-        // iconSize: 16,
-        // padding: EdgeInsets.zero,
-        // constraints: BoxConstraints(),
         child: Image.asset(
           'assets/images/cards/itemSpace.png',
-          height: chargeIconize,
-          width: chargeIconize,
+          height: chargeIconSize,
+          width: chargeIconSize,
         ),
       );
     }
@@ -671,10 +668,8 @@ class _ItemExtractorState extends State<ItemExtractor> {
 
   void invertCharges(List<bool> pCharges) {
     if (pCharges.every((element) => element == false)) {
-      print('empty');
       fullCharges(pCharges);
     } else {
-      print('full');
       emptyCharges(pCharges);
     }
   }
@@ -703,7 +698,6 @@ class _ItemExtractorState extends State<ItemExtractor> {
                     child: GestureDetector(
                       onLongPress:
                           () => setState(() {
-                            print('long');
                             invertCharges(p1charges);
                           }),
                       child: Row(
@@ -743,7 +737,6 @@ class _ItemExtractorState extends State<ItemExtractor> {
                     child: GestureDetector(
                       onLongPress:
                           () => setState(() {
-                            print('long');
                             invertCharges(p2charges);
                           }),
                       child: Row(
@@ -849,7 +842,6 @@ class _ItemExtractorState extends State<ItemExtractor> {
                     child: GestureDetector(
                       onLongPress:
                           () => setState(() {
-                            print('long');
                             invertCharges(p3charges);
                           }),
                       child: Row(
@@ -889,7 +881,6 @@ class _ItemExtractorState extends State<ItemExtractor> {
                     child: GestureDetector(
                       onLongPress:
                           () => setState(() {
-                            print('long');
                             invertCharges(p4charges);
                           }),
                       child: Row(
