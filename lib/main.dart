@@ -482,7 +482,6 @@ class _ItemExtractorState extends State<ItemExtractor> {
           onPressed:
               () => setState(() {
                 p[index] = 0;
-                removeCharges(p1charges, 1);
               }),
 
           icon: Image.asset(
@@ -621,37 +620,6 @@ class _ItemExtractorState extends State<ItemExtractor> {
         ),
       );
     }
-  }
-
-  void addCharges(List<bool> player, int nCharges) {
-    int counter = 0;
-
-    setState(() {
-      for (bool charge in player) {
-        if (counter == nCharges) {
-          break;
-        }
-        if (charge == false) {
-          charge = true;
-        }
-      }
-    });
-  }
-
-  void removeCharges(List<bool> pCharges, int nCharges) {
-    int counter = 0;
-
-    setState(() {
-      for (int i = 5; i > 0; i--) {
-        // print(i);
-        if (counter == nCharges) {
-          break;
-        }
-        if (pCharges.elementAt(i) == true) {
-          pCharges[i] = false;
-        }
-      }
-    });
   }
 
   void fullCharges(List<bool> pCharges) {
