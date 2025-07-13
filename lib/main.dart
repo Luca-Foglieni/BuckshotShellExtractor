@@ -390,6 +390,8 @@ class _ItemExtractorState extends State<ItemExtractor> {
   int itemsAddedP3 = 0;
   int itemsAddedP4 = 0;
 
+  int adrenalinePointer = 0;
+
   int distinctItems = 10;
 
   double chargeIconSize = 25;
@@ -482,7 +484,7 @@ class _ItemExtractorState extends State<ItemExtractor> {
           onPressed:
               () => setState(() {
                 p[index] = 0;
-                removeCharges(p1charges, 1);
+                addCharges(p1charges, 1);
               }),
 
           icon: Image.asset(
@@ -623,16 +625,18 @@ class _ItemExtractorState extends State<ItemExtractor> {
     }
   }
 
-  void addCharges(List<bool> player, int nCharges) {
+  void addCharges(List<bool> pCharges, int nCharges) {
     int counter = 0;
 
     setState(() {
-      for (bool charge in player) {
+      for (int i = 0; i < pCharges.length; i++) {
+        // print(i);
         if (counter == nCharges) {
           break;
         }
-        if (charge == false) {
-          charge = true;
+        if (pCharges.elementAt(i) == false) {
+          pCharges[i] = true;
+          counter++;
         }
       }
     });
@@ -649,6 +653,7 @@ class _ItemExtractorState extends State<ItemExtractor> {
         }
         if (pCharges.elementAt(i) == true) {
           pCharges[i] = false;
+          counter++;
         }
       }
     });
