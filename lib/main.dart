@@ -375,6 +375,11 @@ class _ItemExtractorState extends State<ItemExtractor> {
   List<int> p3items = [0, 0, 0, 0, 0, 0, 0, 0];
   List<int> p4items = [0, 0, 0, 0, 0, 0, 0, 0];
 
+  bool p1alive = true;
+  bool p2alive = true;
+  bool p3alive = true;
+  bool p4alive = true;
+
   List<bool> p1charges = [true, true, true, true, true, true];
   List<bool> p2charges = [true, true, true, true, true, true];
   List<bool> p3charges = [true, true, true, true, true, true];
@@ -399,19 +404,27 @@ class _ItemExtractorState extends State<ItemExtractor> {
 
     setState(() {
       for (var i = 0; i < 8; i++) {
-        if (p1items.elementAt(i) == 0 && itemsAddedP1 < numberOfItems) {
+        if (p1items.elementAt(i) == 0 &&
+            itemsAddedP1 < numberOfItems &&
+            !(p1charges.every((element) => element == false))) {
           p1items[i] = (1 + random.nextInt(distinctItems));
           itemsAddedP1++;
         }
-        if (p2items.elementAt(i) == 0 && itemsAddedP2 < numberOfItems) {
+        if (p2items.elementAt(i) == 0 &&
+            itemsAddedP2 < numberOfItems &&
+            !(p2charges.every((element) => element == false))) {
           p2items[i] = (1 + random.nextInt(distinctItems));
           itemsAddedP2++;
         }
-        if (p3items.elementAt(i) == 0 && itemsAddedP3 < numberOfItems) {
+        if (p3items.elementAt(i) == 0 &&
+            itemsAddedP3 < numberOfItems &&
+            !(p3charges.every((element) => element == false))) {
           p3items[i] = (1 + random.nextInt(distinctItems));
           itemsAddedP3++;
         }
-        if (p4items.elementAt(i) == 0 && itemsAddedP4 < numberOfItems) {
+        if (p4items.elementAt(i) == 0 &&
+            itemsAddedP4 < numberOfItems &&
+            !(p4charges.every((element) => element == false))) {
           p4items[i] = (1 + random.nextInt(distinctItems));
           itemsAddedP4++;
         }
@@ -420,6 +433,8 @@ class _ItemExtractorState extends State<ItemExtractor> {
   }
 
   IconButton insertCardImage(List<int> p, int index) {
+    //function that renders the inventory of the players
+
     const int inverter = 1;
     const int beer = 2;
     const int cigarettePack = 3;
@@ -448,6 +463,7 @@ class _ItemExtractorState extends State<ItemExtractor> {
             width: imageWidth,
           ),
         );
+
       case beer:
         return IconButton(
           onPressed:
@@ -466,6 +482,7 @@ class _ItemExtractorState extends State<ItemExtractor> {
           onPressed:
               () => setState(() {
                 p[index] = 0;
+                removeCharges(p1charges, 1);
               }),
 
           icon: Image.asset(
@@ -585,9 +602,6 @@ class _ItemExtractorState extends State<ItemExtractor> {
             () => setState(() {
               pCharges[index] = false;
             }),
-        // iconSize: 16,
-        // padding: EdgeInsets.zero,
-        // constraints: BoxConstraints(),
         child: Image.asset(
           'assets/images/cards/charge.png',
           height: chargeIconize,
@@ -612,6 +626,59 @@ class _ItemExtractorState extends State<ItemExtractor> {
     }
   }
 
+  void addCharges(List<bool> player, int nCharges) {
+    int counter = 0;
+
+    setState(() {
+      for (bool charge in player) {
+        if (counter == nCharges) {
+          break;
+        }
+        if (charge == false) {
+          charge = true;
+        }
+      }
+    });
+  }
+
+  void removeCharges(List<bool> pCharges, int nCharges) {
+    int counter = 0;
+
+    setState(() {
+      for (int i = 5; i > 0; i--) {
+        // print(i);
+        if (counter == nCharges) {
+          break;
+        }
+        if (pCharges.elementAt(i) == true) {
+          pCharges[i] = false;
+        }
+      }
+    });
+  }
+
+  void fullCharges(List<bool> pCharges) {
+    for (var i = 0; i < pCharges.length; i++) {
+      pCharges[i] = true;
+    }
+  }
+
+  void emptyCharges(List<bool> pCharges) {
+    for (var i = 0; i < pCharges.length; i++) {
+      pCharges[i] = false;
+    }
+  }
+
+  void invertCharges(List<bool> pCharges) {
+    if (pCharges.every((element) => element == false)) {
+      print('empty');
+      fullCharges(pCharges);
+    } else {
+      print('full');
+      emptyCharges(pCharges);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -633,11 +700,18 @@ class _ItemExtractorState extends State<ItemExtractor> {
                 children: [
                   Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: List.generate(p1charges.length, (index) {
-                        return insertPlayerCharges(p1charges, index);
-                      }),
+                    child: GestureDetector(
+                      onLongPress:
+                          () => setState(() {
+                            print('long');
+                            invertCharges(p1charges);
+                          }),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: List.generate(p1charges.length, (index) {
+                          return insertPlayerCharges(p1charges, index);
+                        }),
+                      ),
                     ),
                   ),
                   SizedBox(
@@ -666,11 +740,18 @@ class _ItemExtractorState extends State<ItemExtractor> {
                 children: [
                   Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: List.generate(p2charges.length, (index) {
-                        return insertPlayerCharges(p2charges, index);
-                      }),
+                    child: GestureDetector(
+                      onLongPress:
+                          () => setState(() {
+                            print('long');
+                            invertCharges(p2charges);
+                          }),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: List.generate(p2charges.length, (index) {
+                          return insertPlayerCharges(p2charges, index);
+                        }),
+                      ),
                     ),
                   ),
                   SizedBox(
@@ -765,11 +846,18 @@ class _ItemExtractorState extends State<ItemExtractor> {
                   ),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: List.generate(p3charges.length, (index) {
-                        return insertPlayerCharges(p3charges, index);
-                      }),
+                    child: GestureDetector(
+                      onLongPress:
+                          () => setState(() {
+                            print('long');
+                            invertCharges(p3charges);
+                          }),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: List.generate(p3charges.length, (index) {
+                          return insertPlayerCharges(p3charges, index);
+                        }),
+                      ),
                     ),
                   ),
                 ],
@@ -798,11 +886,18 @@ class _ItemExtractorState extends State<ItemExtractor> {
                   ),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: List.generate(p4charges.length, (index) {
-                        return insertPlayerCharges(p4charges, index);
-                      }),
+                    child: GestureDetector(
+                      onLongPress:
+                          () => setState(() {
+                            print('long');
+                            invertCharges(p4charges);
+                          }),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: List.generate(p4charges.length, (index) {
+                          return insertPlayerCharges(p4charges, index);
+                        }),
+                      ),
                     ),
                   ),
                 ],
