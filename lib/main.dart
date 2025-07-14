@@ -457,6 +457,7 @@ class _ItemExtractorState extends State<ItemExtractor> {
           onPressed:
               () => setState(() {
                 p[index] = 0;
+                adrenalinePointer = [];
               }),
 
           icon: Image.asset(
@@ -471,6 +472,7 @@ class _ItemExtractorState extends State<ItemExtractor> {
           onPressed:
               () => setState(() {
                 p[index] = 0;
+                adrenalinePointer = [];
               }),
 
           icon: Image.asset(
@@ -503,7 +505,9 @@ class _ItemExtractorState extends State<ItemExtractor> {
           onPressed:
               () => setState(() {
                 p[index] = 0;
-                adrenalinePointer = pCharges;
+                if (adrenalinePointer.isEmpty) {
+                  adrenalinePointer = pCharges;
+                }
               }),
 
           icon: Image.asset(
@@ -517,6 +521,7 @@ class _ItemExtractorState extends State<ItemExtractor> {
           onPressed:
               () => setState(() {
                 p[index] = 0;
+                adrenalinePointer = [];
               }),
 
           icon: Image.asset(
@@ -530,6 +535,7 @@ class _ItemExtractorState extends State<ItemExtractor> {
           onPressed:
               () => setState(() {
                 p[index] = 0;
+                adrenalinePointer = [];
               }),
 
           icon: Image.asset(
@@ -543,6 +549,7 @@ class _ItemExtractorState extends State<ItemExtractor> {
           onPressed:
               () => setState(() {
                 p[index] = 0;
+                adrenalinePointer = [];
               }),
 
           icon: Image.asset(
@@ -556,6 +563,21 @@ class _ItemExtractorState extends State<ItemExtractor> {
           onPressed:
               () => setState(() {
                 p[index] = 0;
+                if (adrenalinePointer.isEmpty) {
+                  if (random.nextBool()) {
+                    addCharges(pCharges, 2);
+                  } else {
+                    removeCharges(pCharges, 1);
+                  }
+                } else {
+                  if (random.nextBool()) {
+                    addCharges(adrenalinePointer, 2);
+                  } else {
+                    removeCharges(adrenalinePointer, 1);
+                  }
+                }
+
+                adrenalinePointer = [];
               }),
 
           icon: Image.asset(
@@ -569,6 +591,7 @@ class _ItemExtractorState extends State<ItemExtractor> {
           onPressed:
               () => setState(() {
                 p[index] = 0;
+                adrenalinePointer = [];
               }),
 
           icon: Image.asset(
@@ -582,6 +605,7 @@ class _ItemExtractorState extends State<ItemExtractor> {
           onPressed:
               () => setState(() {
                 p[index] = 0;
+                adrenalinePointer = [];
               }),
 
           icon: Image.asset(
