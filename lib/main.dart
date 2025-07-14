@@ -705,7 +705,7 @@ class _ItemExtractorState extends State<ItemExtractor> {
     int counter = 0;
 
     setState(() {
-      for (int i = 5; i > 0; i--) {
+      for (int i = 5; i >= 0; i--) {
         // print(i);
         if (counter == nCharges) {
           break;
