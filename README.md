@@ -7,17 +7,17 @@ Read THIRD-PARTY-NOTICES.md for third-party assets attributions.
 
 ## Examples
 ### First Page
-![first page](githubAppPreviewImages/homepage.jpg)
+<img src="githubAppPreviewImages/homepage.jpg" alt="first page" width="300">
 
 ### Reload
-![reload](githubAppPreviewImages/reload.jpg)
+<img src="githubAppPreviewImages/reload.jpg" alt="reload" width="300">
 
 ### Burner Phone
 #### Burner Phone prediction
-![burner phone](githubAppPreviewImages/burnerPhone.jpg)
+<img src="githubAppPreviewImages/burnerPhone.jpg" alt="burner phone" width="300">
 
 ### Burner Phone with two shells or less...
-![how unfortunate](githubAppPreviewImages/howUnfortunate.jpg)
+<img src="githubAppPreviewImages/howUnfortunate.jpg" alt="how unfortunate.jpg" width="300">
 
 ### Items Screen
-![items screen](githubAppPreviewImages/itemsScreen.jpg)
+<img src="githubAppPreviewImages/itemsScreen.jpg" alt="items screen" width="300">
