@@ -513,11 +513,9 @@ class _ItemExtractorState extends State<ItemExtractor> {
         return IconButton(
           onPressed:
               () => setState(() {
-                if (adrenalinePointer != pCharges) {
+                if (adrenalinePointer.isEmpty) {
+                  adrenalinePointer = pCharges;
                   p[index] = 0;
-                  if (adrenalinePointer.isEmpty) {
-                    adrenalinePointer = pCharges;
-                  }
                 }
               }),
 
