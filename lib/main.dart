@@ -655,6 +655,7 @@ class _ItemExtractorState extends State<ItemExtractor> {
     }
   }
 
+
   void addCharges(List<bool> pCharges, int nCharges) {
     int counter = 0;
 
