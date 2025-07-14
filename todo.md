@@ -1,14 +1,14 @@
-- [ ] add a reset for the adrenaline pointer after every item use
+- aggiungere il timer di scadenza all'adrenalina (?)
 
-- [ ] impedire ai player di prendere i propri oggetti una volta che hanno attivato l'adrenalina
+- mettere un delay prima di mostrare il risultato dell'expired medicine (?)
 
-- [ ] aggiungere il timer di scadenza all'adrenalina (?)
+- aggiungere un indicatore di giro che viene modificato dal remote
 
-- [ ] aggiungere un indicatore di giro che viene modificato dal remote
+- aggiungere delle foto nel readme che mostrano l'aspetto dell'app
 
-- [ ] add adrenaline functionalities to the expired medicine
+- aggiungere nuova schermata con oggetti che funzionano esclusavamente in modo manuale
 
-- [ ] sistemare l'uso delle sigarette dopo che viene concatenata l'adrenalina
+- indicatore delle manette (?)
 
-- [ ] aggiungere delle foto nel readme che mostrano l'aspetto dell'app
+- far si che l'indicatore delle cariche sia direzionale
 
