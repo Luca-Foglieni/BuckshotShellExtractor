@@ -390,6 +390,8 @@ class _ItemExtractorState extends State<ItemExtractor> {
   int itemsAddedP3 = 0;
   int itemsAddedP4 = 0;
 
+  List<bool> adrenalinePointer = [];
+
   int distinctItems = 10;
 
   double chargeIconSize = 25;
@@ -432,7 +434,7 @@ class _ItemExtractorState extends State<ItemExtractor> {
     });
   }
 
-  IconButton insertCardImage(List<int> p, int index) {
+  IconButton insertCardImage(List<int> p, List<bool> pCharges, int index) {
     //function that renders the inventory of the players
 
     const int inverter = 1;
@@ -455,6 +457,7 @@ class _ItemExtractorState extends State<ItemExtractor> {
           onPressed:
               () => setState(() {
                 p[index] = 0;
+                adrenalinePointer = [];
               }),
 
           icon: Image.asset(
@@ -469,6 +472,7 @@ class _ItemExtractorState extends State<ItemExtractor> {
           onPressed:
               () => setState(() {
                 p[index] = 0;
+                adrenalinePointer = [];
               }),
 
           icon: Image.asset(
@@ -482,6 +486,12 @@ class _ItemExtractorState extends State<ItemExtractor> {
           onPressed:
               () => setState(() {
                 p[index] = 0;
+                if (adrenalinePointer.isEmpty) {
+                  addCharges(pCharges, 1);
+                } else {
+                  addCharges(adrenalinePointer, 1);
+                  adrenalinePointer = [];
+                }
               }),
 
           icon: Image.asset(
@@ -495,6 +505,9 @@ class _ItemExtractorState extends State<ItemExtractor> {
           onPressed:
               () => setState(() {
                 p[index] = 0;
+                if (adrenalinePointer.isEmpty) {
+                  adrenalinePointer = pCharges;
+                }
               }),
 
           icon: Image.asset(
@@ -508,6 +521,7 @@ class _ItemExtractorState extends State<ItemExtractor> {
           onPressed:
               () => setState(() {
                 p[index] = 0;
+                adrenalinePointer = [];
               }),
 
           icon: Image.asset(
@@ -521,6 +535,7 @@ class _ItemExtractorState extends State<ItemExtractor> {
           onPressed:
               () => setState(() {
                 p[index] = 0;
+                adrenalinePointer = [];
               }),
 
           icon: Image.asset(
@@ -534,6 +549,7 @@ class _ItemExtractorState extends State<ItemExtractor> {
           onPressed:
               () => setState(() {
                 p[index] = 0;
+                adrenalinePointer = [];
               }),
 
           icon: Image.asset(
@@ -547,6 +563,21 @@ class _ItemExtractorState extends State<ItemExtractor> {
           onPressed:
               () => setState(() {
                 p[index] = 0;
+                if (adrenalinePointer.isEmpty) {
+                  if (random.nextBool()) {
+                    addCharges(pCharges, 2);
+                  } else {
+                    removeCharges(pCharges, 1);
+                  }
+                } else {
+                  if (random.nextBool()) {
+                    addCharges(adrenalinePointer, 2);
+                  } else {
+                    removeCharges(adrenalinePointer, 1);
+                  }
+                }
+
+                adrenalinePointer = [];
               }),
 
           icon: Image.asset(
@@ -560,6 +591,7 @@ class _ItemExtractorState extends State<ItemExtractor> {
           onPressed:
               () => setState(() {
                 p[index] = 0;
+                adrenalinePointer = [];
               }),
 
           icon: Image.asset(
@@ -573,6 +605,7 @@ class _ItemExtractorState extends State<ItemExtractor> {
           onPressed:
               () => setState(() {
                 p[index] = 0;
+                adrenalinePointer = [];
               }),
 
           icon: Image.asset(
@@ -620,6 +653,41 @@ class _ItemExtractorState extends State<ItemExtractor> {
         ),
       );
     }
+  }
+
+
+  void addCharges(List<bool> pCharges, int nCharges) {
+    int counter = 0;
+
+    setState(() {
+      for (int i = 0; i < pCharges.length; i++) {
+        // print(i);
+        if (counter == nCharges) {
+          break;
+        }
+        if (pCharges.elementAt(i) == false) {
+          pCharges[i] = true;
+          counter++;
+        }
+      }
+    });
+  }
+
+  void removeCharges(List<bool> pCharges, int nCharges) {
+    int counter = 0;
+
+    setState(() {
+      for (int i = 5; i > 0; i--) {
+        // print(i);
+        if (counter == nCharges) {
+          break;
+        }
+        if (pCharges.elementAt(i) == true) {
+          pCharges[i] = false;
+          counter++;
+        }
+      }
+    });
   }
 
   void fullCharges(List<bool> pCharges) {
@@ -680,7 +748,7 @@ class _ItemExtractorState extends State<ItemExtractor> {
                     width: playerInventoryWidth,
                     child: Wrap(
                       children: List.generate(p1items.length, (index) {
-                        return insertCardImage(p1items, index);
+                        return insertCardImage(p1items, p1charges, index);
                       }),
                     ),
                   ),
@@ -719,7 +787,7 @@ class _ItemExtractorState extends State<ItemExtractor> {
                     width: playerInventoryWidth,
                     child: Wrap(
                       children: List.generate(p2items.length, (index) {
-                        return insertCardImage(p2items, index);
+                        return insertCardImage(p2items, p2charges, index);
                       }),
                     ),
                   ),
@@ -801,7 +869,7 @@ class _ItemExtractorState extends State<ItemExtractor> {
                     width: playerInventoryWidth,
                     child: Wrap(
                       children: List.generate(p3items.length, (index) {
-                        return insertCardImage(p3items, index);
+                        return insertCardImage(p3items, p3charges, index);
                       }),
                     ),
                   ),
@@ -840,7 +908,7 @@ class _ItemExtractorState extends State<ItemExtractor> {
                     width: playerInventoryWidth,
                     child: Wrap(
                       children: List.generate(p4items.length, (index) {
-                        return insertCardImage(p4items, index);
+                        return insertCardImage(p4items, p4charges, index);
                       }),
                     ),
                   ),
