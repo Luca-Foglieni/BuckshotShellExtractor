@@ -153,7 +153,8 @@ class _MyHomePageState extends State<MyHomePage> {
       _dealerSpeechBubble = '$itemsNumber ITEMS EACH.';
     }
     _shellNumberOpacity = 1;
-
+    
+    _resetTimer?.cancel();
     // _resetDealerSpeechBubble(120);
   }
 
