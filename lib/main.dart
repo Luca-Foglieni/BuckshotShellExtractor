@@ -396,6 +396,8 @@ class _ItemExtractorState extends State<ItemExtractor> {
 
   double chargeIconSize = 25;
 
+  bool turnDirectionClockwise = true;
+
   void itemsGenerator(int numberOfItems) {
     //function that actually add the number of items selected in the inventory (list) of every player
 
@@ -626,7 +628,11 @@ class _ItemExtractorState extends State<ItemExtractor> {
               () => setState(() {
                 if (adrenalinePointer != pCharges) {
                   p[index] = 0;
-
+                  if (turnDirectionClockwise) {
+                    turnDirectionClockwise = false;
+                  } else {
+                    turnDirectionClockwise = true;
+                  }
                   adrenalinePointer = [];
                 }
               }),
@@ -732,6 +738,22 @@ class _ItemExtractorState extends State<ItemExtractor> {
     }
   }
 
+  Image turnDirectionRenderer() {
+    const double turnDirectionSize = 45;
+
+    if (turnDirectionClockwise) {
+      return Image.asset(
+        'assets/images/cards/turnsDirectionClockwise.png',
+        height: turnDirectionSize,
+      );
+    } else {
+      return Image.asset(
+        'assets/images/cards/turnsDirectionCounterClockwise.png',
+        height: turnDirectionSize,
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -819,58 +841,67 @@ class _ItemExtractorState extends State<ItemExtractor> {
           ),
           Align(
             alignment: Alignment.center,
-            child: Wrap(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Padding(
-                  padding: const EdgeInsets.all(4.0),
-                  child: FloatingActionButton(
-                    heroTag: '1Items',
-                    backgroundColor: Colors.grey,
-                    onPressed:
-                        () => setState(() {
-                          itemsGenerator(1);
-                        }),
-                    child: Text(
-                      'I',
-                      style: TextStyle(fontSize: 22, color: Colors.black),
-                    ),
-                  ),
+                  padding: const EdgeInsets.fromLTRB(0, 0, 25, 0),
+                  child: turnDirectionRenderer(),
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(4.0),
-                  child: FloatingActionButton(
-                    heroTag: '2Items',
-                    backgroundColor: Colors.grey,
-                    onPressed: () => itemsGenerator(2),
-                    child: Text(
-                      'II',
-                      style: TextStyle(fontSize: 22, color: Colors.black),
+                Wrap(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(4.0),
+                      child: FloatingActionButton(
+                        heroTag: '1Items',
+                        backgroundColor: Colors.grey,
+                        onPressed:
+                            () => setState(() {
+                              itemsGenerator(1);
+                            }),
+                        child: Text(
+                          'I',
+                          style: TextStyle(fontSize: 22, color: Colors.black),
+                        ),
+                      ),
                     ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(4.0),
-                  child: FloatingActionButton(
-                    heroTag: '3Items',
-                    backgroundColor: Colors.grey,
-                    onPressed: () => itemsGenerator(3),
-                    child: Text(
-                      'III',
-                      style: TextStyle(fontSize: 22, color: Colors.black),
+                    Padding(
+                      padding: const EdgeInsets.all(4.0),
+                      child: FloatingActionButton(
+                        heroTag: '2Items',
+                        backgroundColor: Colors.grey,
+                        onPressed: () => itemsGenerator(2),
+                        child: Text(
+                          'II',
+                          style: TextStyle(fontSize: 22, color: Colors.black),
+                        ),
+                      ),
                     ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(4.0),
-                  child: FloatingActionButton(
-                    heroTag: '4Items',
-                    backgroundColor: Colors.grey,
-                    onPressed: () => itemsGenerator(4),
-                    child: Text(
-                      'IV',
-                      style: TextStyle(fontSize: 22, color: Colors.black),
+                    Padding(
+                      padding: const EdgeInsets.all(4.0),
+                      child: FloatingActionButton(
+                        heroTag: '3Items',
+                        backgroundColor: Colors.grey,
+                        onPressed: () => itemsGenerator(3),
+                        child: Text(
+                          'III',
+                          style: TextStyle(fontSize: 22, color: Colors.black),
+                        ),
+                      ),
                     ),
-                  ),
+                    Padding(
+                      padding: const EdgeInsets.all(4.0),
+                      child: FloatingActionButton(
+                        heroTag: '4Items',
+                        backgroundColor: Colors.grey,
+                        onPressed: () => itemsGenerator(4),
+                        child: Text(
+                          'IV',
+                          style: TextStyle(fontSize: 22, color: Colors.black),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),

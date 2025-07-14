@@ -40,6 +40,8 @@ Icon of the app is possibly a placeholder and is a slightly edited version of th
 
 <a href="https://www.flaticon.com/free-icons/lightning" title="lightning icons">Lightning icons created by Fazrian Zahrawani - Flaticon</a>
 
+<a href="https://www.flaticon.com/free-icons/refresh" title="refresh icons">Refresh icons created by Vectors Market - Flaticon</a>
+
 ### Shotgun shell design
 
 Shotgun shells design are possibily a placeholder and are taken from https://steamtradingcards.fandom.com/wiki/Buckshot_Roulette, specifically these two images:
