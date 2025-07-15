@@ -1,8 +1,8 @@
 - aggiungere nuova schermata con oggetti che funzionano esclusavamente in modo manuale
 
-- far si che l'indicatore delle cariche sia direzionale (?)
+- indicatore delle manette
 
-- indicatore delle manette (?)
+- far si che l'indicatore delle cariche sia direzionale (?)
 
 - aggiungere il timer di scadenza all'adrenalina (?)
 
