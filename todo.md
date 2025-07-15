@@ -1,8 +1,6 @@
-- aggiungere delle foto nel readme che mostrano l'aspetto dell'app
-
 - aggiungere nuova schermata con oggetti che funzionano esclusavamente in modo manuale
 
-- far si che l'indicatore delle cariche sia direzionale
+- far si che l'indicatore delle cariche sia direzionale (?)
 
 - indicatore delle manette (?)
 

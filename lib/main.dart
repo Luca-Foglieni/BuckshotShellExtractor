@@ -153,7 +153,7 @@ class _MyHomePageState extends State<MyHomePage> {
       _dealerSpeechBubble = '$itemsNumber ITEMS EACH.';
     }
     _shellNumberOpacity = 1;
-    
+
     _resetTimer?.cancel();
     // _resetDealerSpeechBubble(120);
   }
@@ -232,44 +232,58 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
               ),
 
-              Column(
-                children: List.generate(_shellSequence.length, (index) {
-                  final bool burnedShell = index == _burnedShell;
+              Padding(
+                padding: const EdgeInsets.fromLTRB(0, 0, 17.5, 0),
+                child: Column(
+                  children: List.generate(_shellSequence.length, (index) {
+                    final bool burnedShell = index == _burnedShell;
 
-                  return GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        _shellSequence[index] = !_shellSequence[index];
-                      });
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.all(4.0),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          border:
-                              burnedShell
-                                  ? Border.all(
-                                    color: Colors.deepPurpleAccent,
-                                    width: 8,
-                                  )
-                                  : null,
-                          borderRadius: BorderRadius.circular(0),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(10.0),
-                          child: Image.asset(
-                            _shellSequence[index]
-                                ? 'assets/images/live.png'
-                                : 'assets/images/blank.png',
-                            height: 30,
-                            width: 90,
-                            fit: BoxFit.contain,
+                    return GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          _shellSequence[index] = !_shellSequence[index];
+                        });
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.all(4.0),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            border:
+                                burnedShell
+                                    ? Border.all(
+                                      color: Colors.deepPurpleAccent,
+                                      width: 8,
+                                    )
+                                    : null,
+                            borderRadius: BorderRadius.circular(0),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(0),
+                            child: Padding(
+                              padding: const EdgeInsets.fromLTRB(8, 2, 4, 2),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text((index + 1).toString()),
+                                  SizedBox(width: 5),
+                                  Image.asset(
+                                    _shellSequence[index]
+                                        ? 'assets/images/live.png'
+                                        : 'assets/images/blank.png',
+                                    // height: 30,
+                                    width: 90,
+                                    fit: BoxFit.contain,
+                                  ),
+                                ],
+                              ),
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  );
-                }),
+                    );
+                  }),
+                ),
               ),
             ],
           ),
@@ -393,6 +407,8 @@ class _ItemExtractorState extends State<ItemExtractor> {
 
   List<bool> adrenalinePointer = [];
 
+  int handcuffsTrigger = 0;
+
   int distinctItems = 10;
 
   double chargeIconSize = 25;
@@ -457,6 +473,7 @@ class _ItemExtractorState extends State<ItemExtractor> {
     switch (p[index]) {
       case inverter:
         return IconButton(
+          tooltip: 'INVERTER',
           onPressed:
               () => setState(() {
                 if (adrenalinePointer != pCharges) {
@@ -474,6 +491,7 @@ class _ItemExtractorState extends State<ItemExtractor> {
 
       case beer:
         return IconButton(
+          tooltip: 'BEER',
           onPressed:
               () => setState(() {
                 if (adrenalinePointer != pCharges) {
@@ -490,6 +508,7 @@ class _ItemExtractorState extends State<ItemExtractor> {
         );
       case cigarettePack:
         return IconButton(
+          tooltip: 'CIGARETTE PACK',
           onPressed:
               () => setState(() {
                 if (adrenalinePointer != pCharges) {
@@ -512,6 +531,7 @@ class _ItemExtractorState extends State<ItemExtractor> {
         );
       case adrenaline:
         return IconButton(
+          tooltip: 'ADRENALINE',
           onPressed:
               () => setState(() {
                 if (adrenalinePointer.isEmpty) {
@@ -528,6 +548,7 @@ class _ItemExtractorState extends State<ItemExtractor> {
         );
       case burnerPhone:
         return IconButton(
+          tooltip: 'BURNER PHONE',
           onPressed:
               () => setState(() {
                 if (adrenalinePointer != pCharges) {
@@ -544,6 +565,7 @@ class _ItemExtractorState extends State<ItemExtractor> {
         );
       case handsaw:
         return IconButton(
+          tooltip: 'HANDSAW',
           onPressed:
               () => setState(() {
                 if (adrenalinePointer != pCharges) {
@@ -560,6 +582,7 @@ class _ItemExtractorState extends State<ItemExtractor> {
         );
       case handcuffs:
         return IconButton(
+          tooltip: 'HANDCUFFS',
           onPressed:
               () => setState(() {
                 if (adrenalinePointer != pCharges) {
@@ -576,6 +599,7 @@ class _ItemExtractorState extends State<ItemExtractor> {
         );
       case expiredMedicine:
         return IconButton(
+          tooltip: 'EXPIRED MEDICINE',
           onPressed:
               () => setState(() {
                 if (adrenalinePointer != pCharges) {
@@ -606,6 +630,7 @@ class _ItemExtractorState extends State<ItemExtractor> {
         );
       case magnifyingGlass:
         return IconButton(
+          tooltip: 'MAGNIFYING GLASS',
           onPressed:
               () => setState(() {
                 if (adrenalinePointer != pCharges) {
@@ -623,6 +648,7 @@ class _ItemExtractorState extends State<ItemExtractor> {
         );
       case remote:
         return IconButton(
+          tooltip: 'REMOTE',
           onPressed:
               () => setState(() {
                 if (adrenalinePointer != pCharges) {
@@ -753,6 +779,10 @@ class _ItemExtractorState extends State<ItemExtractor> {
     }
   }
 
+  handcuffsHandler() {
+    if (handcuffsTrigger != 0) {}
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -760,42 +790,46 @@ class _ItemExtractorState extends State<ItemExtractor> {
 
       body: Stack(
         children: [
-          Align(
-            alignment: Alignment.topLeft,
-            child: Container(
-              decoration: BoxDecoration(
-                border: Border(
-                  right: BorderSide(color: Colors.grey, width: 2),
-                  bottom: BorderSide(color: Colors.grey, width: 2),
+          GestureDetector(
+            onTap: handcuffsHandler(),
+            child: Align(
+              alignment: Alignment.topLeft,
+              child: Container(
+                decoration: BoxDecoration(
+                  border: Border(
+                    right: BorderSide(color: Colors.grey, width: 2),
+                    bottom: BorderSide(color: Colors.grey, width: 2),
+                  ),
+                  // color: Colors.blueGrey,
                 ),
-              ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: GestureDetector(
-                      onLongPress:
-                          () => setState(() {
-                            invertCharges(p1charges);
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: GestureDetector(
+                        onLongPress:
+                            () => setState(() {
+                              invertCharges(p1charges);
+                            }),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: List.generate(p1charges.length, (index) {
+                            return insertPlayerCharges(p1charges, index);
                           }),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: List.generate(p1charges.length, (index) {
-                          return insertPlayerCharges(p1charges, index);
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      width: playerInventoryWidth,
+                      child: Wrap(
+                        children: List.generate(p1items.length, (index) {
+                          return insertCardImage(p1items, p1charges, index);
                         }),
                       ),
                     ),
-                  ),
-                  SizedBox(
-                    width: playerInventoryWidth,
-                    child: Wrap(
-                      children: List.generate(p1items.length, (index) {
-                        return insertCardImage(p1items, p1charges, index);
-                      }),
-                    ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),

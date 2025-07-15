@@ -14,7 +14,7 @@ Written using Flutter and Dart https://flutter.dev/.
 
 <a href="https://www.flaticon.com/free-icons/coin" title="coin icons">Coin icons created by turkkub - Flaticon</a>
 
-Icon of the app is possibly a placeholder and is a slightly edited version of the thumbnail of this video https://youtu.be/OwZZWLWMto4. All credits for the original design of the Dealer go to the creator of the game Mike Klubnika.
+<a href="https://www.flaticon.com/free-icons/skull" title="skull icons">Skull icons created by MYS Design - Flaticon</a>
 
 ### Items
 
@@ -44,13 +44,7 @@ Icon of the app is possibly a placeholder and is a slightly edited version of th
 
 ### Shotgun shell design
 
-Shotgun shells design are possibily a placeholder and are taken from https://steamtradingcards.fandom.com/wiki/Buckshot_Roulette, specifically these two images:
-
-https://static.wikia.nocookie.net/steamtradingcards/images/f/f5/Buckshot_Roulette_Emoticon_buckshotblank.png/revision/latest?cb=20240503034602
-
-https://static.wikia.nocookie.net/steamtradingcards/images/f/fb/Buckshot_Roulette_Emoticon_buckshotlive.png/revision/latest?cb=20240503034602
-
-All credits for the original design of the shells go to the creator of the game Mike Klubnika.
+<a href="https://www.flaticon.com/free-icons/ammunition" title="ammunition icons">Ammunition icons created by Smashicons - Flaticon</a>
 
 ### Fonts
 
