@@ -383,7 +383,7 @@ class ItemExtractor extends StatefulWidget {
 }
 
 class _ItemExtractorState extends State<ItemExtractor> {
-  double playerInventoryWidth = 160;
+  double playerInventoryWidth = 165;
 
   final random = Random();
 
@@ -407,14 +407,29 @@ class _ItemExtractorState extends State<ItemExtractor> {
   int itemsAddedP3 = 0;
   int itemsAddedP4 = 0;
 
+  //tracks who uses the adrenaline to correcly make them use healing items
   List<bool> adrenalinePointer = [];
 
-  int handcuffsTrigger = 0;
+  //handcuffs variables
+  bool handcuffsTrigger = false;
 
+  bool p1handcuffed = false;
+  bool p2handcuffed = false;
+  bool p3handcuffed = false;
+  bool p4handcuffed = false;
+
+  Color p1color = Colors.transparent;
+  Color p2color = Colors.transparent;
+  Color p3color = Colors.transparent;
+  Color p4color = Colors.transparent;
+
+  //number of different items
   int distinctItems = 10;
 
+  // charge icon size
   double chargeIconSize = 25;
 
+  //game turn direction
   bool turnDirectionClockwise = true;
 
   void itemsGenerator(int numberOfItems) {
@@ -455,7 +470,12 @@ class _ItemExtractorState extends State<ItemExtractor> {
     });
   }
 
-  IconButton insertCardImage(List<int> p, List<bool> pCharges, int index) {
+  IconButton insertCardImage(
+    List<int> p,
+    List<bool> pCharges,
+    int playerNumber,
+    int index,
+  ) {
     //function that renders the inventory of the players
 
     const int inverter = 1;
@@ -570,7 +590,8 @@ class _ItemExtractorState extends State<ItemExtractor> {
           tooltip: 'HANDSAW',
           onPressed:
               () => setState(() {
-                if (adrenalinePointer != pCharges) {
+                if (handcuffsTrigger) {
+                } else if (adrenalinePointer != pCharges) {
                   p[index] = 0;
                   adrenalinePointer = [];
                 }
@@ -589,6 +610,7 @@ class _ItemExtractorState extends State<ItemExtractor> {
               () => setState(() {
                 if (adrenalinePointer != pCharges) {
                   p[index] = 0;
+                  handcuffsTrigger = true;
                   adrenalinePointer = [];
                 }
               }),
@@ -733,7 +755,6 @@ class _ItemExtractorState extends State<ItemExtractor> {
 
     setState(() {
       for (int i = 5; i >= 0; i--) {
-        // print(i);
         if (counter == nCharges) {
           break;
         }
@@ -781,8 +802,25 @@ class _ItemExtractorState extends State<ItemExtractor> {
     }
   }
 
-  handcuffsHandler() {
-    if (handcuffsTrigger != 0) {}
+  handcuffsON(int playerNumber) {
+    print('trigger ' + handcuffsTrigger.toString());
+    print('pointer ' + playerNumber.toString());
+    if (handcuffsTrigger) {
+      switch (playerNumber) {
+        case 1:
+          p1color = Colors.blueGrey;
+          break;
+        case 2:
+          p2color = Colors.blueGrey;
+          break;
+        case 3:
+          p3color = Colors.blueGrey;
+        case 4:
+          p4color = Colors.blueGrey;
+        default:
+          print('handcuffs error');
+      }
+    }
   }
 
   @override
@@ -792,49 +830,61 @@ class _ItemExtractorState extends State<ItemExtractor> {
 
       body: Stack(
         children: [
-          GestureDetector(
-            onTap: handcuffsHandler(),
-            child: Align(
-              alignment: Alignment.topLeft,
-              child: Container(
-                decoration: BoxDecoration(
-                  border: Border(
-                    right: BorderSide(color: Colors.grey, width: 2),
-                    bottom: BorderSide(color: Colors.grey, width: 2),
-                  ),
-                  // color: Colors.blueGrey,
+          //Player 1
+          Align(
+            alignment: Alignment.topLeft,
+            child: Container(
+              decoration: BoxDecoration(
+                border: Border(
+                  right: BorderSide(color: Colors.grey, width: 2),
+                  bottom: BorderSide(color: Colors.grey, width: 2),
                 ),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: GestureDetector(
-                        onLongPress:
-                            () => setState(() {
-                              invertCharges(p1charges);
-                            }),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: List.generate(p1charges.length, (index) {
-                            return insertPlayerCharges(p1charges, index);
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: GestureDetector(
+                      onLongPress:
+                          () => setState(() {
+                            invertCharges(p1charges);
                           }),
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      width: playerInventoryWidth,
-                      child: Wrap(
-                        children: List.generate(p1items.length, (index) {
-                          return insertCardImage(p1items, p1charges, index);
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: List.generate(p1charges.length, (index) {
+                          return insertPlayerCharges(p1charges, index);
                         }),
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                  GestureDetector(
+                    onTap: () => handcuffsON(1),
+                    child: Container(
+                      color: p1color,
+                      child: SizedBox(
+                        width: playerInventoryWidth,
+                        child: Center(
+                          child: Wrap(
+                            children: List.generate(p1items.length, (index) {
+                              return insertCardImage(
+                                p1items,
+                                p1charges,
+                                1,
+                                index,
+                              );
+                            }),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
+
+          //Player 2
           Align(
             alignment: Alignment.topRight,
             child: Container(
@@ -862,12 +912,25 @@ class _ItemExtractorState extends State<ItemExtractor> {
                       ),
                     ),
                   ),
-                  SizedBox(
-                    width: playerInventoryWidth,
-                    child: Wrap(
-                      children: List.generate(p2items.length, (index) {
-                        return insertCardImage(p2items, p2charges, index);
-                      }),
+                  GestureDetector(
+                    onTap: () => print('here' + 2.toString()),
+                    child: Container(
+                      color: p2color,
+                      child: SizedBox(
+                        width: playerInventoryWidth,
+                        child: Center(
+                          child: Wrap(
+                            children: List.generate(p2items.length, (index) {
+                              return insertCardImage(
+                                p2items,
+                                p2charges,
+                                2,
+                                index,
+                              );
+                            }),
+                          ),
+                        ),
+                      ),
                     ),
                   ),
                 ],
@@ -941,6 +1004,8 @@ class _ItemExtractorState extends State<ItemExtractor> {
               ],
             ),
           ),
+
+          //Player 3
           Align(
             alignment: Alignment.bottomLeft,
             child: Container(
@@ -953,12 +1018,22 @@ class _ItemExtractorState extends State<ItemExtractor> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  SizedBox(
-                    width: playerInventoryWidth,
-                    child: Wrap(
-                      children: List.generate(p3items.length, (index) {
-                        return insertCardImage(p3items, p3charges, index);
-                      }),
+                  Container(
+                    color: p3color,
+                    child: SizedBox(
+                      width: playerInventoryWidth,
+                      child: Center(
+                        child: Wrap(
+                          children: List.generate(p3items.length, (index) {
+                            return insertCardImage(
+                              p3items,
+                              p3charges,
+                              3,
+                              index,
+                            );
+                          }),
+                        ),
+                      ),
                     ),
                   ),
                   Padding(
@@ -980,6 +1055,8 @@ class _ItemExtractorState extends State<ItemExtractor> {
               ),
             ),
           ),
+
+          //Player 4
           Align(
             alignment: Alignment.bottomRight,
             child: Container(
@@ -992,12 +1069,22 @@ class _ItemExtractorState extends State<ItemExtractor> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  SizedBox(
-                    width: playerInventoryWidth,
-                    child: Wrap(
-                      children: List.generate(p4items.length, (index) {
-                        return insertCardImage(p4items, p4charges, index);
-                      }),
+                  Container(
+                    color: p4color,
+                    child: SizedBox(
+                      width: playerInventoryWidth,
+                      child: Center(
+                        child: Wrap(
+                          children: List.generate(p4items.length, (index) {
+                            return insertCardImage(
+                              p4items,
+                              p4charges,
+                              4,
+                              index,
+                            );
+                          }),
+                        ),
+                      ),
                     ),
                   ),
                   Padding(

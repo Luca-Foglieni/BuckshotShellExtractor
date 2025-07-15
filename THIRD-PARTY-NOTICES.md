@@ -11,7 +11,7 @@ Written using Flutter and Dart https://flutter.dev/.
 
 <img src="assets/images/shellExtraction/live.png" width="50">
 <img src="assets/images/shellExtraction/blank.png" width="50"> are recolored versions of
-<a href="https://www.flaticon.com/free-icons/ammunition" title="ammunition icons">Ammunition icons created by Smashicons - Flaticon</a>
+<a href="https://www.flaticon.com/free-icons/shotgun" title="shotgun icons">Shotgun icons created by Freepik - Flaticon</a>
 
 ### Home Page Buttons
 
