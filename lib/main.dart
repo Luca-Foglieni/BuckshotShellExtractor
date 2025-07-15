@@ -387,10 +387,10 @@ class _ItemExtractorState extends State<ItemExtractor> {
 
   final random = Random();
 
-  List<int> p1items = [0, 0, 0, 0, 0, 0, 0, 0];
-  List<int> p2items = [0, 0, 0, 0, 0, 0, 0, 0];
-  List<int> p3items = [0, 0, 0, 0, 0, 0, 0, 0];
-  List<int> p4items = [0, 0, 0, 0, 0, 0, 0, 0];
+  List<int> p1items = [7, 7, 7, 7, 4, 4, 2, 2];
+  List<int> p2items = [7, 7, 7, 7, 4, 4, 2, 2];
+  List<int> p3items = [7, 7, 7, 7, 4, 4, 2, 2];
+  List<int> p4items = [7, 7, 7, 7, 4, 4, 2, 2];
 
   bool p1alive = true;
   bool p2alive = true;
@@ -413,15 +413,19 @@ class _ItemExtractorState extends State<ItemExtractor> {
   //handcuffs variables
   bool handcuffsTrigger = false;
 
-  bool p1handcuffed = false;
-  bool p2handcuffed = false;
-  bool p3handcuffed = false;
-  bool p4handcuffed = false;
+  int p1handcuffed = 0;
+  int p2handcuffed = 0;
+  int p3handcuffed = 0;
+  int p4handcuffed = 0;
 
-  Color p1color = Colors.transparent;
-  Color p2color = Colors.transparent;
-  Color p3color = Colors.transparent;
-  Color p4color = Colors.transparent;
+  static const Color handcuffedColor = Colors.blueGrey;
+
+  static const Color notHandcuffedColor = Colors.transparent;
+
+  Color p1color = notHandcuffedColor;
+  Color p2color = notHandcuffedColor;
+  Color p3color = notHandcuffedColor;
+  Color p4color = notHandcuffedColor;
 
   //number of different items
   int distinctItems = 10;
@@ -470,7 +474,7 @@ class _ItemExtractorState extends State<ItemExtractor> {
     });
   }
 
-  IconButton insertCardImage(
+  IconButton InsertItems(
     List<int> p,
     List<bool> pCharges,
     int playerNumber,
@@ -608,11 +612,25 @@ class _ItemExtractorState extends State<ItemExtractor> {
           tooltip: 'HANDCUFFS',
           onPressed:
               () => setState(() {
-                if (adrenalinePointer != pCharges) {
+                if (adrenalinePointer != pCharges &&
+                    (p1handcuffed +
+                            p2handcuffed +
+                            p3handcuffed +
+                            p4handcuffed) <
+                        3) {
                   p[index] = 0;
                   handcuffsTrigger = true;
                   adrenalinePointer = [];
                 }
+                print(
+                  'number of cuffed up ' +
+                      (p1handcuffed +
+                              p2handcuffed +
+                              p3handcuffed +
+                              p4handcuffed)
+                          .toString(),
+                );
+                print("hTrigger: " + handcuffsTrigger.toString());
               }),
 
           icon: Image.asset(
@@ -802,25 +820,55 @@ class _ItemExtractorState extends State<ItemExtractor> {
     }
   }
 
-  handcuffsON(int playerNumber) {
+  handcuffsHandler(int playerNumber) {
     print('trigger ' + handcuffsTrigger.toString());
     print('pointer ' + playerNumber.toString());
-    if (handcuffsTrigger) {
-      switch (playerNumber) {
-        case 1:
-          p1color = Colors.blueGrey;
-          break;
-        case 2:
-          p2color = Colors.blueGrey;
-          break;
-        case 3:
-          p3color = Colors.blueGrey;
-        case 4:
-          p4color = Colors.blueGrey;
-        default:
-          print('handcuffs error');
+    setState(() {
+      if (handcuffsTrigger) {
+        handcuffsTrigger = false;
+        switch (playerNumber) {
+          case 1:
+            p1color = handcuffedColor;
+            p1handcuffed = 1;
+            break;
+          case 2:
+            p2color = handcuffedColor;
+            p2handcuffed = 1;
+            break;
+          case 3:
+            p3color = handcuffedColor;
+            p3handcuffed = 1;
+          case 4:
+            p4color = handcuffedColor;
+            p4handcuffed = 1;
+            print('p4h: ' + p4handcuffed.toString());
+          default:
+            print('handcuffs error');
+        }
+      } else if (handcuffsTrigger == false && adrenalinePointer.isEmpty) {
+        switch (playerNumber) {
+          case 1:
+            p1color = notHandcuffedColor;
+            p1handcuffed = 0;
+            break;
+          case 2:
+            p2color = notHandcuffedColor;
+            p2handcuffed = 0;
+            break;
+          case 3:
+            p3color = notHandcuffedColor;
+            p3handcuffed = 0;
+          case 4:
+            p4color = notHandcuffedColor;
+            p4handcuffed = 0;
+            print('p4h: ' + p4handcuffed.toString());
+          default:
+            print('handcuffs error');
+        }
+      } else {
+        print('adrenaline! ' + adrenalinePointer.toString());
       }
-    }
+    });
   }
 
   @override
@@ -835,6 +883,7 @@ class _ItemExtractorState extends State<ItemExtractor> {
             alignment: Alignment.topLeft,
             child: Container(
               decoration: BoxDecoration(
+                color: p1color,
                 border: Border(
                   right: BorderSide(color: Colors.grey, width: 2),
                   bottom: BorderSide(color: Colors.grey, width: 2),
@@ -859,20 +908,17 @@ class _ItemExtractorState extends State<ItemExtractor> {
                     ),
                   ),
                   GestureDetector(
-                    onTap: () => handcuffsON(1),
-                    child: Container(
-                      color: p1color,
+                    onTap: () => handcuffsHandler(1),
+                    child: AbsorbPointer(
+                      absorbing:
+                          (handcuffsTrigger || p1handcuffed == 1) &&
+                          adrenalinePointer.isEmpty,
                       child: SizedBox(
                         width: playerInventoryWidth,
                         child: Center(
                           child: Wrap(
                             children: List.generate(p1items.length, (index) {
-                              return insertCardImage(
-                                p1items,
-                                p1charges,
-                                1,
-                                index,
-                              );
+                              return InsertItems(p1items, p1charges, 1, index);
                             }),
                           ),
                         ),
@@ -889,6 +935,7 @@ class _ItemExtractorState extends State<ItemExtractor> {
             alignment: Alignment.topRight,
             child: Container(
               decoration: BoxDecoration(
+                color: p2color,
                 border: Border(
                   left: BorderSide(color: Colors.grey, width: 2),
                   bottom: BorderSide(color: Colors.grey, width: 2),
@@ -913,20 +960,17 @@ class _ItemExtractorState extends State<ItemExtractor> {
                     ),
                   ),
                   GestureDetector(
-                    onTap: () => print('here' + 2.toString()),
-                    child: Container(
-                      color: p2color,
+                    onTap: () => handcuffsHandler(2),
+                    child: AbsorbPointer(
+                      absorbing:
+                          (handcuffsTrigger || p2handcuffed == 1) &&
+                          adrenalinePointer.isEmpty,
                       child: SizedBox(
                         width: playerInventoryWidth,
                         child: Center(
                           child: Wrap(
                             children: List.generate(p2items.length, (index) {
-                              return insertCardImage(
-                                p2items,
-                                p2charges,
-                                2,
-                                index,
-                              );
+                              return InsertItems(p2items, p2charges, 2, index);
                             }),
                           ),
                         ),
@@ -1010,6 +1054,7 @@ class _ItemExtractorState extends State<ItemExtractor> {
             alignment: Alignment.bottomLeft,
             child: Container(
               decoration: BoxDecoration(
+                color: p3color,
                 border: Border(
                   top: BorderSide(color: Colors.grey, width: 2),
                   right: BorderSide(color: Colors.grey, width: 2),
@@ -1018,20 +1063,20 @@ class _ItemExtractorState extends State<ItemExtractor> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Container(
-                    color: p3color,
-                    child: SizedBox(
-                      width: playerInventoryWidth,
-                      child: Center(
-                        child: Wrap(
-                          children: List.generate(p3items.length, (index) {
-                            return insertCardImage(
-                              p3items,
-                              p3charges,
-                              3,
-                              index,
-                            );
-                          }),
+                  GestureDetector(
+                    onTap: () => handcuffsHandler(3),
+                    child: AbsorbPointer(
+                      absorbing:
+                          (handcuffsTrigger || p3handcuffed == 1) &&
+                          adrenalinePointer.isEmpty,
+                      child: SizedBox(
+                        width: playerInventoryWidth,
+                        child: Center(
+                          child: Wrap(
+                            children: List.generate(p3items.length, (index) {
+                              return InsertItems(p3items, p3charges, 3, index);
+                            }),
+                          ),
                         ),
                       ),
                     ),
@@ -1061,6 +1106,7 @@ class _ItemExtractorState extends State<ItemExtractor> {
             alignment: Alignment.bottomRight,
             child: Container(
               decoration: BoxDecoration(
+                color: p4color,
                 border: Border(
                   left: BorderSide(color: Colors.grey, width: 2),
                   top: BorderSide(color: Colors.grey, width: 2),
@@ -1069,20 +1115,20 @@ class _ItemExtractorState extends State<ItemExtractor> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Container(
-                    color: p4color,
-                    child: SizedBox(
-                      width: playerInventoryWidth,
-                      child: Center(
-                        child: Wrap(
-                          children: List.generate(p4items.length, (index) {
-                            return insertCardImage(
-                              p4items,
-                              p4charges,
-                              4,
-                              index,
-                            );
-                          }),
+                  GestureDetector(
+                    onTap: () => handcuffsHandler(4),
+                    child: AbsorbPointer(
+                      absorbing:
+                          (handcuffsTrigger || p4handcuffed == 1) &&
+                          adrenalinePointer.isEmpty,
+                      child: SizedBox(
+                        width: playerInventoryWidth,
+                        child: Center(
+                          child: Wrap(
+                            children: List.generate(p4items.length, (index) {
+                              return InsertItems(p4items, p4charges, 4, index);
+                            }),
+                          ),
                         ),
                       ),
                     ),
