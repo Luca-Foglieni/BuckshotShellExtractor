@@ -365,7 +365,7 @@ class _MyHomePageState extends State<MyHomePage> {
               backgroundColor: Color.fromRGBO(255, 255, 253, 1),
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Image.asset('assets/images/items/blackItems/beer.png'),
+                child: Image.asset('assets/images/shellExtraction/beer.png'),
               ),
             ),
           ),

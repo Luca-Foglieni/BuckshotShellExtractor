@@ -29,6 +29,9 @@ is a merged version of this two icons:
 <img src="assets/images/shellExtraction/coin.png" width="50">
 <a href="https://www.flaticon.com/free-icons/coin" title="coin icons">Coin icons created by turkkub - Flaticon</a>
 
+<img src="assets/images/shellExtraction/beer.png" width="50">
+<a href="https://www.flaticon.com/free-icons/beer-can" title="beer can icons">Beer can icons created by Freepik - Flaticon</a>
+
 ### Items
 
 <img src="assets/images/items/inverter.png" width="50">
@@ -65,7 +68,7 @@ is a merged version of this two icons:
 <a href="https://www.flaticon.com/free-icons/lightning" title="lightning icons">Lightning icons created by Fazrian Zahrawani - Flaticon</a>
 
 <img src="assets/images/items/turnsDirectionClockwise.png" width="50">
-<img src="assets/images/items/turnsDirectionCounterClockwise.png" width="50">
+<img src="assets/images/items/turnsDirectionCounterClockwise.png" width="50"> 
 <a href="https://www.flaticon.com/free-icons/refresh" title="refresh icons">Refresh icons created by Vectors Market - Flaticon</a>
 
 ### Fonts
