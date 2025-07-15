@@ -60,32 +60,32 @@ flutter:
   uses-material-design: true
 
   assets:
-    - assets/images/live.png
-    - assets/images/blank.png
-    - assets/images/reload.png
-    - assets/images/eject.png
-    - assets/images/burnerPhone.png
-    - assets/images/coin.png
+    - assets/images/shellExtraction/live.png
+    - assets/images/shellExtraction/blank.png
+    - assets/images/shellExtraction/reload.png
+    - assets/images/shellExtraction/eject.png
+    - assets/images/shellExtraction/burnerPhone.png
+    - assets/images/shellExtraction/coin.png
 
-    - assets/images/cards/blackItems/beer.png
+    - assets/images/items/blackItems/beer.png
 
-    - assets/images/cards/inverter.png
-    - assets/images/cards/beer.png
-    - assets/images/cards/cigarettePack.png
-    - assets/images/cards/adrenaline.png
-    - assets/images/cards/burnerPhone.png
-    - assets/images/cards/handsaw.png
-    - assets/images/cards/handcuffs.png
-    - assets/images/cards/expiredMedicine.png
-    - assets/images/cards/magnifyingGlass.png
-    - assets/images/cards/remote.png
+    - assets/images/items/inverter.png
+    - assets/images/items/beer.png
+    - assets/images/items/cigarettePack.png
+    - assets/images/items/adrenaline.png
+    - assets/images/items/burnerPhone.png
+    - assets/images/items/handsaw.png
+    - assets/images/items/handcuffs.png
+    - assets/images/items/expiredMedicine.png
+    - assets/images/items/magnifyingGlass.png
+    - assets/images/items/remote.png
 
-    - assets/images/cards/itemSpace.png
+    - assets/images/items/itemSpace.png
 
-    - assets/images/cards/charge.png
+    - assets/images/items/charge.png
 
-    - assets/images/cards/turnsDirectionClockwise.png
-    - assets/images/cards/turnsDirectionCounterClockwise.png
+    - assets/images/items/turnsDirectionClockwise.png
+    - assets/images/items/turnsDirectionCounterClockwise.png
 
   fonts:
     - family: VCR_OSD_MONO

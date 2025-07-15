@@ -269,8 +269,8 @@ class _MyHomePageState extends State<MyHomePage> {
                                   SizedBox(width: 5),
                                   Image.asset(
                                     _shellSequence[index]
-                                        ? 'assets/images/live.png'
-                                        : 'assets/images/blank.png',
+                                        ? 'assets/images/shellExtraction/live.png'
+                                        : 'assets/images/shellExtraction/blank.png',
                                     // height: 30,
                                     width: 90,
                                     fit: BoxFit.contain,
@@ -302,7 +302,7 @@ class _MyHomePageState extends State<MyHomePage> {
               backgroundColor: Color.fromRGBO(255, 255, 253, 1),
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Image.asset('assets/images/reload.png'),
+                child: Image.asset('assets/images/shellExtraction/reload.png'),
               ),
             ),
           ),
@@ -316,7 +316,7 @@ class _MyHomePageState extends State<MyHomePage> {
               backgroundColor: Color.fromRGBO(255, 255, 253, 1),
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Image.asset('assets/images/eject.png'),
+                child: Image.asset('assets/images/shellExtraction/eject.png'),
               ),
             ),
           ),
@@ -330,7 +330,9 @@ class _MyHomePageState extends State<MyHomePage> {
               backgroundColor: Color.fromRGBO(255, 255, 253, 1),
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Image.asset('assets/images/burnerPhone.png'),
+                child: Image.asset(
+                  'assets/images/shellExtraction/burnerPhone.png',
+                ),
               ),
             ),
           ),
@@ -344,7 +346,7 @@ class _MyHomePageState extends State<MyHomePage> {
               backgroundColor: Color.fromRGBO(255, 255, 253, 1),
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Image.asset('assets/images/coin.png'),
+                child: Image.asset('assets/images/shellExtraction/coin.png'),
               ),
             ),
           ),
@@ -359,11 +361,11 @@ class _MyHomePageState extends State<MyHomePage> {
                   MaterialPageRoute(builder: (context) => _itemExtractorPage),
                 );
               },
-              tooltip: 'gotoCardsPage',
+              tooltip: 'ITEMS PAGE',
               backgroundColor: Color.fromRGBO(255, 255, 253, 1),
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Image.asset('assets/images/cards/blackItems/beer.png'),
+                child: Image.asset('assets/images/items/blackItems/beer.png'),
               ),
             ),
           ),
@@ -483,7 +485,7 @@ class _ItemExtractorState extends State<ItemExtractor> {
               }),
 
           icon: Image.asset(
-            'assets/images/cards/inverter.png',
+            'assets/images/items/inverter.png',
             height: imageHeight,
             width: imageWidth,
           ),
@@ -501,7 +503,7 @@ class _ItemExtractorState extends State<ItemExtractor> {
               }),
 
           icon: Image.asset(
-            'assets/images/cards/beer.png',
+            'assets/images/items/beer.png',
             height: imageHeight,
             width: imageWidth,
           ),
@@ -524,7 +526,7 @@ class _ItemExtractorState extends State<ItemExtractor> {
               }),
 
           icon: Image.asset(
-            'assets/images/cards/cigarettePack.png',
+            'assets/images/items/cigarettePack.png',
             height: imageHeight,
             width: imageWidth,
           ),
@@ -541,7 +543,7 @@ class _ItemExtractorState extends State<ItemExtractor> {
               }),
 
           icon: Image.asset(
-            'assets/images/cards/adrenaline.png',
+            'assets/images/items/adrenaline.png',
             height: imageHeight,
             width: imageWidth,
           ),
@@ -558,7 +560,7 @@ class _ItemExtractorState extends State<ItemExtractor> {
               }),
 
           icon: Image.asset(
-            'assets/images/cards/burnerPhone.png',
+            'assets/images/items/burnerPhone.png',
             height: imageHeight,
             width: imageWidth,
           ),
@@ -575,7 +577,7 @@ class _ItemExtractorState extends State<ItemExtractor> {
               }),
 
           icon: Image.asset(
-            'assets/images/cards/handsaw.png',
+            'assets/images/items/handsaw.png',
             height: imageHeight,
             width: imageWidth,
           ),
@@ -592,7 +594,7 @@ class _ItemExtractorState extends State<ItemExtractor> {
               }),
 
           icon: Image.asset(
-            'assets/images/cards/handcuffs.png',
+            'assets/images/items/handcuffs.png',
             height: imageHeight,
             width: imageWidth,
           ),
@@ -623,7 +625,7 @@ class _ItemExtractorState extends State<ItemExtractor> {
               }),
 
           icon: Image.asset(
-            'assets/images/cards/expiredMedicine.png',
+            'assets/images/items/expiredMedicine.png',
             height: imageHeight,
             width: imageWidth,
           ),
@@ -641,7 +643,7 @@ class _ItemExtractorState extends State<ItemExtractor> {
               }),
 
           icon: Image.asset(
-            'assets/images/cards/magnifyingGlass.png',
+            'assets/images/items/magnifyingGlass.png',
             height: imageHeight,
             width: imageWidth,
           ),
@@ -663,7 +665,7 @@ class _ItemExtractorState extends State<ItemExtractor> {
               }),
 
           icon: Image.asset(
-            'assets/images/cards/remote.png',
+            'assets/images/items/remote.png',
             height: imageHeight,
             width: imageWidth,
           ),
@@ -673,7 +675,7 @@ class _ItemExtractorState extends State<ItemExtractor> {
           onPressed: () => {},
 
           icon: Image.asset(
-            'assets/images/cards/itemSpace.png',
+            'assets/images/items/itemSpace.png',
             height: imageHeight,
             width: imageWidth,
           ),
@@ -689,7 +691,7 @@ class _ItemExtractorState extends State<ItemExtractor> {
               removeCharges(pCharges, 1);
             }),
         child: Image.asset(
-          'assets/images/cards/charge.png',
+          'assets/images/items/charge.png',
           height: chargeIconSize,
           width: chargeIconSize,
         ),
@@ -701,7 +703,7 @@ class _ItemExtractorState extends State<ItemExtractor> {
               addCharges(pCharges, 1);
             }),
         child: Image.asset(
-          'assets/images/cards/itemSpace.png',
+          'assets/images/items/itemSpace.png',
           height: chargeIconSize,
           width: chargeIconSize,
         ),
@@ -768,12 +770,12 @@ class _ItemExtractorState extends State<ItemExtractor> {
 
     if (turnDirectionClockwise) {
       return Image.asset(
-        'assets/images/cards/turnsDirectionClockwise.png',
+        'assets/images/items/turnsDirectionClockwise.png',
         height: turnDirectionSize,
       );
     } else {
       return Image.asset(
-        'assets/images/cards/turnsDirectionCounterClockwise.png',
+        'assets/images/items/turnsDirectionCounterClockwise.png',
         height: turnDirectionSize,
       );
     }
