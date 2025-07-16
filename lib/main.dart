@@ -413,7 +413,7 @@ class _ItemExtractorState extends State<ItemExtractor> {
   List<int> adrenalinePointerPItems = [];
 
   static const Color statusNothing = Colors.transparent;
-  static const Color statusAdrenaline = Colors.yellow;
+  static const Color statusAdrenaline = Color.fromRGBO(255, 235, 59, 0.4);
 
   //handcuffs variables
   bool handcuffsTrigger = false;
@@ -427,7 +427,7 @@ class _ItemExtractorState extends State<ItemExtractor> {
     0,
   ]; //each int represent a player from 1 to 4
 
-  static const Color handcuffedColor = Colors.blueGrey;
+  static const Color handcuffedColor = Color.fromRGBO(80, 80, 80, 1);
   // static const Color intermediateHandcuffsColor = Colors.grey;
   static const Color notHandcuffedColor = Colors.transparent;
 
@@ -436,7 +436,7 @@ class _ItemExtractorState extends State<ItemExtractor> {
   Color p3color = notHandcuffedColor;
   Color p4color = notHandcuffedColor;
 
-  static const Color statusHandcuffs = Colors.lightBlue;
+  static const Color statusHandcuffs = Color.fromRGBO(3, 168, 244, 0.4);
 
   //number of different items
   int distinctItems = 10;
@@ -1263,7 +1263,10 @@ class _ItemExtractorState extends State<ItemExtractor> {
           child: IgnorePointer(
             child: Container(
               decoration: BoxDecoration(
-                border: Border.all(color: statusBorderManager(), width: 10),
+                border: Border.all(color: statusBorderManager(), width: 12),
+                borderRadius: BorderRadius.circular(
+                  MediaQuery.of(context).size.width * 0.05,
+                ),
               ),
             ),
           ),
