@@ -12,4 +12,6 @@
 
 1. inserire un secondo stato di colore che indica che il giocatore ha già saltato un turno con le manette e non può essere ammanettato di nuovo.
 
-2. aggiungere nuova schermata con oggetti che funzionano esclusavamente in modo manuale
+2. Fixare che si può usare l'adrenalina quando c'è solo adrenalina sul banco
+
+3. aggiungere nuova schermata con oggetti che funzionano esclusavamente in modo manuale
