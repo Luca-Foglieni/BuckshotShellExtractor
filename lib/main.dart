@@ -383,7 +383,7 @@ class ItemExtractor extends StatefulWidget {
 }
 
 class _ItemExtractorState extends State<ItemExtractor> {
-  double playerInventoryWidth = 160;
+  double playerInventoryWidth = 165;
 
   final random = Random();
 
@@ -407,14 +407,44 @@ class _ItemExtractorState extends State<ItemExtractor> {
   int itemsAddedP3 = 0;
   int itemsAddedP4 = 0;
 
-  List<bool> adrenalinePointer = [];
+  //tracks who uses the adrenaline to correcly make them use healing items
+  int adrenalineCaster = 0;
+  List<bool> adrenalinePointerPCharges = [];
+  List<int> adrenalinePointerPItems = [];
 
-  int handcuffsTrigger = 0;
+  static const Color statusNothing = Colors.transparent;
+  static const Color statusAdrenaline = Color.fromRGBO(255, 235, 59, 0.4);
 
+  //handcuffs variables
+  bool handcuffsTrigger = false;
+
+  int nHandcuffsSender = 0;
+
+  List<int> handcuffedPlayers = [
+    0,
+    0,
+    0,
+    0,
+  ]; //each int represent a player from 1 to 4
+
+  static const Color handcuffedColor = Color.fromRGBO(80, 80, 80, 1);
+  // static const Color intermediateHandcuffsColor = Colors.grey;
+  static const Color notHandcuffedColor = Colors.transparent;
+
+  Color p1color = notHandcuffedColor;
+  Color p2color = notHandcuffedColor;
+  Color p3color = notHandcuffedColor;
+  Color p4color = notHandcuffedColor;
+
+  static const Color statusHandcuffs = Color.fromRGBO(3, 168, 244, 0.4);
+
+  //number of different items
   int distinctItems = 10;
 
+  // charge icon size
   double chargeIconSize = 25;
 
+  //game turn direction
   bool turnDirectionClockwise = true;
 
   void itemsGenerator(int numberOfItems) {
@@ -455,7 +485,12 @@ class _ItemExtractorState extends State<ItemExtractor> {
     });
   }
 
-  IconButton insertCardImage(List<int> p, List<bool> pCharges, int index) {
+  IconButton insertItems(
+    List<int> pItems,
+    List<bool> pCharges,
+    int playerNumber,
+    int index,
+  ) {
     //function that renders the inventory of the players
 
     const int inverter = 1;
@@ -472,16 +507,13 @@ class _ItemExtractorState extends State<ItemExtractor> {
     const double imageHeight = 60;
     const double imageWidth = 60;
 
-    switch (p[index]) {
+    switch (pItems[index]) {
       case inverter:
         return IconButton(
           tooltip: 'INVERTER',
           onPressed:
               () => setState(() {
-                if (adrenalinePointer != pCharges) {
-                  p[index] = 0;
-                  adrenalinePointer = [];
-                }
+                if (!adrenalineHandler(pItems, index, pCharges)) {}
               }),
 
           icon: Image.asset(
@@ -496,10 +528,7 @@ class _ItemExtractorState extends State<ItemExtractor> {
           tooltip: 'BEER',
           onPressed:
               () => setState(() {
-                if (adrenalinePointer != pCharges) {
-                  p[index] = 0;
-                  adrenalinePointer = [];
-                }
+                if (!adrenalineHandler(pItems, index, pCharges)) {}
               }),
 
           icon: Image.asset(
@@ -513,15 +542,16 @@ class _ItemExtractorState extends State<ItemExtractor> {
           tooltip: 'CIGARETTE PACK',
           onPressed:
               () => setState(() {
-                if (adrenalinePointer != pCharges) {
-                  p[index] = 0;
-
-                  if (adrenalinePointer.isEmpty) {
+                if (adrenalinePointerPCharges != pCharges) {
+                  if (adrenalinePointerPCharges.isEmpty) {
                     addCharges(pCharges, 1);
                   } else {
-                    addCharges(adrenalinePointer, 1);
+                    addCharges(adrenalinePointerPCharges, 1);
                   }
-                  adrenalinePointer = [];
+                  pItems[index] = 0;
+                  adrenalinePointerPCharges = [];
+                  adrenalinePointerPItems = [];
+                  adrenalineCaster = 0;
                 }
               }),
 
@@ -536,9 +566,56 @@ class _ItemExtractorState extends State<ItemExtractor> {
           tooltip: 'ADRENALINE',
           onPressed:
               () => setState(() {
-                if (adrenalinePointer.isEmpty) {
-                  adrenalinePointer = pCharges;
-                  p[index] = 0;
+                if (adrenalinePointerPCharges.isEmpty) {
+                  bool foundSomethingOtherThanAdrenalineAndHandcuffs = false;
+                  bool foundSomethingOtherThanAdrenaline = false;
+                  for (int i = 0; i < pItems.length; i++) {
+                    if ((p1items[i] != 4 &&
+                            p1items[i] != 7 &&
+                            p1items[i] != 0 &&
+                            playerNumber != 1) ||
+                        (p2items[i] != 4 &&
+                            p2items[i] != 7 &&
+                            p2items[i] != 0 &&
+                            playerNumber != 2) ||
+                        (p3items[i] != 4 &&
+                            p3items[i] != 7 &&
+                            p3items[i] != 0 &&
+                            playerNumber != 3) ||
+                        (p4items[i] != 4 &&
+                            p4items[i] != 7 &&
+                            p4items[i] != 0 &&
+                            playerNumber != 4)) {
+                      foundSomethingOtherThanAdrenalineAndHandcuffs = true;
+                    }
+                    if ((p1items[i] != 4) ||
+                        (p2items[i] != 4) ||
+                        (p3items[i] != 4) ||
+                        (p4items[i] != 4)) {
+                      foundSomethingOtherThanAdrenaline = true;
+                    }
+                    if (foundSomethingOtherThanAdrenalineAndHandcuffs &&
+                        foundSomethingOtherThanAdrenaline) {
+                      break;
+                    }
+                  }
+                  if (foundSomethingOtherThanAdrenalineAndHandcuffs) {
+                    adrenalinePointerPCharges = pCharges;
+                    adrenalinePointerPCharges = pCharges;
+                    adrenalinePointerPItems = pItems;
+                    adrenalineCaster = playerNumber;
+                    pItems[index] = 0;
+                  } else if (foundSomethingOtherThanAdrenaline &&
+                      (handcuffedPlayers.elementAt(0) +
+                              handcuffedPlayers.elementAt(1) +
+                              handcuffedPlayers.elementAt(2) +
+                              handcuffedPlayers.elementAt(3)) <
+                          3) {
+                    adrenalinePointerPCharges = pCharges;
+                    adrenalinePointerPItems = pItems;
+                    adrenalineCaster = playerNumber;
+                    pItems[index] = 0;
+                  }
                 }
               }),
 
@@ -553,10 +630,7 @@ class _ItemExtractorState extends State<ItemExtractor> {
           tooltip: 'BURNER PHONE',
           onPressed:
               () => setState(() {
-                if (adrenalinePointer != pCharges) {
-                  p[index] = 0;
-                  adrenalinePointer = [];
-                }
+                if (!adrenalineHandler(pItems, index, pCharges)) {}
               }),
 
           icon: Image.asset(
@@ -570,10 +644,7 @@ class _ItemExtractorState extends State<ItemExtractor> {
           tooltip: 'HANDSAW',
           onPressed:
               () => setState(() {
-                if (adrenalinePointer != pCharges) {
-                  p[index] = 0;
-                  adrenalinePointer = [];
-                }
+                if (!adrenalineHandler(pItems, index, pCharges)) {}
               }),
 
           icon: Image.asset(
@@ -587,9 +658,22 @@ class _ItemExtractorState extends State<ItemExtractor> {
           tooltip: 'HANDCUFFS',
           onPressed:
               () => setState(() {
-                if (adrenalinePointer != pCharges) {
-                  p[index] = 0;
-                  adrenalinePointer = [];
+                if (adrenalinePointerPCharges != pCharges &&
+                    (handcuffedPlayers.elementAt(0) +
+                            handcuffedPlayers.elementAt(1) +
+                            handcuffedPlayers.elementAt(2) +
+                            handcuffedPlayers.elementAt(3)) <
+                        3) {
+                  pItems[index] = 0;
+                  handcuffsTrigger = true;
+                  if (adrenalineCaster != 0) {
+                    nHandcuffsSender = adrenalineCaster;
+                  } else {
+                    nHandcuffsSender = playerNumber;
+                  }
+                  adrenalinePointerPCharges = [];
+                  adrenalinePointerPItems = [];
+                  adrenalineCaster = 0;
                 }
               }),
 
@@ -604,10 +688,8 @@ class _ItemExtractorState extends State<ItemExtractor> {
           tooltip: 'EXPIRED MEDICINE',
           onPressed:
               () => setState(() {
-                if (adrenalinePointer != pCharges) {
-                  p[index] = 0;
-
-                  if (adrenalinePointer.isEmpty) {
+                if (adrenalinePointerPCharges != pCharges) {
+                  if (adrenalinePointerPCharges.isEmpty) {
                     if (random.nextBool()) {
                       addCharges(pCharges, 2);
                     } else {
@@ -615,12 +697,15 @@ class _ItemExtractorState extends State<ItemExtractor> {
                     }
                   } else {
                     if (random.nextBool()) {
-                      addCharges(adrenalinePointer, 2);
+                      addCharges(adrenalinePointerPCharges, 2);
                     } else {
-                      removeCharges(adrenalinePointer, 1);
+                      removeCharges(adrenalinePointerPCharges, 1);
                     }
                   }
-                  adrenalinePointer = [];
+                  pItems[index] = 0;
+                  adrenalinePointerPCharges = [];
+                  adrenalinePointerPItems = [];
+                  adrenalineCaster = 0;
                 }
               }),
 
@@ -635,11 +720,7 @@ class _ItemExtractorState extends State<ItemExtractor> {
           tooltip: 'MAGNIFYING GLASS',
           onPressed:
               () => setState(() {
-                if (adrenalinePointer != pCharges) {
-                  p[index] = 0;
-
-                  adrenalinePointer = [];
-                }
+                if (!adrenalineHandler(pItems, index, pCharges)) {}
               }),
 
           icon: Image.asset(
@@ -653,14 +734,16 @@ class _ItemExtractorState extends State<ItemExtractor> {
           tooltip: 'REMOTE',
           onPressed:
               () => setState(() {
-                if (adrenalinePointer != pCharges) {
-                  p[index] = 0;
+                if (adrenalinePointerPCharges != pCharges) {
+                  pItems[index] = 0;
+                  adrenalinePointerPCharges = [];
+                  adrenalinePointerPItems = [];
+                  adrenalineCaster = 0;
                   if (turnDirectionClockwise) {
                     turnDirectionClockwise = false;
                   } else {
                     turnDirectionClockwise = true;
                   }
-                  adrenalinePointer = [];
                 }
               }),
 
@@ -733,7 +816,6 @@ class _ItemExtractorState extends State<ItemExtractor> {
 
     setState(() {
       for (int i = 5; i >= 0; i--) {
-        // print(i);
         if (counter == nCharges) {
           break;
         }
@@ -781,246 +863,415 @@ class _ItemExtractorState extends State<ItemExtractor> {
     }
   }
 
-  handcuffsHandler() {
-    if (handcuffsTrigger != 0) {}
+  bool adrenalineHandler(List<int> pItems, int index, List<bool> pCharges) {
+    if (adrenalinePointerPCharges != pCharges) {
+      pItems[index] = 0;
+      adrenalinePointerPCharges = [];
+      adrenalinePointerPItems = [];
+      adrenalineCaster = 0;
+      return true;
+    }
+    return false;
+  }
+
+  void handcuffsHandler(int nReceiver) {
+    setState(() {
+      if (handcuffsTrigger &&
+          nHandcuffsSender != nReceiver &&
+          handcuffedPlayers[nReceiver - 1] != 1) {
+        handcuffsTrigger = false;
+        switch (nReceiver) {
+          case 1:
+            p1color = handcuffedColor;
+            handcuffedPlayers[0] = 1;
+            break;
+          case 2:
+            p2color = handcuffedColor;
+            handcuffedPlayers[1] = 1;
+            break;
+          case 3:
+            p3color = handcuffedColor;
+            handcuffedPlayers[2] = 1;
+          case 4:
+            p4color = handcuffedColor;
+            handcuffedPlayers[3] = 1;
+          default:
+        }
+      } else if (handcuffsTrigger == false &&
+          adrenalinePointerPCharges.isEmpty) {
+        switch (nReceiver) {
+          case 1:
+            p1color = notHandcuffedColor;
+            handcuffedPlayers[0] = 0;
+            break;
+          case 2:
+            p2color = notHandcuffedColor;
+            handcuffedPlayers[1] = 0;
+            break;
+          case 3:
+            p3color = notHandcuffedColor;
+            handcuffedPlayers[2] = 0;
+          case 4:
+            p4color = notHandcuffedColor;
+            handcuffedPlayers[3] = 0;
+          default:
+        }
+      }
+    });
+  }
+
+  Color statusBorderManager() {
+    if (adrenalinePointerPCharges.isNotEmpty) {
+      return statusAdrenaline;
+    } else if (handcuffsTrigger) {
+      return statusHandcuffs;
+    } else {
+      return statusNothing;
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.black,
+    return Stack(
+      children: [
+        Scaffold(
+          backgroundColor: Colors.black,
+          body: Stack(
+            children: [
+              //Player 1
+              Align(
+                alignment: Alignment.topLeft,
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: p1color,
+                    border: Border(
+                      right: BorderSide(color: Colors.grey, width: 2),
+                      bottom: BorderSide(color: Colors.grey, width: 2),
+                    ),
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: GestureDetector(
+                          onLongPress:
+                              () => setState(() {
+                                invertCharges(p1charges);
+                              }),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: List.generate(p1charges.length, (index) {
+                              return insertPlayerCharges(p1charges, index);
+                            }),
+                          ),
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: () => handcuffsHandler(1),
+                        child: AbsorbPointer(
+                          absorbing:
+                              (handcuffsTrigger ||
+                                  handcuffedPlayers.elementAt(0) == 1) &&
+                              adrenalinePointerPCharges.isEmpty,
+                          child: SizedBox(
+                            width: playerInventoryWidth,
+                            child: Center(
+                              child: Wrap(
+                                children: List.generate(p1items.length, (
+                                  index,
+                                ) {
+                                  return insertItems(
+                                    p1items,
+                                    p1charges,
+                                    1,
+                                    index,
+                                  );
+                                }),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
 
-      body: Stack(
-        children: [
-          GestureDetector(
-            onTap: handcuffsHandler(),
-            child: Align(
-              alignment: Alignment.topLeft,
-              child: Container(
-                decoration: BoxDecoration(
-                  border: Border(
-                    right: BorderSide(color: Colors.grey, width: 2),
-                    bottom: BorderSide(color: Colors.grey, width: 2),
+              //Player 2
+              Align(
+                alignment: Alignment.topRight,
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: p2color,
+                    border: Border(
+                      left: BorderSide(color: Colors.grey, width: 2),
+                      bottom: BorderSide(color: Colors.grey, width: 2),
+                    ),
                   ),
-                  // color: Colors.blueGrey,
-                ),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: GestureDetector(
-                        onLongPress:
-                            () => setState(() {
-                              invertCharges(p1charges);
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: GestureDetector(
+                          onLongPress:
+                              () => setState(() {
+                                invertCharges(p2charges);
+                              }),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: List.generate(p2charges.length, (index) {
+                              return insertPlayerCharges(p2charges, index);
                             }),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: List.generate(p1charges.length, (index) {
-                            return insertPlayerCharges(p1charges, index);
-                          }),
+                          ),
                         ),
                       ),
-                    ),
-                    SizedBox(
-                      width: playerInventoryWidth,
-                      child: Wrap(
-                        children: List.generate(p1items.length, (index) {
-                          return insertCardImage(p1items, p1charges, index);
-                        }),
+                      GestureDetector(
+                        onTap: () => handcuffsHandler(2),
+                        child: AbsorbPointer(
+                          absorbing:
+                              (handcuffsTrigger ||
+                                  handcuffedPlayers.elementAt(1) == 1) &&
+                              adrenalinePointerPCharges.isEmpty,
+                          child: SizedBox(
+                            width: playerInventoryWidth,
+                            child: Center(
+                              child: Wrap(
+                                children: List.generate(p2items.length, (
+                                  index,
+                                ) {
+                                  return insertItems(
+                                    p2items,
+                                    p2charges,
+                                    2,
+                                    index,
+                                  );
+                                }),
+                              ),
+                            ),
+                          ),
+                        ),
                       ),
+                    ],
+                  ),
+                ),
+              ),
+              Align(
+                alignment: Alignment.center,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(0, 0, 25, 0),
+                      child: turnDirectionRenderer(),
+                    ),
+                    Wrap(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(4.0),
+                          child: FloatingActionButton(
+                            heroTag: '1Items',
+                            backgroundColor: Colors.grey,
+                            onPressed:
+                                () => setState(() {
+                                  itemsGenerator(1);
+                                }),
+                            child: Text(
+                              'I',
+                              style: TextStyle(
+                                fontSize: 22,
+                                color: Colors.black,
+                              ),
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(4.0),
+                          child: FloatingActionButton(
+                            heroTag: '2Items',
+                            backgroundColor: Colors.grey,
+                            onPressed: () => itemsGenerator(2),
+                            child: Text(
+                              'II',
+                              style: TextStyle(
+                                fontSize: 22,
+                                color: Colors.black,
+                              ),
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(4.0),
+                          child: FloatingActionButton(
+                            heroTag: '3Items',
+                            backgroundColor: Colors.grey,
+                            onPressed: () => itemsGenerator(3),
+                            child: Text(
+                              'III',
+                              style: TextStyle(
+                                fontSize: 22,
+                                color: Colors.black,
+                              ),
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(4.0),
+                          child: FloatingActionButton(
+                            heroTag: '4Items',
+                            backgroundColor: Colors.grey,
+                            onPressed: () => itemsGenerator(4),
+                            child: Text(
+                              'IV',
+                              style: TextStyle(
+                                fontSize: 22,
+                                color: Colors.black,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
               ),
-            ),
-          ),
-          Align(
-            alignment: Alignment.topRight,
-            child: Container(
-              decoration: BoxDecoration(
-                border: Border(
-                  left: BorderSide(color: Colors.grey, width: 2),
-                  bottom: BorderSide(color: Colors.grey, width: 2),
-                ),
-              ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: GestureDetector(
-                      onLongPress:
-                          () => setState(() {
-                            invertCharges(p2charges);
-                          }),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: List.generate(p2charges.length, (index) {
-                          return insertPlayerCharges(p2charges, index);
-                        }),
+
+              //Player 3
+              Align(
+                alignment: Alignment.bottomLeft,
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: p3color,
+                    border: Border(
+                      top: BorderSide(color: Colors.grey, width: 2),
+                      right: BorderSide(color: Colors.grey, width: 2),
+                    ),
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      GestureDetector(
+                        onTap: () => handcuffsHandler(3),
+                        child: AbsorbPointer(
+                          absorbing:
+                              (handcuffsTrigger ||
+                                  handcuffedPlayers.elementAt(2) == 1) &&
+                              adrenalinePointerPCharges.isEmpty,
+                          child: SizedBox(
+                            width: playerInventoryWidth,
+                            child: Center(
+                              child: Wrap(
+                                children: List.generate(p3items.length, (
+                                  index,
+                                ) {
+                                  return insertItems(
+                                    p3items,
+                                    p3charges,
+                                    3,
+                                    index,
+                                  );
+                                }),
+                              ),
+                            ),
+                          ),
+                        ),
                       ),
-                    ),
-                  ),
-                  SizedBox(
-                    width: playerInventoryWidth,
-                    child: Wrap(
-                      children: List.generate(p2items.length, (index) {
-                        return insertCardImage(p2items, p2charges, index);
-                      }),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          Align(
-            alignment: Alignment.center,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 0, 25, 0),
-                  child: turnDirectionRenderer(),
-                ),
-                Wrap(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(4.0),
-                      child: FloatingActionButton(
-                        heroTag: '1Items',
-                        backgroundColor: Colors.grey,
-                        onPressed:
-                            () => setState(() {
-                              itemsGenerator(1);
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: GestureDetector(
+                          onLongPress:
+                              () => setState(() {
+                                invertCharges(p3charges);
+                              }),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: List.generate(p3charges.length, (index) {
+                              return insertPlayerCharges(p3charges, index);
                             }),
-                        child: Text(
-                          'I',
-                          style: TextStyle(fontSize: 22, color: Colors.black),
+                          ),
                         ),
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(4.0),
-                      child: FloatingActionButton(
-                        heroTag: '2Items',
-                        backgroundColor: Colors.grey,
-                        onPressed: () => itemsGenerator(2),
-                        child: Text(
-                          'II',
-                          style: TextStyle(fontSize: 22, color: Colors.black),
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(4.0),
-                      child: FloatingActionButton(
-                        heroTag: '3Items',
-                        backgroundColor: Colors.grey,
-                        onPressed: () => itemsGenerator(3),
-                        child: Text(
-                          'III',
-                          style: TextStyle(fontSize: 22, color: Colors.black),
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(4.0),
-                      child: FloatingActionButton(
-                        heroTag: '4Items',
-                        backgroundColor: Colors.grey,
-                        onPressed: () => itemsGenerator(4),
-                        child: Text(
-                          'IV',
-                          style: TextStyle(fontSize: 22, color: Colors.black),
-                        ),
-                      ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ],
-            ),
+              ),
+
+              //Player 4
+              Align(
+                alignment: Alignment.bottomRight,
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: p4color,
+                    border: Border(
+                      left: BorderSide(color: Colors.grey, width: 2),
+                      top: BorderSide(color: Colors.grey, width: 2),
+                    ),
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      GestureDetector(
+                        onTap: () => handcuffsHandler(4),
+                        child: AbsorbPointer(
+                          absorbing:
+                              (handcuffsTrigger ||
+                                  handcuffedPlayers.elementAt(3) == 1) &&
+                              adrenalinePointerPCharges.isEmpty,
+                          child: SizedBox(
+                            width: playerInventoryWidth,
+                            child: Center(
+                              child: Wrap(
+                                children: List.generate(p4items.length, (
+                                  index,
+                                ) {
+                                  return insertItems(
+                                    p4items,
+                                    p4charges,
+                                    4,
+                                    index,
+                                  );
+                                }),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: GestureDetector(
+                          onLongPress:
+                              () => setState(() {
+                                invertCharges(p4charges);
+                              }),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: List.generate(p4charges.length, (index) {
+                              return insertPlayerCharges(p4charges, index);
+                            }),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
           ),
-          Align(
-            alignment: Alignment.bottomLeft,
+        ),
+        Positioned.fill(
+          child: IgnorePointer(
             child: Container(
               decoration: BoxDecoration(
-                border: Border(
-                  top: BorderSide(color: Colors.grey, width: 2),
-                  right: BorderSide(color: Colors.grey, width: 2),
+                border: Border.all(color: statusBorderManager(), width: 12),
+                borderRadius: BorderRadius.circular(
+                  MediaQuery.of(context).size.width * 0.05,
                 ),
-              ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  SizedBox(
-                    width: playerInventoryWidth,
-                    child: Wrap(
-                      children: List.generate(p3items.length, (index) {
-                        return insertCardImage(p3items, p3charges, index);
-                      }),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: GestureDetector(
-                      onLongPress:
-                          () => setState(() {
-                            invertCharges(p3charges);
-                          }),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: List.generate(p3charges.length, (index) {
-                          return insertPlayerCharges(p3charges, index);
-                        }),
-                      ),
-                    ),
-                  ),
-                ],
               ),
             ),
           ),
-          Align(
-            alignment: Alignment.bottomRight,
-            child: Container(
-              decoration: BoxDecoration(
-                border: Border(
-                  left: BorderSide(color: Colors.grey, width: 2),
-                  top: BorderSide(color: Colors.grey, width: 2),
-                ),
-              ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  SizedBox(
-                    width: playerInventoryWidth,
-                    child: Wrap(
-                      children: List.generate(p4items.length, (index) {
-                        return insertCardImage(p4items, p4charges, index);
-                      }),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: GestureDetector(
-                      onLongPress:
-                          () => setState(() {
-                            invertCharges(p4charges);
-                          }),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: List.generate(p4charges.length, (index) {
-                          return insertPlayerCharges(p4charges, index);
-                        }),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }
