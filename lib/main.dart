@@ -599,23 +599,6 @@ class _ItemExtractorState extends State<ItemExtractor> {
                       break;
                     }
                   }
-                  print(
-                    'found something other than a and h? ' +
-                        foundSomethingOtherThanAdrenalineAndHandcuffs
-                            .toString(),
-                  );
-                  print(
-                    'found something other than a? ' +
-                        foundSomethingOtherThanAdrenaline.toString(),
-                  );
-                  print(
-                    'handcuffed: ' +
-                        ((handcuffedPlayers.elementAt(0) +
-                                handcuffedPlayers.elementAt(1) +
-                                handcuffedPlayers.elementAt(2) +
-                                handcuffedPlayers.elementAt(3)))
-                            .toString(),
-                  );
                   if (foundSomethingOtherThanAdrenalineAndHandcuffs) {
                     adrenalinePointerPCharges = pCharges;
                     adrenalinePointerPCharges = pCharges;
@@ -632,13 +615,8 @@ class _ItemExtractorState extends State<ItemExtractor> {
                     adrenalinePointerPItems = pItems;
                     adrenalineCaster = playerNumber;
                     pItems[index] = 0;
-                    print('adrenaline active');
                   }
                 }
-                print(
-                  'adrenaline caster adrenaline use: ' +
-                      adrenalineCaster.toString(),
-                );
               }),
 
           icon: Image.asset(
@@ -680,8 +658,6 @@ class _ItemExtractorState extends State<ItemExtractor> {
           tooltip: 'HANDCUFFS',
           onPressed:
               () => setState(() {
-                print('adrenaline caster bh: ' + adrenalineCaster.toString());
-                print('handcuffs sender bh: ' + nHandcuffsSender.toString());
                 if (adrenalinePointerPCharges != pCharges &&
                     (handcuffedPlayers.elementAt(0) +
                             handcuffedPlayers.elementAt(1) +
@@ -699,19 +675,6 @@ class _ItemExtractorState extends State<ItemExtractor> {
                   adrenalinePointerPItems = [];
                   adrenalineCaster = 0;
                 }
-                print(
-                  'number of cuffed up ' +
-                      (handcuffedPlayers.elementAt(0) +
-                              handcuffedPlayers.elementAt(1) +
-                              handcuffedPlayers.elementAt(2) +
-                              handcuffedPlayers.elementAt(3))
-                          .toString(),
-                );
-
-                print("hTrigger: " + handcuffsTrigger.toString());
-
-                print('adrenaline caster ah: ' + adrenalineCaster.toString());
-                print('handcuffs sender ah: ' + nHandcuffsSender.toString());
               }),
 
           icon: Image.asset(
@@ -912,8 +875,6 @@ class _ItemExtractorState extends State<ItemExtractor> {
   }
 
   void handcuffsHandler(int nReceiver) {
-    print('trigger ' + handcuffsTrigger.toString());
-    print('pointerTo ' + nReceiver.toString());
     setState(() {
       if (handcuffsTrigger &&
           nHandcuffsSender != nReceiver &&
@@ -935,7 +896,6 @@ class _ItemExtractorState extends State<ItemExtractor> {
             p4color = handcuffedColor;
             handcuffedPlayers[3] = 1;
           default:
-            print('handcuffs error');
         }
       } else if (handcuffsTrigger == false &&
           adrenalinePointerPCharges.isEmpty) {
@@ -955,10 +915,7 @@ class _ItemExtractorState extends State<ItemExtractor> {
             p4color = notHandcuffedColor;
             handcuffedPlayers[3] = 0;
           default:
-            print('handcuffs error');
         }
-      } else {
-        print('adrenaline! ' + adrenalinePointerPCharges.toString());
       }
     });
   }
