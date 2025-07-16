@@ -8,11 +8,6 @@
 
 # Planned
 
-- impedire ai giocatori di ammanettarsi da soli dopo che rubano le manette con l'adrenalina
+1. inserire un secondo stato di colore che indica che il giocatore ha già saltato un turno con le manette e non può essere ammanettato di nuovo.
 
-- impedire ai giocatori di usare le manette su qualcuno di già ammanettato
-
-- aggiungere nuova schermata con oggetti che funzionano esclusavamente in modo manuale
-
-- inserire un secondo stato di colore che indica che il giocatore ha già saltato un turno con le manette e non può essere ammanettato di nuovo.
-
+2. aggiungere nuova schermata con oggetti che funzionano esclusavamente in modo manuale
