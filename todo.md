@@ -1,4 +1,6 @@
-# In discussione
+# In discussion
+
+- Aggiungere interazione handsaw
 
 - far si che l'indicatore delle cariche sia direzionale
 
