@@ -8,11 +8,11 @@
 
 # Planned
 
-- impedire ai giocatori di ammanettarsi da soli
+- impedire ai giocatori di ammanettarsi da soli dopo che rubano le manette con l'adrenalina
+
+- impedire ai giocatori di usare le manette su qualcuno di già ammanettato
 
 - aggiungere nuova schermata con oggetti che funzionano esclusavamente in modo manuale
 
 - inserire un secondo stato di colore che indica che il giocatore ha già saltato un turno con le manette e non può essere ammanettato di nuovo.
 
-- fixare che se ci sono solo manette e adrenaline il gioco potrebbe andare in softlock.
-possibile soluzione: prima di attivare l'adrenalina, controllare che ci siano altri oggetti oltre all'adrenalina sul banco e controllare che il numero si giocatori ammanettati sia < 3

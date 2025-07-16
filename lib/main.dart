@@ -482,7 +482,7 @@ class _ItemExtractorState extends State<ItemExtractor> {
   }
 
   IconButton insertItems(
-    List<int> p,
+    List<int> pItems,
     List<bool> pCharges,
     int playerNumber,
     int index,
@@ -503,14 +503,14 @@ class _ItemExtractorState extends State<ItemExtractor> {
     const double imageHeight = 60;
     const double imageWidth = 60;
 
-    switch (p[index]) {
+    switch (pItems[index]) {
       case inverter:
         return IconButton(
           tooltip: 'INVERTER',
           onPressed:
               () => setState(() {
                 if (adrenalinePointer != pCharges) {
-                  p[index] = 0;
+                  pItems[index] = 0;
                   adrenalinePointer = [];
                 }
               }),
@@ -528,7 +528,7 @@ class _ItemExtractorState extends State<ItemExtractor> {
           onPressed:
               () => setState(() {
                 if (adrenalinePointer != pCharges) {
-                  p[index] = 0;
+                  pItems[index] = 0;
                   adrenalinePointer = [];
                 }
               }),
@@ -545,7 +545,7 @@ class _ItemExtractorState extends State<ItemExtractor> {
           onPressed:
               () => setState(() {
                 if (adrenalinePointer != pCharges) {
-                  p[index] = 0;
+                  pItems[index] = 0;
 
                   if (adrenalinePointer.isEmpty) {
                     addCharges(pCharges, 1);
@@ -568,8 +568,63 @@ class _ItemExtractorState extends State<ItemExtractor> {
           onPressed:
               () => setState(() {
                 if (adrenalinePointer.isEmpty) {
-                  adrenalinePointer = pCharges;
-                  p[index] = 0;
+                  bool foundSomethingOtherThanAdrenalineAndHandcuffs = false;
+                  bool foundSomethingOtherThanAdrenaline = false;
+                  for (int i = 0; i < pItems.length; i++) {
+                    if ((p1items[i] != 4 &&
+                            p1items[i] != 7 &&
+                            p1items[i] != 0) ||
+                        (p2items[i] != 4 &&
+                            p2items[i] != 7 &&
+                            p2items[i] != 0) ||
+                        (p3items[i] != 4 &&
+                            p3items[i] != 7 &&
+                            p3items[i] != 0) ||
+                        (p4items[i] != 4 &&
+                            p4items[i] != 7 &&
+                            p4items[i] != 0)) {
+                      foundSomethingOtherThanAdrenalineAndHandcuffs = true;
+                    }
+                    if ((p1items[i] != 4) ||
+                        (p2items[i] != 4) ||
+                        (p3items[i] != 4) ||
+                        (p4items[i] != 4)) {
+                      foundSomethingOtherThanAdrenaline = true;
+                    }
+                    if (foundSomethingOtherThanAdrenalineAndHandcuffs &&
+                        foundSomethingOtherThanAdrenaline) {
+                      break;
+                    }
+                  }
+                  print(
+                    'found something other than a and h? ' +
+                        foundSomethingOtherThanAdrenalineAndHandcuffs
+                            .toString(),
+                  );
+                  print(
+                    'found something other than a? ' +
+                        foundSomethingOtherThanAdrenaline.toString(),
+                  );
+                  print(
+                    'handcuffed: ' +
+                        ((p1handcuffed +
+                                p2handcuffed +
+                                p3handcuffed +
+                                p4handcuffed))
+                            .toString(),
+                  );
+                  if (foundSomethingOtherThanAdrenalineAndHandcuffs) {
+                    adrenalinePointer = pCharges;
+                    pItems[index] = 0;
+                  } else if (foundSomethingOtherThanAdrenaline &&
+                      (p1handcuffed +
+                              p2handcuffed +
+                              p3handcuffed +
+                              p4handcuffed) <
+                          3) {
+                    adrenalinePointer = pCharges;
+                    pItems[index] = 0;
+                  }
                 }
               }),
 
@@ -585,7 +640,7 @@ class _ItemExtractorState extends State<ItemExtractor> {
           onPressed:
               () => setState(() {
                 if (adrenalinePointer != pCharges) {
-                  p[index] = 0;
+                  pItems[index] = 0;
                   adrenalinePointer = [];
                 }
               }),
@@ -603,7 +658,7 @@ class _ItemExtractorState extends State<ItemExtractor> {
               () => setState(() {
                 if (handcuffsTrigger) {
                 } else if (adrenalinePointer != pCharges) {
-                  p[index] = 0;
+                  pItems[index] = 0;
                   adrenalinePointer = [];
                 }
               }),
@@ -625,7 +680,7 @@ class _ItemExtractorState extends State<ItemExtractor> {
                             p3handcuffed +
                             p4handcuffed) <
                         3) {
-                  p[index] = 0;
+                  pItems[index] = 0;
                   handcuffsTrigger = true;
                   nHandcuffsSender = playerNumber;
                   adrenalinePointer = [];
@@ -653,7 +708,7 @@ class _ItemExtractorState extends State<ItemExtractor> {
           onPressed:
               () => setState(() {
                 if (adrenalinePointer != pCharges) {
-                  p[index] = 0;
+                  pItems[index] = 0;
 
                   if (adrenalinePointer.isEmpty) {
                     if (random.nextBool()) {
@@ -684,7 +739,7 @@ class _ItemExtractorState extends State<ItemExtractor> {
           onPressed:
               () => setState(() {
                 if (adrenalinePointer != pCharges) {
-                  p[index] = 0;
+                  pItems[index] = 0;
 
                   adrenalinePointer = [];
                 }
@@ -702,7 +757,7 @@ class _ItemExtractorState extends State<ItemExtractor> {
           onPressed:
               () => setState(() {
                 if (adrenalinePointer != pCharges) {
-                  p[index] = 0;
+                  pItems[index] = 0;
                   if (turnDirectionClockwise) {
                     turnDirectionClockwise = false;
                   } else {
