@@ -387,10 +387,10 @@ class _ItemExtractorState extends State<ItemExtractor> {
 
   final random = Random();
 
-  List<int> p1items = [0, 0, 0, 0, 0, 0, 0, 0];
-  List<int> p2items = [0, 0, 0, 0, 0, 0, 0, 0];
-  List<int> p3items = [0, 0, 0, 0, 0, 0, 0, 0];
-  List<int> p4items = [0, 0, 0, 0, 0, 0, 0, 0];
+  List<int> p1items = [4, 7, 7, 0, 0, 0, 0, 0];
+  List<int> p2items = [4, 7, 7, 0, 0, 0, 0, 0];
+  List<int> p3items = [4, 7, 7, 0, 0, 0, 0, 0];
+  List<int> p4items = [4, 7, 7, 0, 0, 0, 0, 0];
 
   bool p1alive = true;
   bool p2alive = true;
@@ -588,10 +588,18 @@ class _ItemExtractorState extends State<ItemExtractor> {
                             playerNumber != 4)) {
                       foundSomethingOtherThanAdrenalineAndHandcuffs = true;
                     }
-                    if ((p1items[i] != 4) ||
-                        (p2items[i] != 4) ||
-                        (p3items[i] != 4) ||
-                        (p4items[i] != 4)) {
+                    if ((p1items[i] != 4 &&
+                            p1items[i] != 0 &&
+                            playerNumber != 1) ||
+                        (p2items[i] != 4 &&
+                            p2items[i] != 0 &&
+                            playerNumber != 2) ||
+                        (p3items[i] != 4 &&
+                            p3items[i] != 0 &&
+                            playerNumber != 3) ||
+                        (p4items[i] != 4 &&
+                            p4items[i] != 0 &&
+                            playerNumber != 4)) {
                       foundSomethingOtherThanAdrenaline = true;
                     }
                     if (foundSomethingOtherThanAdrenalineAndHandcuffs &&
