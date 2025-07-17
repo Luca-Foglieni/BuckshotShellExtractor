@@ -387,10 +387,10 @@ class _ItemExtractorState extends State<ItemExtractor> {
 
   final random = Random();
 
-  List<int> p1items = [4, 7, 7, 0, 0, 0, 0, 0];
-  List<int> p2items = [4, 7, 7, 0, 0, 0, 0, 0];
-  List<int> p3items = [4, 7, 7, 0, 0, 0, 0, 0];
-  List<int> p4items = [4, 7, 7, 0, 0, 0, 0, 0];
+  List<int> p1items = [0, 0, 0, 0, 0, 0, 0, 0];
+  List<int> p2items = [0, 0, 0, 0, 0, 0, 0, 0];
+  List<int> p3items = [0, 0, 0, 0, 0, 0, 0, 0];
+  List<int> p4items = [0, 0, 0, 0, 0, 0, 0, 0];
 
   bool p1alive = true;
   bool p2alive = true;
