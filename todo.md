@@ -1,15 +1,17 @@
 # In discussion
 
-- Aggiungere interazione handsaw
+- Add handsaw double damage interaction
 
-- far si che l'indicatore delle cariche sia direzionale
+- Make the charges indicator directional
 
-- aggiungere il timer di scadenza all'adrenalina
+- Make so that the adrenaline effect expires after 10 seconds
 
-- mettere un delay prima di mostrare il risultato dell'expired medicine
+- Add a delay (to create suspense) before showing the outcome of the expired medicine
+
+- Make items that cannot be momentarily used greyed out
 
 # Planned
 
-1. inserire un secondo stato di colore che indica che il giocatore ha già saltato un turno con le manette e non può essere ammanettato di nuovo.
+1. Add a second intermediate state to signify that a player has already skipped a turn due to the handcuffs but cannot yet be handcuffed again before playing a round
 
-2. aggiungere nuova schermata con oggetti che funzionano esclusavamente in modo manuale
+3. Add a second items table mode that exclusively works manually, so that more than one phone can be used to simulate the items
