@@ -69,6 +69,7 @@ flutter:
     - assets/images/shellExtraction/reload.png
 
     - assets/images/shellExtraction/beer.png
+    - assets/images/shellExtraction/beers.png
 
     - assets/images/items/inverter.png
     - assets/images/items/beer.png

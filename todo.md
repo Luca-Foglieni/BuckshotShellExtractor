@@ -13,9 +13,3 @@
 - Turn up the multimedia volume of the phone when a player takes damage
 
 # Planned
-
-1. Add the inverter button for the dealer
-
-2. Add a second intermediate state to signify that a player has already skipped a turn due to the handcuffs but cannot yet be handcuffed again before playing a round
-
-
