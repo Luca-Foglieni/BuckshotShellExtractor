@@ -15,6 +15,12 @@ Written using Flutter and Dart https://flutter.dev/.
 
 ### Home Page Buttons
 
+<img src="assets/images/shellExtraction/coin.png" width="50">
+<a href="https://www.flaticon.com/free-icons/coin" title="coin icons">Coin icons created by turkkub - Flaticon</a>
+
+<img src="assets/images/shellExtraction/inverter.png" width="50">
+<a href="https://www.flaticon.com/free-icons/inverter" title="inverter icons">Inverter icons created by Vichanon Chaimsuk - Flaticon</a>
+
 <img src="assets/images/shellExtraction/burnerPhone.png" width="50">
 <a href="https://www.flaticon.com/free-icons/flip-phone" title="flip phone icons">Flip phone icons created by Freepik - Flaticon</a>
 
@@ -25,9 +31,6 @@ is a merged version of this two icons:
 
 <img src="assets/images/shellExtraction/reload.png" width="50">
 <a href="https://www.flaticon.com/free-icons/shotgun" title="shotgun icons">Shotgun icons created by POD Gladiator - Flaticon</a>
-
-<img src="assets/images/shellExtraction/coin.png" width="50">
-<a href="https://www.flaticon.com/free-icons/coin" title="coin icons">Coin icons created by turkkub - Flaticon</a>
 
 <img src="assets/images/shellExtraction/beer.png" width="50">
 <a href="https://www.flaticon.com/free-icons/beer-can" title="beer can icons">Beer can icons created by Freepik - Flaticon</a>

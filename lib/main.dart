@@ -196,6 +196,14 @@ class _MyHomePageState extends State<MyHomePage> {
     _resetDealerSpeechBubble(3);
   }
 
+  void _inverter() {
+    if (_shellSequence.isNotEmpty) {
+      setState(() {
+        _shellSequence[0] = !_shellSequence[0];
+      });
+    }
+  }
+
   void _resetDealerSpeechBubble(int delay) {
     _resetTimer?.cancel();
     _resetTimer = Timer(Duration(seconds: delay), () {
@@ -293,6 +301,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
       floatingActionButton: Stack(
         children: <Widget>[
+          // right side
           Positioned(
             bottom: 0,
             right: 0,
@@ -341,6 +350,22 @@ class _MyHomePageState extends State<MyHomePage> {
             bottom: 192,
             right: 0,
             child: FloatingActionButton(
+              heroTag: 'inverter',
+              onPressed: _inverter,
+              tooltip: 'INVERTER',
+              backgroundColor: Color.fromRGBO(255, 255, 253, 1),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Image.asset(
+                  'assets/images/shellExtraction/inverter.png',
+                ),
+              ),
+            ),
+          ),
+          Positioned(
+            bottom: 256,
+            right: 0,
+            child: FloatingActionButton(
               heroTag: 'coinFlip',
               onPressed: _coinFlip,
               tooltip: 'COIN FLIP',
@@ -370,6 +395,8 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
             ),
           ),
+
+          // left side
           Positioned(
             bottom: 64,
             left: 30,

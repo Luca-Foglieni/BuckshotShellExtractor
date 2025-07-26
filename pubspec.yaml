@@ -62,10 +62,11 @@ flutter:
   assets:
     - assets/images/shellExtraction/live.png
     - assets/images/shellExtraction/blank.png
-    - assets/images/shellExtraction/reload.png
-    - assets/images/shellExtraction/eject.png
-    - assets/images/shellExtraction/burnerPhone.png
     - assets/images/shellExtraction/coin.png
+    - assets/images/shellExtraction/inverter.png
+    - assets/images/shellExtraction/burnerPhone.png
+    - assets/images/shellExtraction/eject.png
+    - assets/images/shellExtraction/reload.png
 
     - assets/images/shellExtraction/beer.png
 
