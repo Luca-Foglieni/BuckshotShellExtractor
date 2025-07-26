@@ -414,7 +414,7 @@ class _MyHomePageState extends State<MyHomePage> {
               backgroundColor: Color.fromRGBO(255, 255, 253, 1),
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Image.asset('assets/images/shellExtraction/beer.png'),
+                child: Image.asset('assets/images/shellExtraction/beers.png'),
               ),
             ),
           ),
@@ -969,6 +969,7 @@ class _ItemsTableManualState extends State<ItemsTableManual> {
   }
 }
 
+// items page for 4 or less players
 class ItemsTable extends StatefulWidget {
   const ItemsTable({super.key});
 
@@ -1021,8 +1022,8 @@ class _ItemsTableState extends State<ItemsTable> {
     0,
   ]; //each int represent a player from 1 to 4
 
-  static const Color handcuffedColor = Color.fromRGBO(80, 80, 80, 1);
-  // static const Color intermediateHandcuffsColor = Colors.grey;
+  static const Color handcuffedColor = Color.fromRGBO(138, 138, 138, 1);
+  static const Color intermediateHandcuffsColor = Color.fromRGBO(80, 80, 80, 1);
   static const Color notHandcuffedColor = Colors.transparent;
 
   Color p1color = notHandcuffedColor;
@@ -1208,10 +1209,10 @@ class _ItemsTableState extends State<ItemsTable> {
                     adrenalineCaster = playerNumber;
                     pItems[index] = 0;
                   } else if (foundSomethingOtherThanAdrenaline &&
-                      (handcuffedPlayers.elementAt(0) +
-                              handcuffedPlayers.elementAt(1) +
-                              handcuffedPlayers.elementAt(2) +
-                              handcuffedPlayers.elementAt(3)) <
+                      (boolToInt(handcuffedPlayers.elementAt(0) != 0) +
+                              boolToInt(handcuffedPlayers.elementAt(1) != 0) +
+                              boolToInt(handcuffedPlayers.elementAt(2) != 0) +
+                              boolToInt(handcuffedPlayers.elementAt(3) != 0)) <
                           3) {
                     adrenalinePointerPCharges = pCharges;
                     adrenalinePointerPItems = pItems;
@@ -1261,10 +1262,10 @@ class _ItemsTableState extends State<ItemsTable> {
           onPressed:
               () => setState(() {
                 if (adrenalinePointerPCharges != pCharges &&
-                    (handcuffedPlayers.elementAt(0) +
-                            handcuffedPlayers.elementAt(1) +
-                            handcuffedPlayers.elementAt(2) +
-                            handcuffedPlayers.elementAt(3)) <
+                    (boolToInt(handcuffedPlayers.elementAt(0) != 0) +
+                            boolToInt(handcuffedPlayers.elementAt(1) != 0) +
+                            boolToInt(handcuffedPlayers.elementAt(2) != 0) +
+                            boolToInt(handcuffedPlayers.elementAt(3) != 0)) <
                         3) {
                   pItems[index] = 0;
                   handcuffsTrigger = true;
@@ -1476,6 +1477,14 @@ class _ItemsTableState extends State<ItemsTable> {
     return false;
   }
 
+  int boolToInt(bool flag) {
+    if (flag) {
+      return 1;
+    } else {
+      return 0;
+    }
+  }
+
   void handcuffsHandler(int nReceiver) {
     setState(() {
       if (handcuffsTrigger &&
@@ -1485,21 +1494,42 @@ class _ItemsTableState extends State<ItemsTable> {
         switch (nReceiver) {
           case 1:
             p1color = handcuffedColor;
-            handcuffedPlayers[0] = 1;
+            handcuffedPlayers[0] = 2;
             break;
           case 2:
             p2color = handcuffedColor;
-            handcuffedPlayers[1] = 1;
+            handcuffedPlayers[1] = 2;
             break;
           case 3:
             p3color = handcuffedColor;
-            handcuffedPlayers[2] = 1;
+            handcuffedPlayers[2] = 2;
           case 4:
             p4color = handcuffedColor;
+            handcuffedPlayers[3] = 2;
+          default:
+        }
+      } else if (handcuffedPlayers[nReceiver - 1] == 2 &&
+          handcuffsTrigger == false &&
+          adrenalinePointerPCharges.isEmpty) {
+        switch (nReceiver) {
+          case 1:
+            p1color = intermediateHandcuffsColor;
+            handcuffedPlayers[0] = 1;
+            break;
+          case 2:
+            p2color = intermediateHandcuffsColor;
+            handcuffedPlayers[1] = 1;
+            break;
+          case 3:
+            p3color = intermediateHandcuffsColor;
+            handcuffedPlayers[2] = 1;
+          case 4:
+            p4color = intermediateHandcuffsColor;
             handcuffedPlayers[3] = 1;
           default:
         }
-      } else if (handcuffsTrigger == false &&
+      } else if (handcuffedPlayers[nReceiver - 1] == 1 &&
+          handcuffsTrigger == false &&
           adrenalinePointerPCharges.isEmpty) {
         switch (nReceiver) {
           case 1:
@@ -1574,7 +1604,7 @@ class _ItemsTableState extends State<ItemsTable> {
                         child: AbsorbPointer(
                           absorbing:
                               (handcuffsTrigger ||
-                                  handcuffedPlayers.elementAt(0) == 1) &&
+                                  handcuffedPlayers.elementAt(0) != 0) &&
                               adrenalinePointerPCharges.isEmpty,
                           child: SizedBox(
                             width: playerInventoryWidth,
@@ -1634,7 +1664,7 @@ class _ItemsTableState extends State<ItemsTable> {
                         child: AbsorbPointer(
                           absorbing:
                               (handcuffsTrigger ||
-                                  handcuffedPlayers.elementAt(1) == 1) &&
+                                  handcuffedPlayers.elementAt(1) != 0) &&
                               adrenalinePointerPCharges.isEmpty,
                           child: SizedBox(
                             width: playerInventoryWidth,
@@ -1758,7 +1788,7 @@ class _ItemsTableState extends State<ItemsTable> {
                         child: AbsorbPointer(
                           absorbing:
                               (handcuffsTrigger ||
-                                  handcuffedPlayers.elementAt(2) == 1) &&
+                                  handcuffedPlayers.elementAt(2) != 0) &&
                               adrenalinePointerPCharges.isEmpty,
                           child: SizedBox(
                             width: playerInventoryWidth,
@@ -1818,7 +1848,7 @@ class _ItemsTableState extends State<ItemsTable> {
                         child: AbsorbPointer(
                           absorbing:
                               (handcuffsTrigger ||
-                                  handcuffedPlayers.elementAt(3) == 1) &&
+                                  handcuffedPlayers.elementAt(3) != 0) &&
                               adrenalinePointerPCharges.isEmpty,
                           child: SizedBox(
                             width: playerInventoryWidth,
