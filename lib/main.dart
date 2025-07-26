@@ -99,8 +99,8 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  late final Widget _ItemsTablePage = ItemsTable();
-  late final Widget _ItemsTableManualPage = ItemsTableManual();
+  late final Widget _itemsTablePage = ItemsTable();
+  late final Widget _itemsTableManualPage = ItemsTableManual();
   //to fix, the state of the items page is not saved when you go back to the homepage
 
   final random = Random();
@@ -384,7 +384,7 @@ class _MyHomePageState extends State<MyHomePage> {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => _ItemsTablePage),
+                  MaterialPageRoute(builder: (context) => _itemsTablePage),
                 );
               },
               tooltip: 'ITEMS PAGE',
@@ -406,7 +406,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => _ItemsTableManualPage,
+                    builder: (context) => _itemsTableManualPage,
                   ),
                 );
               },
