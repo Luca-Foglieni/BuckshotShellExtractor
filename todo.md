@@ -14,8 +14,8 @@
 
 # Planned
 
-1. Add a second intermediate state to signify that a player has already skipped a turn due to the handcuffs but cannot yet be handcuffed again before playing a round
+1. Add the inverter button for the dealer
 
-2. Add a second items table mode that exclusively works manually, so that more than one phone can be used to simulate the items
+2. Add a second intermediate state to signify that a player has already skipped a turn due to the handcuffs but cannot yet be handcuffed again before playing a round
 
 
