@@ -2,6 +2,7 @@ import 'dart:math';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
+import 'package:provider/provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -11,7 +12,116 @@ void main() async {
   await SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp, // locks app in vertical orientation
   ]);
-  runApp(const MyApp());
+  runApp(
+    ChangeNotifierProvider(create: (_) => ShellOrderState(), child: MyApp()),
+  );
+}
+
+class ShellOrderState extends ChangeNotifier {
+  final random = Random();
+
+  int _shellNumber = 0;
+  final List<bool> _shellSequence = [];
+
+  bool _oneLive = false;
+  bool _oneBlank = false;
+
+  double _shellNumberOpacity = 0;
+
+  int? _burnedShell;
+
+  int _lastShell = -1;
+
+  int itemsNumber = 0;
+
+  String _dealerSpeechBubble = 'PLEASE SIGN THE WAIVER.';
+
+  Timer? _resetTimer;
+
+  void _reload() {
+    HapticFeedback.lightImpact();
+    _shellNumber = 2 + random.nextInt(7);
+
+    do {
+      _shellSequence.clear();
+      _oneLive = false;
+      _oneBlank = false;
+      for (var i = 0; i < _shellNumber; i++) {
+        _shellSequence.add(random.nextBool());
+
+        if (_shellSequence.elementAt(i) == true && _oneLive == false) {
+          _oneLive = true;
+        }
+
+        if (_shellSequence.last == false && _oneBlank == false) {
+          _oneBlank = true;
+        }
+      }
+    } while (_oneLive == false || _oneBlank == false);
+
+    _burnedShell = -1;
+
+    itemsNumber = 1 + random.nextInt(4);
+
+    if (itemsNumber == 1) {
+      _dealerSpeechBubble = '$itemsNumber ITEM EACH.';
+    } else {
+      _dealerSpeechBubble = '$itemsNumber ITEMS EACH.';
+    }
+    _shellNumberOpacity = 1;
+
+    _resetTimer?.cancel();
+    // _resetDealerSpeechBubble(120);
+  }
+
+  void _burnerPhonePrediction() {
+    HapticFeedback.mediumImpact();
+    if (_shellSequence.length <= 2) {
+      _dealerSpeechBubble = 'HOW UNFORTUNATE...';
+      _resetDealerSpeechBubble(3);
+      return;
+    }
+
+    _burnedShell = random.nextInt(_shellSequence.length);
+  }
+
+  void _eject() {
+    HapticFeedback.mediumImpact();
+    if (_shellSequence.isNotEmpty) {
+      if (_shellSequence[0]) {
+        _lastShell = 1;
+      } else {
+        _lastShell = 0;
+      }
+      _shellSequence.removeAt(0);
+      _burnedShell = -1;
+    } else {
+      _lastShell = -1;
+    }
+  }
+
+  void _coinFlip() {
+    bool coin = random.nextBool();
+    if (coin) {
+      _dealerSpeechBubble = 'HEADS.';
+    } else {
+      _dealerSpeechBubble = 'TAILS.';
+    }
+    _resetDealerSpeechBubble(3);
+  }
+
+  void _inverter() {
+    if (_shellSequence.isNotEmpty) {
+      _shellSequence[0] = !_shellSequence[0];
+    }
+  }
+
+  void _resetDealerSpeechBubble(int delay) {
+    _resetTimer?.cancel();
+    _resetTimer = Timer(Duration(seconds: delay), () {
+      _dealerSpeechBubble = ' ';
+    });
+  }
 }
 
 class MyApp extends StatelessWidget {
@@ -103,115 +213,115 @@ class _MyHomePageState extends State<MyHomePage> {
   late final Widget _itemsTableManualPage = ItemsTableManual();
   //to fix, the state of the items page is not saved when you go back to the homepage
 
-  final random = Random();
+  // final random = Random();
 
-  int _shellNumber = 0;
-  final List<bool> _shellSequence = [];
+  // int _shellNumber = 0;
+  // final List<bool> _shellSequence = [];
 
-  bool _oneLive = false;
-  bool _oneBlank = false;
+  // bool _oneLive = false;
+  // bool _oneBlank = false;
 
-  double _shellNumberOpacity = 0;
+  // double _shellNumberOpacity = 0;
 
-  int? _burnedShell;
+  // int? _burnedShell;
 
-  int itemsNumber = 0;
+  // int itemsNumber = 0;
 
-  String _dealerSpeechBubble = 'PLEASE SIGN THE WAIVER.';
+  // String _dealerSpeechBubble = 'PLEASE SIGN THE WAIVER.';
 
-  Timer? _resetTimer;
+  // Timer? _resetTimer;
 
-  void _reload() {
-    HapticFeedback.lightImpact();
-    setState(() {
-      _shellNumber = 2 + random.nextInt(7);
+  // void _reload() {
+  //   HapticFeedback.lightImpact();
+  //   setState(() {
+  //     _shellNumber = 2 + random.nextInt(7);
 
-      do {
-        _shellSequence.clear();
-        _oneLive = false;
-        _oneBlank = false;
-        for (var i = 0; i < _shellNumber; i++) {
-          _shellSequence.add(random.nextBool());
+  //     do {
+  //       _shellSequence.clear();
+  //       _oneLive = false;
+  //       _oneBlank = false;
+  //       for (var i = 0; i < _shellNumber; i++) {
+  //         _shellSequence.add(random.nextBool());
 
-          if (_shellSequence.elementAt(i) == true && _oneLive == false) {
-            _oneLive = true;
-          }
+  //         if (_shellSequence.elementAt(i) == true && _oneLive == false) {
+  //           _oneLive = true;
+  //         }
 
-          if (_shellSequence.last == false && _oneBlank == false) {
-            _oneBlank = true;
-          }
-        }
-      } while (_oneLive == false || _oneBlank == false);
-    });
+  //         if (_shellSequence.last == false && _oneBlank == false) {
+  //           _oneBlank = true;
+  //         }
+  //       }
+  //     } while (_oneLive == false || _oneBlank == false);
+  //   });
 
-    _burnedShell = -1;
+  //   _burnedShell = -1;
 
-    itemsNumber = 1 + random.nextInt(4);
+  //   itemsNumber = 1 + random.nextInt(4);
 
-    if (itemsNumber == 1) {
-      _dealerSpeechBubble = '$itemsNumber ITEM EACH.';
-    } else {
-      _dealerSpeechBubble = '$itemsNumber ITEMS EACH.';
-    }
-    _shellNumberOpacity = 1;
+  //   if (itemsNumber == 1) {
+  //     _dealerSpeechBubble = '$itemsNumber ITEM EACH.';
+  //   } else {
+  //     _dealerSpeechBubble = '$itemsNumber ITEMS EACH.';
+  //   }
+  //   _shellNumberOpacity = 1;
 
-    _resetTimer?.cancel();
-    // _resetDealerSpeechBubble(120);
-  }
+  //   _resetTimer?.cancel();
+  //   // _resetDealerSpeechBubble(120);
+  // }
 
-  void _burnerPhonePrediction() {
-    HapticFeedback.mediumImpact();
-    if (_shellSequence.length <= 2) {
-      setState(() {
-        _dealerSpeechBubble = 'HOW UNFORTUNATE...';
-      });
-      _resetDealerSpeechBubble(3);
-      return;
-    }
+  // void _burnerPhonePrediction() {
+  //   HapticFeedback.mediumImpact();
+  //   if (_shellSequence.length <= 2) {
+  //     setState(() {
+  //       _dealerSpeechBubble = 'HOW UNFORTUNATE...';
+  //     });
+  //     _resetDealerSpeechBubble(3);
+  //     return;
+  //   }
 
-    setState(() {
-      _burnedShell = random.nextInt(_shellSequence.length);
-    });
-  }
+  //   setState(() {
+  //     _burnedShell = random.nextInt(_shellSequence.length);
+  //   });
+  // }
 
-  void _eject() {
-    HapticFeedback.mediumImpact();
-    if (_shellSequence.isEmpty) return;
+  // void _eject() {
+  //   HapticFeedback.mediumImpact();
+  //   if (_shellSequence.isEmpty) return;
 
-    setState(() {
-      _shellSequence.removeAt(0);
-      _burnedShell = -1;
-    });
-  }
+  //   setState(() {
+  //     _shellSequence.removeAt(0);
+  //     _burnedShell = -1;
+  //   });
+  // }
 
-  void _coinFlip() {
-    bool coin = random.nextBool();
-    setState(() {
-      if (coin) {
-        _dealerSpeechBubble = 'HEADS.';
-      } else {
-        _dealerSpeechBubble = 'TAILS.';
-      }
-    });
-    _resetDealerSpeechBubble(3);
-  }
+  // void _coinFlip() {
+  //   bool coin = random.nextBool();
+  //   setState(() {
+  //     if (coin) {
+  //       _dealerSpeechBubble = 'HEADS.';
+  //     } else {
+  //       _dealerSpeechBubble = 'TAILS.';
+  //     }
+  //   });
+  //   _resetDealerSpeechBubble(3);
+  // }
 
-  void _inverter() {
-    if (_shellSequence.isNotEmpty) {
-      setState(() {
-        _shellSequence[0] = !_shellSequence[0];
-      });
-    }
-  }
+  // void _inverter() {
+  //   if (_shellSequence.isNotEmpty) {
+  //     setState(() {
+  //       _shellSequence[0] = !_shellSequence[0];
+  //     });
+  //   }
+  // }
 
-  void _resetDealerSpeechBubble(int delay) {
-    _resetTimer?.cancel();
-    _resetTimer = Timer(Duration(seconds: delay), () {
-      setState(() {
-        _dealerSpeechBubble = ' ';
-      });
-    });
-  }
+  // void _resetDealerSpeechBubble(int delay) {
+  //   _resetTimer?.cancel();
+  //   _resetTimer = Timer(Duration(seconds: delay), () {
+  //     setState(() {
+  //       _dealerSpeechBubble = ' ';
+  //     });
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -229,69 +339,85 @@ class _MyHomePageState extends State<MyHomePage> {
             children: <Widget>[
               SizedBox(height: 40),
               Text(
-                _dealerSpeechBubble,
+                context.read<ShellOrderState>()._dealerSpeechBubble,
                 style: TextStyle(color: Colors.white, fontSize: 20),
               ),
               SizedBox(height: 20),
               Text(
-                '$_shellNumber',
+                '${context.read<ShellOrderState>()._shellNumber}',
                 style: TextStyle(
                   fontSize: 70,
-                  color: Color.fromRGBO(255, 255, 255, _shellNumberOpacity),
+                  color: Color.fromRGBO(
+                    255,
+                    255,
+                    255,
+                    context.read<ShellOrderState>()._shellNumberOpacity,
+                  ),
                 ),
               ),
 
               Padding(
                 padding: const EdgeInsets.fromLTRB(0, 0, 17.5, 0),
                 child: Column(
-                  children: List.generate(_shellSequence.length, (index) {
-                    final bool burnedShell = index == _burnedShell;
+                  children: List.generate(
+                    context.read<ShellOrderState>()._shellSequence.length,
+                    (index) {
+                      final bool burnedShell =
+                          index == context.read<ShellOrderState>()._burnedShell;
 
-                    return GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          _shellSequence[index] = !_shellSequence[index];
-                        });
-                      },
-                      child: Padding(
-                        padding: const EdgeInsets.all(4.0),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            border:
-                                burnedShell
-                                    ? Border.all(
-                                      color: Colors.deepPurpleAccent,
-                                      width: 8,
-                                    )
-                                    : null,
-                            borderRadius: BorderRadius.circular(0),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(0),
+                      return GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            context
+                                    .read<ShellOrderState>()
+                                    ._shellSequence[index] =
+                                !context
+                                    .read<ShellOrderState>()
+                                    ._shellSequence[index];
+                          });
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.all(4.0),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              border:
+                                  burnedShell
+                                      ? Border.all(
+                                        color: Colors.deepPurpleAccent,
+                                        width: 8,
+                                      )
+                                      : null,
+                              borderRadius: BorderRadius.circular(0),
+                            ),
                             child: Padding(
-                              padding: const EdgeInsets.fromLTRB(8, 2, 4, 2),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text((index + 1).toString()),
-                                  SizedBox(width: 5),
-                                  Image.asset(
-                                    _shellSequence[index]
-                                        ? 'assets/images/shellExtraction/live.png'
-                                        : 'assets/images/shellExtraction/blank.png',
-                                    // height: 30,
-                                    width: 90,
-                                    fit: BoxFit.contain,
-                                  ),
-                                ],
+                              padding: const EdgeInsets.all(0),
+                              child: Padding(
+                                padding: const EdgeInsets.fromLTRB(8, 2, 4, 2),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text((index + 1).toString()),
+                                    SizedBox(width: 5),
+                                    Image.asset(
+                                      context
+                                              .read<ShellOrderState>()
+                                              ._shellSequence[index]
+                                          ? 'assets/images/shellExtraction/live.png'
+                                          : 'assets/images/shellExtraction/blank.png',
+                                      // height: 30,
+                                      width: 90,
+                                      fit: BoxFit.contain,
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
                           ),
                         ),
-                      ),
-                    );
-                  }),
+                      );
+                    },
+                  ),
                 ),
               ),
             ],
@@ -307,7 +433,10 @@ class _MyHomePageState extends State<MyHomePage> {
             right: 0,
             child: FloatingActionButton(
               heroTag: 'reload',
-              onPressed: _reload,
+              onPressed:
+                  () => setState(() {
+                    context.read<ShellOrderState>()._reload();
+                  }),
               tooltip: 'RELOAD',
               backgroundColor: Color.fromRGBO(255, 255, 253, 1),
               child: Padding(
@@ -321,7 +450,10 @@ class _MyHomePageState extends State<MyHomePage> {
             right: 0,
             child: FloatingActionButton(
               heroTag: 'eject',
-              onPressed: _eject,
+              onPressed:
+                  () => setState(() {
+                    context.read<ShellOrderState>()._eject();
+                  }),
               tooltip: 'EJECT',
               backgroundColor: Color.fromRGBO(255, 255, 253, 1),
               child: Padding(
@@ -335,7 +467,10 @@ class _MyHomePageState extends State<MyHomePage> {
             right: 0,
             child: FloatingActionButton(
               heroTag: 'burnerPhone',
-              onPressed: _burnerPhonePrediction,
+              onPressed:
+                  () => setState(() {
+                    context.read<ShellOrderState>()._burnerPhonePrediction();
+                  }),
               tooltip: 'BURNER PHONE',
               backgroundColor: Color.fromRGBO(255, 255, 253, 1),
               child: Padding(
@@ -351,7 +486,10 @@ class _MyHomePageState extends State<MyHomePage> {
             right: 0,
             child: FloatingActionButton(
               heroTag: 'inverter',
-              onPressed: _inverter,
+              onPressed:
+                  () => setState(() {
+                    context.read<ShellOrderState>()._inverter();
+                  }),
               tooltip: 'INVERTER',
               backgroundColor: Color.fromRGBO(255, 255, 253, 1),
               child: Padding(
@@ -367,7 +505,10 @@ class _MyHomePageState extends State<MyHomePage> {
             right: 0,
             child: FloatingActionButton(
               heroTag: 'coinFlip',
-              onPressed: _coinFlip,
+              onPressed:
+                  () => setState(() {
+                    context.read<ShellOrderState>()._coinFlip();
+                  }),
               tooltip: 'COIN FLIP',
               backgroundColor: Color.fromRGBO(255, 255, 253, 1),
               child: Padding(
@@ -1580,6 +1721,28 @@ class _ItemsTableState extends State<ItemsTable> {
     }
   }
 
+  Image renderLastShell() {
+    if (context.read<ShellOrderState>()._lastShell == 1) {
+      return Image.asset(
+        'assets/images/shellExtraction/live.png',
+        width: 90,
+        fit: BoxFit.contain,
+      );
+    } else if (context.read<ShellOrderState>()._lastShell == 0) {
+      return Image.asset(
+        'assets/images/shellExtraction/blank.png',
+        width: 90,
+        fit: BoxFit.contain,
+      );
+    } else {
+      return Image.asset(
+        'assets/images/items/itemSpace.png',
+        width: 90,
+        fit: BoxFit.contain,
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -1707,13 +1870,14 @@ class _ItemsTableState extends State<ItemsTable> {
                   ),
                 ),
               ),
+              // items buttons
               Align(
                 alignment: Alignment.center,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Padding(
-                      padding: const EdgeInsets.fromLTRB(0, 0, 25, 0),
+                      padding: const EdgeInsets.all(8.0),
                       child: turnDirectionRenderer(),
                     ),
                     Wrap(
@@ -1736,17 +1900,74 @@ class _ItemsTableState extends State<ItemsTable> {
                             ),
                           ),
                         ),
+                        // Padding(
+                        //   padding: const EdgeInsets.all(4.0),
+                        //   child: FloatingActionButton(
+                        //     heroTag: '2Items',
+                        //     backgroundColor: Colors.grey,
+                        //     onPressed: () => itemsGenerator(2),
+                        //     child: Text(
+                        //       'II',
+                        //       style: TextStyle(
+                        //         fontSize: 22,
+                        //         color: Colors.black,
+                        //       ),
+                        //     ),
+                        //   ),
+                        // ),
+                        // Padding(
+                        //   padding: const EdgeInsets.all(4.0),
+                        //   child: FloatingActionButton(
+                        //     heroTag: '3Items',
+                        //     backgroundColor: Colors.grey,
+                        //     onPressed: () => itemsGenerator(3),
+                        //     child: Text(
+                        //       'III',
+                        //       style: TextStyle(
+                        //         fontSize: 22,
+                        //         color: Colors.black,
+                        //       ),
+                        //     ),
+                        //   ),
+                        // ),
+                        // Padding(
+                        //   padding: const EdgeInsets.all(4.0),
+                        //   child: FloatingActionButton(
+                        //     heroTag: '4Items',
+                        //     backgroundColor: Colors.grey,
+                        //     onPressed: () => itemsGenerator(4),
+                        //     child: Text(
+                        //       'IV',
+                        //       style: TextStyle(
+                        //         fontSize: 22,
+                        //         color: Colors.black,
+                        //       ),
+                        //     ),
+                        //   ),
+                        // ),
+                      ],
+                    ),
+                    Wrap(
+                      alignment: WrapAlignment.center,
+                      children: [
                         Padding(
                           padding: const EdgeInsets.all(4.0),
                           child: FloatingActionButton(
-                            heroTag: '2Items',
+                            heroTag: 'roloadButton',
+                            onPressed: () {
+                              setState(() {
+                                context.read<ShellOrderState>()._reload();
+                              });
+
+                              print(
+                                context.read<ShellOrderState>()._shellSequence,
+                              );
+                            },
                             backgroundColor: Colors.grey,
-                            onPressed: () => itemsGenerator(2),
-                            child: Text(
-                              'II',
-                              style: TextStyle(
-                                fontSize: 22,
-                                color: Colors.black,
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Image.asset(
+                                'assets/images/shellExtraction/reload.png',
                               ),
                             ),
                           ),
@@ -1754,34 +1975,26 @@ class _ItemsTableState extends State<ItemsTable> {
                         Padding(
                           padding: const EdgeInsets.all(4.0),
                           child: FloatingActionButton(
-                            heroTag: '3Items',
+                            heroTag: 'ejectButton',
+                            onPressed: () {
+                              setState(() {
+                                context.read<ShellOrderState>()._eject();
+                              });
+                            },
                             backgroundColor: Colors.grey,
-                            onPressed: () => itemsGenerator(3),
-                            child: Text(
-                              'III',
-                              style: TextStyle(
-                                fontSize: 22,
-                                color: Colors.black,
-                              ),
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(4.0),
-                          child: FloatingActionButton(
-                            heroTag: '4Items',
-                            backgroundColor: Colors.grey,
-                            onPressed: () => itemsGenerator(4),
-                            child: Text(
-                              'IV',
-                              style: TextStyle(
-                                fontSize: 22,
-                                color: Colors.black,
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Image.asset(
+                                'assets/images/shellExtraction/eject.png',
                               ),
                             ),
                           ),
                         ),
                       ],
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: renderLastShell(),
                     ),
                   ],
                 ),
