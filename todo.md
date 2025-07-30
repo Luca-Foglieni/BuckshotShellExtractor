@@ -13,5 +13,3 @@
 - Turn up the multimedia volume of the phone when a player takes damage
 
 # Planned
-
-- Add items descriptions on the tooltip

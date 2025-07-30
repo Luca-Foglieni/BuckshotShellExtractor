@@ -1105,7 +1105,8 @@ class _ItemsTableState extends State<ItemsTable> {
     switch (pItems[index]) {
       case inverter:
         return IconButton(
-          tooltip: 'INVERTER',
+          tooltip:
+              'INVERTER\n\nSWAPS THE POLARITY OF THE CURRENT SHELL IN THE CHAMBER.',
           onPressed:
               () => setState(() {
                 if (!adrenalineHandler(pItems, index, pCharges)) {}
@@ -1120,7 +1121,7 @@ class _ItemsTableState extends State<ItemsTable> {
 
       case beer:
         return IconButton(
-          tooltip: 'BEER',
+          tooltip: 'BEER\n\nRACKS THE SHOTGUN. EJECTS CURRENT SHELL.',
           onPressed:
               () => setState(() {
                 if (!adrenalineHandler(pItems, index, pCharges)) {}
@@ -1134,7 +1135,7 @@ class _ItemsTableState extends State<ItemsTable> {
         );
       case cigarettePack:
         return IconButton(
-          tooltip: 'CIGARETTE PACK',
+          tooltip: 'CIGARETTE PACK\n\nTAKES THE EDGE OFF. REGAIN 1 CHARGE.',
           onPressed:
               () => setState(() {
                 if (adrenalinePointerPCharges != pCharges) {
@@ -1158,7 +1159,7 @@ class _ItemsTableState extends State<ItemsTable> {
         );
       case adrenaline:
         return IconButton(
-          tooltip: 'ADRENALINE',
+          tooltip: 'ADRENALINE\n\nSTEAL AN ITEM AND USE IT IMMEDIATELY. ',
           onPressed:
               () => setState(() {
                 if (adrenalinePointerPCharges.isEmpty) {
@@ -1230,7 +1231,8 @@ class _ItemsTableState extends State<ItemsTable> {
         );
       case burnerPhone:
         return IconButton(
-          tooltip: 'BURNER PHONE',
+          tooltip:
+              'BURNER PHONE\n\nA MYSTERIOUS VOICE GIVES YOU AN INSIGHT INTO THE FUTURE.',
           onPressed:
               () => setState(() {
                 if (!adrenalineHandler(pItems, index, pCharges)) {}
@@ -1244,7 +1246,7 @@ class _ItemsTableState extends State<ItemsTable> {
         );
       case handsaw:
         return IconButton(
-          tooltip: 'HANDSAW',
+          tooltip: 'HANDSAW\n\nSHOTGUN DEALS 2 DAMAGE.',
           onPressed:
               () => setState(() {
                 if (!adrenalineHandler(pItems, index, pCharges)) {}
@@ -1258,7 +1260,7 @@ class _ItemsTableState extends State<ItemsTable> {
         );
       case handcuffs:
         return IconButton(
-          tooltip: 'HANDCUFFS',
+          tooltip: 'HANDCUFFS\n\nSELECTED OPPONENT SKIPS THEIR NEXT TURN.',
           onPressed:
               () => setState(() {
                 if (adrenalinePointerPCharges != pCharges &&
@@ -1288,7 +1290,8 @@ class _ItemsTableState extends State<ItemsTable> {
         );
       case expiredMedicine:
         return IconButton(
-          tooltip: 'EXPIRED MEDICINE',
+          tooltip:
+              'EXPIRED MEDICINE\n\n50% CHANCE OF GAINING 2 CHARGES. IF NOT, LOSE 1 CHARGE.',
           onPressed:
               () => setState(() {
                 if (adrenalinePointerPCharges != pCharges) {
@@ -1320,7 +1323,8 @@ class _ItemsTableState extends State<ItemsTable> {
         );
       case magnifyingGlass:
         return IconButton(
-          tooltip: 'MAGNIFYING GLASS',
+          tooltip:
+              'MAGNIFYING GLASS\n\nCHECK THE CURRENT ROUND IN THE CHAMBER.',
           onPressed:
               () => setState(() {
                 if (!adrenalineHandler(pItems, index, pCharges)) {}
@@ -1334,7 +1338,7 @@ class _ItemsTableState extends State<ItemsTable> {
         );
       case remote:
         return IconButton(
-          tooltip: 'REMOTE',
+          tooltip: 'REMOTE\n\nSWAPS THE CURRENT TURN ORDER.',
           onPressed:
               () => setState(() {
                 if (adrenalinePointerPCharges != pCharges) {
