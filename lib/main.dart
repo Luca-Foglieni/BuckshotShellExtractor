@@ -519,6 +519,8 @@ class _ItemsTableManualState extends State<ItemsTableManual> {
     switch (p[index]) {
       case inverter:
         return IconButton(
+          tooltip:
+              'INVERTER\n\nSWAPS THE POLARITY OF THE CURRENT SHELL IN THE CHAMBER.',
           onPressed:
               () => setState(() {
                 p[index] = 0;
@@ -533,6 +535,7 @@ class _ItemsTableManualState extends State<ItemsTableManual> {
 
       case beer:
         return IconButton(
+          tooltip: 'BEER\n\nRACKS THE SHOTGUN. EJECTS CURRENT SHELL.',
           onPressed:
               () => setState(() {
                 p[index] = 0;
@@ -546,6 +549,7 @@ class _ItemsTableManualState extends State<ItemsTableManual> {
         );
       case cigarettePack:
         return IconButton(
+          tooltip: 'CIGARETTE PACK\n\nTAKES THE EDGE OFF. REGAIN 1 CHARGE.',
           onPressed:
               () => setState(() {
                 p[index] = 0;
@@ -559,6 +563,7 @@ class _ItemsTableManualState extends State<ItemsTableManual> {
         );
       case adrenaline:
         return IconButton(
+          tooltip: 'ADRENALINE\n\nSTEAL AN ITEM AND USE IT IMMEDIATELY. ',
           onPressed:
               () => setState(() {
                 p[index] = 0;
@@ -572,6 +577,8 @@ class _ItemsTableManualState extends State<ItemsTableManual> {
         );
       case burnerPhone:
         return IconButton(
+          tooltip:
+              'BURNER PHONE\n\nA MYSTERIOUS VOICE GIVES YOU AN INSIGHT INTO THE FUTURE.',
           onPressed:
               () => setState(() {
                 p[index] = 0;
@@ -585,6 +592,7 @@ class _ItemsTableManualState extends State<ItemsTableManual> {
         );
       case handsaw:
         return IconButton(
+          tooltip: 'HANDSAW\n\nSHOTGUN DEALS 2 DAMAGE.',
           onPressed:
               () => setState(() {
                 p[index] = 0;
@@ -598,6 +606,7 @@ class _ItemsTableManualState extends State<ItemsTableManual> {
         );
       case handcuffs:
         return IconButton(
+          tooltip: 'HANDCUFFS\n\nSELECTED OPPONENT SKIPS THEIR NEXT TURN.',
           onPressed:
               () => setState(() {
                 p[index] = 0;
@@ -611,6 +620,8 @@ class _ItemsTableManualState extends State<ItemsTableManual> {
         );
       case expiredMedicine:
         return IconButton(
+          tooltip:
+              'EXPIRED MEDICINE\n\n50% CHANCE OF GAINING 2 CHARGES. IF NOT, LOSE 1 CHARGE.',
           onPressed:
               () => setState(() {
                 p[index] = 0;
@@ -624,6 +635,8 @@ class _ItemsTableManualState extends State<ItemsTableManual> {
         );
       case magnifyingGlass:
         return IconButton(
+          tooltip:
+              'MAGNIFYING GLASS\n\nCHECK THE CURRENT ROUND IN THE CHAMBER.',
           onPressed:
               () => setState(() {
                 p[index] = 0;
@@ -637,6 +650,7 @@ class _ItemsTableManualState extends State<ItemsTableManual> {
         );
       case remote:
         return IconButton(
+          tooltip: 'REMOTE\n\nSWAPS THE CURRENT TURN ORDER.',
           onPressed:
               () => setState(() {
                 p[index] = 0;
