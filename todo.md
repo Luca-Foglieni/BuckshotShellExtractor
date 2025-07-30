@@ -14,9 +14,4 @@
 
 # Planned
 
-- Refactoring of manual and automatic items modes to unify them.
-
 - Add a way to play without the Dealer.
-
-- Add more haptic feedback on more buttons.
-
