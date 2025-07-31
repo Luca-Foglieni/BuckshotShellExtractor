@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:provider/provider.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -12,23 +13,27 @@ void main() async {
   await SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp, // locks app in vertical orientation
   ]);
-  runApp(
-    ChangeNotifierProvider(create: (_) => ShellOrderState(), child: MyApp()),
-  );
+  runApp(ChangeNotifierProvider(create: (_) => ShellOrderState(), child: MyApp()));
 }
 
 class ShellOrderState extends ChangeNotifier {
   final random = Random();
 
   int _shellNumber = 0;
+
   final List<bool> _shellSequence = [];
+
+  int _nLives = 0;
+  int _nBlanks = 0;
+
+  final List<int> _shellHiddenSequence = [];
 
   bool _oneLive = false;
   bool _oneBlank = false;
 
   double _shellNumberOpacity = 0;
 
-  int? _burnedShell;
+  int _burnedShell = -1;
 
   int _lastShell = -1;
 
@@ -39,15 +44,24 @@ class ShellOrderState extends ChangeNotifier {
   Timer? _resetTimer;
 
   void _reload() {
-    HapticFeedback.lightImpact();
+    HapticFeedback.selectionClick();
     _shellNumber = 2 + random.nextInt(7);
+    _lastShell = -1;
 
     do {
       _shellSequence.clear();
+      _shellHiddenSequence.clear();
       _oneLive = false;
       _oneBlank = false;
+      _nLives = 0;
+      _nBlanks = 0;
       for (var i = 0; i < _shellNumber; i++) {
         _shellSequence.add(random.nextBool());
+        if (_shellSequence.elementAt(i)) {
+          _nLives++;
+        } else {
+          _nBlanks++;
+        }
 
         if (_shellSequence.elementAt(i) == true && _oneLive == false) {
           _oneLive = true;
@@ -58,6 +72,32 @@ class ShellOrderState extends ChangeNotifier {
         }
       }
     } while (_oneLive == false || _oneBlank == false);
+
+    print('Sequence: ' + _shellSequence.toString());
+
+    print(_nLives);
+
+    print(_nBlanks);
+
+    for (var i = 0; i < _nLives; i++) {
+      _shellHiddenSequence.add(1);
+    }
+
+    print('L: ' + _shellHiddenSequence.toString());
+
+    for (var i = 0; i < _nBlanks; i++) {
+      _shellHiddenSequence.add(0);
+    }
+
+    print('B: ' + _shellHiddenSequence.toString());
+
+    print('shellNumber: ' + _shellNumber.toString());
+
+    for (var i = _nBlanks + _nLives; i < 8; i++) {
+      _shellHiddenSequence.add(-1);
+    }
+
+    print('N: ' + _shellHiddenSequence.toString());
 
     _burnedShell = -1;
 
@@ -86,7 +126,7 @@ class ShellOrderState extends ChangeNotifier {
   }
 
   void _eject() {
-    HapticFeedback.mediumImpact();
+    HapticFeedback.heavyImpact();
     if (_shellSequence.isNotEmpty) {
       if (_shellSequence[0]) {
         _lastShell = 1;
@@ -133,64 +173,23 @@ class MyApp extends StatelessWidget {
       title: 'Buckshot Shell Extractor',
       theme: ThemeData(
         primaryColor: Color.fromRGBO(20, 4, 1, 1),
-        tooltipTheme: TooltipThemeData(
-          textStyle: TextStyle(fontFamily: 'VCR_OSD_MONO', color: Colors.white),
-        ),
+        tooltipTheme: TooltipThemeData(textStyle: TextStyle(fontFamily: 'VCR_OSD_MONO', color: Colors.white)),
         textTheme: TextTheme(
-          headlineSmall: TextStyle(
-            fontFamily: 'VCR_OSD_MONO',
-            color: Colors.white,
-          ),
-          headlineMedium: TextStyle(
-            fontFamily: 'VCR_OSD_MONO',
-            color: Colors.white,
-          ),
-          headlineLarge: TextStyle(
-            fontFamily: 'VCR_OSD_MONO',
-            color: Colors.white,
-          ),
+          headlineSmall: TextStyle(fontFamily: 'VCR_OSD_MONO', color: Colors.white),
+          headlineMedium: TextStyle(fontFamily: 'VCR_OSD_MONO', color: Colors.white),
+          headlineLarge: TextStyle(fontFamily: 'VCR_OSD_MONO', color: Colors.white),
           bodyLarge: TextStyle(fontFamily: 'VCR_OSD_MONO', color: Colors.white),
-          bodyMedium: TextStyle(
-            fontFamily: 'VCR_OSD_MONO',
-            color: Colors.white,
-          ),
+          bodyMedium: TextStyle(fontFamily: 'VCR_OSD_MONO', color: Colors.white),
           bodySmall: TextStyle(fontFamily: 'VCR_OSD_MONO', color: Colors.white),
-          displayLarge: TextStyle(
-            fontFamily: 'VCR_OSD_MONO',
-            color: Colors.white,
-          ),
-          displayMedium: TextStyle(
-            fontFamily: 'VCR_OSD_MONO',
-            color: Colors.white,
-          ),
-          displaySmall: TextStyle(
-            fontFamily: 'VCR_OSD_MONO',
-            color: Colors.white,
-          ),
-          labelLarge: TextStyle(
-            fontFamily: 'VCR_OSD_MONO',
-            color: Colors.white,
-          ),
-          labelMedium: TextStyle(
-            fontFamily: 'VCR_OSD_MONO',
-            color: Colors.white,
-          ),
-          labelSmall: TextStyle(
-            fontFamily: 'VCR_OSD_MONO',
-            color: Colors.white,
-          ),
-          titleLarge: TextStyle(
-            fontFamily: 'VCR_OSD_MONO',
-            color: Colors.white,
-          ),
-          titleMedium: TextStyle(
-            fontFamily: 'VCR_OSD_MONO',
-            color: Colors.white,
-          ),
-          titleSmall: TextStyle(
-            fontFamily: 'VCR_OSD_MONO',
-            color: Colors.white,
-          ),
+          displayLarge: TextStyle(fontFamily: 'VCR_OSD_MONO', color: Colors.white),
+          displayMedium: TextStyle(fontFamily: 'VCR_OSD_MONO', color: Colors.white),
+          displaySmall: TextStyle(fontFamily: 'VCR_OSD_MONO', color: Colors.white),
+          labelLarge: TextStyle(fontFamily: 'VCR_OSD_MONO', color: Colors.white),
+          labelMedium: TextStyle(fontFamily: 'VCR_OSD_MONO', color: Colors.white),
+          labelSmall: TextStyle(fontFamily: 'VCR_OSD_MONO', color: Colors.white),
+          titleLarge: TextStyle(fontFamily: 'VCR_OSD_MONO', color: Colors.white),
+          titleMedium: TextStyle(fontFamily: 'VCR_OSD_MONO', color: Colors.white),
+          titleSmall: TextStyle(fontFamily: 'VCR_OSD_MONO', color: Colors.white),
         ),
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.black),
       ),
@@ -211,117 +210,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   late final Widget _itemsTablePage = ItemsTable();
   late final Widget _itemsTableManualPage = ItemsTableManual();
-  //to fix, the state of the items page is not saved when you go back to the homepage
-
-  // final random = Random();
-
-  // int _shellNumber = 0;
-  // final List<bool> _shellSequence = [];
-
-  // bool _oneLive = false;
-  // bool _oneBlank = false;
-
-  // double _shellNumberOpacity = 0;
-
-  // int? _burnedShell;
-
-  // int itemsNumber = 0;
-
-  // String _dealerSpeechBubble = 'PLEASE SIGN THE WAIVER.';
-
-  // Timer? _resetTimer;
-
-  // void _reload() {
-  //   HapticFeedback.lightImpact();
-  //   setState(() {
-  //     _shellNumber = 2 + random.nextInt(7);
-
-  //     do {
-  //       _shellSequence.clear();
-  //       _oneLive = false;
-  //       _oneBlank = false;
-  //       for (var i = 0; i < _shellNumber; i++) {
-  //         _shellSequence.add(random.nextBool());
-
-  //         if (_shellSequence.elementAt(i) == true && _oneLive == false) {
-  //           _oneLive = true;
-  //         }
-
-  //         if (_shellSequence.last == false && _oneBlank == false) {
-  //           _oneBlank = true;
-  //         }
-  //       }
-  //     } while (_oneLive == false || _oneBlank == false);
-  //   });
-
-  //   _burnedShell = -1;
-
-  //   itemsNumber = 1 + random.nextInt(4);
-
-  //   if (itemsNumber == 1) {
-  //     _dealerSpeechBubble = '$itemsNumber ITEM EACH.';
-  //   } else {
-  //     _dealerSpeechBubble = '$itemsNumber ITEMS EACH.';
-  //   }
-  //   _shellNumberOpacity = 1;
-
-  //   _resetTimer?.cancel();
-  //   // _resetDealerSpeechBubble(120);
-  // }
-
-  // void _burnerPhonePrediction() {
-  //   HapticFeedback.mediumImpact();
-  //   if (_shellSequence.length <= 2) {
-  //     setState(() {
-  //       _dealerSpeechBubble = 'HOW UNFORTUNATE...';
-  //     });
-  //     _resetDealerSpeechBubble(3);
-  //     return;
-  //   }
-
-  //   setState(() {
-  //     _burnedShell = random.nextInt(_shellSequence.length);
-  //   });
-  // }
-
-  // void _eject() {
-  //   HapticFeedback.mediumImpact();
-  //   if (_shellSequence.isEmpty) return;
-
-  //   setState(() {
-  //     _shellSequence.removeAt(0);
-  //     _burnedShell = -1;
-  //   });
-  // }
-
-  // void _coinFlip() {
-  //   bool coin = random.nextBool();
-  //   setState(() {
-  //     if (coin) {
-  //       _dealerSpeechBubble = 'HEADS.';
-  //     } else {
-  //       _dealerSpeechBubble = 'TAILS.';
-  //     }
-  //   });
-  //   _resetDealerSpeechBubble(3);
-  // }
-
-  // void _inverter() {
-  //   if (_shellSequence.isNotEmpty) {
-  //     setState(() {
-  //       _shellSequence[0] = !_shellSequence[0];
-  //     });
-  //   }
-  // }
-
-  // void _resetDealerSpeechBubble(int delay) {
-  //   _resetTimer?.cancel();
-  //   _resetTimer = Timer(Duration(seconds: delay), () {
-  //     setState(() {
-  //       _dealerSpeechBubble = ' ';
-  //     });
-  //   });
-  // }
+  // TODO: the state of the items page is not saved when you go back to the homepage
 
   @override
   Widget build(BuildContext context) {
@@ -347,77 +236,48 @@ class _MyHomePageState extends State<MyHomePage> {
                 '${context.read<ShellOrderState>()._shellNumber}',
                 style: TextStyle(
                   fontSize: 70,
-                  color: Color.fromRGBO(
-                    255,
-                    255,
-                    255,
-                    context.read<ShellOrderState>()._shellNumberOpacity,
-                  ),
+                  color: Color.fromRGBO(255, 255, 255, context.read<ShellOrderState>()._shellNumberOpacity),
                 ),
               ),
 
               Padding(
                 padding: const EdgeInsets.fromLTRB(0, 0, 17.5, 0),
                 child: Column(
-                  children: List.generate(
-                    context.read<ShellOrderState>()._shellSequence.length,
-                    (index) {
-                      final bool burnedShell =
-                          index == context.read<ShellOrderState>()._burnedShell;
+                  children: List.generate(context.read<ShellOrderState>()._shellSequence.length, (index) {
+                    final bool burnedShell = index == context.read<ShellOrderState>()._burnedShell;
 
-                      return GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            context
-                                    .read<ShellOrderState>()
-                                    ._shellSequence[index] =
-                                !context
-                                    .read<ShellOrderState>()
-                                    ._shellSequence[index];
-                          });
-                        },
+                    return Padding(
+                      padding: const EdgeInsets.all(4.0),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          border: burnedShell ? Border.all(color: Colors.deepPurpleAccent, width: 8) : null,
+                          borderRadius: BorderRadius.circular(0),
+                        ),
                         child: Padding(
-                          padding: const EdgeInsets.all(4.0),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              border:
-                                  burnedShell
-                                      ? Border.all(
-                                        color: Colors.deepPurpleAccent,
-                                        width: 8,
-                                      )
-                                      : null,
-                              borderRadius: BorderRadius.circular(0),
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.all(0),
-                              child: Padding(
-                                padding: const EdgeInsets.fromLTRB(8, 2, 4, 2),
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text((index + 1).toString()),
-                                    SizedBox(width: 5),
-                                    Image.asset(
-                                      context
-                                              .read<ShellOrderState>()
-                                              ._shellSequence[index]
-                                          ? 'assets/images/shellExtraction/live.png'
-                                          : 'assets/images/shellExtraction/blank.png',
-                                      // height: 30,
-                                      width: 90,
-                                      fit: BoxFit.contain,
-                                    ),
-                                  ],
+                          padding: const EdgeInsets.all(0),
+                          child: Padding(
+                            padding: const EdgeInsets.fromLTRB(8, 2, 4, 2),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text((index + 1).toString()),
+                                SizedBox(width: 5),
+                                Image.asset(
+                                  context.read<ShellOrderState>()._shellSequence[index]
+                                      ? 'assets/images/shellExtraction/live.png'
+                                      : 'assets/images/shellExtraction/blank.png',
+                                  // height: 30,
+                                  width: 90,
+                                  fit: BoxFit.contain,
                                 ),
-                              ),
+                              ],
                             ),
                           ),
                         ),
-                      );
-                    },
-                  ),
+                      ),
+                    );
+                  }),
                 ),
               ),
             ],
@@ -475,9 +335,7 @@ class _MyHomePageState extends State<MyHomePage> {
               backgroundColor: Color.fromRGBO(255, 255, 253, 1),
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Image.asset(
-                  'assets/images/shellExtraction/burnerPhone.png',
-                ),
+                child: Image.asset('assets/images/shellExtraction/burnerPhone.png'),
               ),
             ),
           ),
@@ -494,9 +352,7 @@ class _MyHomePageState extends State<MyHomePage> {
               backgroundColor: Color.fromRGBO(255, 255, 253, 1),
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Image.asset(
-                  'assets/images/shellExtraction/inverter.png',
-                ),
+                child: Image.asset('assets/images/shellExtraction/inverter.png'),
               ),
             ),
           ),
@@ -523,10 +379,7 @@ class _MyHomePageState extends State<MyHomePage> {
             child: FloatingActionButton(
               heroTag: 'gotoCardsPage',
               onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => _itemsTablePage),
-                );
+                Navigator.push(context, MaterialPageRoute(builder: (context) => _itemsTablePage));
               },
               tooltip: 'ITEMS PAGE',
               backgroundColor: Color.fromRGBO(255, 255, 253, 1),
@@ -544,12 +397,7 @@ class _MyHomePageState extends State<MyHomePage> {
             child: FloatingActionButton(
               heroTag: 'gotoManualCardsPage',
               onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => _itemsTableManualPage,
-                  ),
-                );
+                Navigator.push(context, MaterialPageRoute(builder: (context) => _itemsTableManualPage));
               },
               tooltip: 'MANUAL ITEMS PAGE',
               backgroundColor: Color.fromRGBO(255, 255, 253, 1),
@@ -660,18 +508,13 @@ class _ItemsTableManualState extends State<ItemsTableManual> {
     switch (p[index]) {
       case inverter:
         return IconButton(
-          tooltip:
-              'INVERTER\n\nSWAPS THE POLARITY OF THE CURRENT SHELL IN THE CHAMBER.',
+          tooltip: 'INVERTER\n\nSWAPS THE POLARITY OF THE CURRENT SHELL IN THE CHAMBER.',
           onPressed:
               () => setState(() {
                 p[index] = 0;
               }),
 
-          icon: Image.asset(
-            'assets/images/items/inverter.png',
-            height: imageHeight,
-            width: imageWidth,
-          ),
+          icon: Image.asset('assets/images/items/inverter.png', height: imageHeight, width: imageWidth),
         );
 
       case beer:
@@ -682,11 +525,7 @@ class _ItemsTableManualState extends State<ItemsTableManual> {
                 p[index] = 0;
               }),
 
-          icon: Image.asset(
-            'assets/images/items/beer.png',
-            height: imageHeight,
-            width: imageWidth,
-          ),
+          icon: Image.asset('assets/images/items/beer.png', height: imageHeight, width: imageWidth),
         );
       case cigarettePack:
         return IconButton(
@@ -696,11 +535,7 @@ class _ItemsTableManualState extends State<ItemsTableManual> {
                 p[index] = 0;
               }),
 
-          icon: Image.asset(
-            'assets/images/items/cigarettePack.png',
-            height: imageHeight,
-            width: imageWidth,
-          ),
+          icon: Image.asset('assets/images/items/cigarettePack.png', height: imageHeight, width: imageWidth),
         );
       case adrenaline:
         return IconButton(
@@ -710,26 +545,17 @@ class _ItemsTableManualState extends State<ItemsTableManual> {
                 p[index] = 0;
               }),
 
-          icon: Image.asset(
-            'assets/images/items/adrenaline.png',
-            height: imageHeight,
-            width: imageWidth,
-          ),
+          icon: Image.asset('assets/images/items/adrenaline.png', height: imageHeight, width: imageWidth),
         );
       case burnerPhone:
         return IconButton(
-          tooltip:
-              'BURNER PHONE\n\nA MYSTERIOUS VOICE GIVES YOU AN INSIGHT INTO THE FUTURE.',
+          tooltip: 'BURNER PHONE\n\nA MYSTERIOUS VOICE GIVES YOU AN INSIGHT INTO THE FUTURE.',
           onPressed:
               () => setState(() {
                 p[index] = 0;
               }),
 
-          icon: Image.asset(
-            'assets/images/items/burnerPhone.png',
-            height: imageHeight,
-            width: imageWidth,
-          ),
+          icon: Image.asset('assets/images/items/burnerPhone.png', height: imageHeight, width: imageWidth),
         );
       case handsaw:
         return IconButton(
@@ -739,11 +565,7 @@ class _ItemsTableManualState extends State<ItemsTableManual> {
                 p[index] = 0;
               }),
 
-          icon: Image.asset(
-            'assets/images/items/handsaw.png',
-            height: imageHeight,
-            width: imageWidth,
-          ),
+          icon: Image.asset('assets/images/items/handsaw.png', height: imageHeight, width: imageWidth),
         );
       case handcuffs:
         return IconButton(
@@ -753,41 +575,27 @@ class _ItemsTableManualState extends State<ItemsTableManual> {
                 p[index] = 0;
               }),
 
-          icon: Image.asset(
-            'assets/images/items/handcuffs.png',
-            height: imageHeight,
-            width: imageWidth,
-          ),
+          icon: Image.asset('assets/images/items/handcuffs.png', height: imageHeight, width: imageWidth),
         );
       case expiredMedicine:
         return IconButton(
-          tooltip:
-              'EXPIRED MEDICINE\n\n50% CHANCE OF GAINING 2 CHARGES. IF NOT, LOSE 1 CHARGE.',
+          tooltip: 'EXPIRED MEDICINE\n\n50% CHANCE OF GAINING 2 CHARGES. IF NOT, LOSE 1 CHARGE.',
           onPressed:
               () => setState(() {
                 p[index] = 0;
               }),
 
-          icon: Image.asset(
-            'assets/images/items/expiredMedicine.png',
-            height: imageHeight,
-            width: imageWidth,
-          ),
+          icon: Image.asset('assets/images/items/expiredMedicine.png', height: imageHeight, width: imageWidth),
         );
       case magnifyingGlass:
         return IconButton(
-          tooltip:
-              'MAGNIFYING GLASS\n\nCHECK THE CURRENT ROUND IN THE CHAMBER.',
+          tooltip: 'MAGNIFYING GLASS\n\nCHECK THE CURRENT ROUND IN THE CHAMBER.',
           onPressed:
               () => setState(() {
                 p[index] = 0;
               }),
 
-          icon: Image.asset(
-            'assets/images/items/magnifyingGlass.png',
-            height: imageHeight,
-            width: imageWidth,
-          ),
+          icon: Image.asset('assets/images/items/magnifyingGlass.png', height: imageHeight, width: imageWidth),
         );
       case remote:
         return IconButton(
@@ -797,21 +605,13 @@ class _ItemsTableManualState extends State<ItemsTableManual> {
                 p[index] = 0;
               }),
 
-          icon: Image.asset(
-            'assets/images/items/remote.png',
-            height: imageHeight,
-            width: imageWidth,
-          ),
+          icon: Image.asset('assets/images/items/remote.png', height: imageHeight, width: imageWidth),
         );
       default:
         return IconButton(
           onPressed: () => {},
 
-          icon: Image.asset(
-            'assets/images/items/itemSpace.png',
-            height: imageHeight,
-            width: imageWidth,
-          ),
+          icon: Image.asset('assets/images/items/itemSpace.png', height: imageHeight, width: imageWidth),
         );
     }
   }
@@ -823,11 +623,7 @@ class _ItemsTableManualState extends State<ItemsTableManual> {
             () => setState(() {
               removeCharges(pCharges, 1);
             }),
-        child: Image.asset(
-          'assets/images/items/charge.png',
-          height: chargeIconSize,
-          width: chargeIconSize,
-        ),
+        child: Image.asset('assets/images/items/charge.png', height: chargeIconSize, width: chargeIconSize),
       );
     } else {
       return GestureDetector(
@@ -835,11 +631,7 @@ class _ItemsTableManualState extends State<ItemsTableManual> {
             () => setState(() {
               addCharges(pCharges, 1);
             }),
-        child: Image.asset(
-          'assets/images/items/itemSpace.png',
-          height: chargeIconSize,
-          width: chargeIconSize,
-        ),
+        child: Image.asset('assets/images/items/itemSpace.png', height: chargeIconSize, width: chargeIconSize),
       );
     }
   }
@@ -995,10 +787,7 @@ class _ItemsTableManualState extends State<ItemsTableManual> {
                         () => setState(() {
                           itemsGenerator(1);
                         }),
-                    child: Text(
-                      'I',
-                      style: TextStyle(fontSize: 22, color: Colors.black),
-                    ),
+                    child: Text('I', style: TextStyle(fontSize: 22, color: Colors.black)),
                   ),
                 ),
                 Padding(
@@ -1007,10 +796,7 @@ class _ItemsTableManualState extends State<ItemsTableManual> {
                     heroTag: '2Items',
                     backgroundColor: Colors.grey,
                     onPressed: () => itemsGenerator(2),
-                    child: Text(
-                      'II',
-                      style: TextStyle(fontSize: 22, color: Colors.black),
-                    ),
+                    child: Text('II', style: TextStyle(fontSize: 22, color: Colors.black)),
                   ),
                 ),
                 Padding(
@@ -1019,10 +805,7 @@ class _ItemsTableManualState extends State<ItemsTableManual> {
                     heroTag: '3Items',
                     backgroundColor: Colors.grey,
                     onPressed: () => itemsGenerator(3),
-                    child: Text(
-                      'III',
-                      style: TextStyle(fontSize: 22, color: Colors.black),
-                    ),
+                    child: Text('III', style: TextStyle(fontSize: 22, color: Colors.black)),
                   ),
                 ),
                 Padding(
@@ -1031,10 +814,7 @@ class _ItemsTableManualState extends State<ItemsTableManual> {
                     heroTag: '4Items',
                     backgroundColor: Colors.grey,
                     onPressed: () => itemsGenerator(4),
-                    child: Text(
-                      'IV',
-                      style: TextStyle(fontSize: 22, color: Colors.black),
-                    ),
+                    child: Text('IV', style: TextStyle(fontSize: 22, color: Colors.black)),
                   ),
                 ),
               ],
@@ -1170,12 +950,7 @@ class _ItemsTableState extends State<ItemsTable> {
 
   int nHandcuffsSender = 0;
 
-  List<int> handcuffedPlayers = [
-    0,
-    0,
-    0,
-    0,
-  ]; //each int represent a player from 1 to 4
+  List<int> handcuffedPlayers = [0, 0, 0, 0]; //each int represent a player from 1 to 4
 
   static const Color handcuffedColor = Color.fromRGBO(138, 138, 138, 1);
   static const Color intermediateHandcuffsColor = Color.fromRGBO(80, 80, 80, 1);
@@ -1235,12 +1010,7 @@ class _ItemsTableState extends State<ItemsTable> {
     });
   }
 
-  IconButton insertItems(
-    List<int> pItems,
-    List<bool> pCharges,
-    int playerNumber,
-    int index,
-  ) {
+  IconButton insertItems(List<int> pItems, List<bool> pCharges, int playerNumber, int index) {
     //function that renders the inventory of the players
 
     const int inverter = 1;
@@ -1260,18 +1030,17 @@ class _ItemsTableState extends State<ItemsTable> {
     switch (pItems[index]) {
       case inverter:
         return IconButton(
-          tooltip:
-              'INVERTER\n\nSWAPS THE POLARITY OF THE CURRENT SHELL IN THE CHAMBER.',
+          tooltip: 'INVERTER\n\nSWAPS THE POLARITY OF THE CURRENT SHELL IN THE CHAMBER.',
           onPressed:
               () => setState(() {
-                if (!adrenalineHandler(pItems, index, pCharges)) {}
+                if (adrenalineHandler(pItems, index, pCharges)) {
+                  print('before Inverter: ' + context.read<ShellOrderState>()._shellSequence.elementAt(0).toString());
+                  context.read<ShellOrderState>()._inverter();
+                  print('after Inverter: ' + context.read<ShellOrderState>()._shellSequence.elementAt(0).toString());
+                }
               }),
 
-          icon: Image.asset(
-            'assets/images/items/inverter.png',
-            height: imageHeight,
-            width: imageWidth,
-          ),
+          icon: Image.asset('assets/images/items/inverter.png', height: imageHeight, width: imageWidth),
         );
 
       case beer:
@@ -1279,14 +1048,10 @@ class _ItemsTableState extends State<ItemsTable> {
           tooltip: 'BEER\n\nRACKS THE SHOTGUN. EJECTS CURRENT SHELL.',
           onPressed:
               () => setState(() {
-                if (!adrenalineHandler(pItems, index, pCharges)) {}
+                if (adrenalineHandler(pItems, index, pCharges)) {}
               }),
 
-          icon: Image.asset(
-            'assets/images/items/beer.png',
-            height: imageHeight,
-            width: imageWidth,
-          ),
+          icon: Image.asset('assets/images/items/beer.png', height: imageHeight, width: imageWidth),
         );
       case cigarettePack:
         return IconButton(
@@ -1306,11 +1071,7 @@ class _ItemsTableState extends State<ItemsTable> {
                 }
               }),
 
-          icon: Image.asset(
-            'assets/images/items/cigarettePack.png',
-            height: imageHeight,
-            width: imageWidth,
-          ),
+          icon: Image.asset('assets/images/items/cigarettePack.png', height: imageHeight, width: imageWidth),
         );
       case adrenaline:
         return IconButton(
@@ -1321,40 +1082,19 @@ class _ItemsTableState extends State<ItemsTable> {
                   bool foundSomethingOtherThanAdrenalineAndHandcuffs = false;
                   bool foundSomethingOtherThanAdrenaline = false;
                   for (int i = 0; i < pItems.length; i++) {
-                    if ((p1items[i] != 4 &&
-                            p1items[i] != 7 &&
-                            p1items[i] != 0 &&
-                            playerNumber != 1) ||
-                        (p2items[i] != 4 &&
-                            p2items[i] != 7 &&
-                            p2items[i] != 0 &&
-                            playerNumber != 2) ||
-                        (p3items[i] != 4 &&
-                            p3items[i] != 7 &&
-                            p3items[i] != 0 &&
-                            playerNumber != 3) ||
-                        (p4items[i] != 4 &&
-                            p4items[i] != 7 &&
-                            p4items[i] != 0 &&
-                            playerNumber != 4)) {
+                    if ((p1items[i] != 4 && p1items[i] != 7 && p1items[i] != 0 && playerNumber != 1) ||
+                        (p2items[i] != 4 && p2items[i] != 7 && p2items[i] != 0 && playerNumber != 2) ||
+                        (p3items[i] != 4 && p3items[i] != 7 && p3items[i] != 0 && playerNumber != 3) ||
+                        (p4items[i] != 4 && p4items[i] != 7 && p4items[i] != 0 && playerNumber != 4)) {
                       foundSomethingOtherThanAdrenalineAndHandcuffs = true;
                     }
-                    if ((p1items[i] != 4 &&
-                            p1items[i] != 0 &&
-                            playerNumber != 1) ||
-                        (p2items[i] != 4 &&
-                            p2items[i] != 0 &&
-                            playerNumber != 2) ||
-                        (p3items[i] != 4 &&
-                            p3items[i] != 0 &&
-                            playerNumber != 3) ||
-                        (p4items[i] != 4 &&
-                            p4items[i] != 0 &&
-                            playerNumber != 4)) {
+                    if ((p1items[i] != 4 && p1items[i] != 0 && playerNumber != 1) ||
+                        (p2items[i] != 4 && p2items[i] != 0 && playerNumber != 2) ||
+                        (p3items[i] != 4 && p3items[i] != 0 && playerNumber != 3) ||
+                        (p4items[i] != 4 && p4items[i] != 0 && playerNumber != 4)) {
                       foundSomethingOtherThanAdrenaline = true;
                     }
-                    if (foundSomethingOtherThanAdrenalineAndHandcuffs &&
-                        foundSomethingOtherThanAdrenaline) {
+                    if (foundSomethingOtherThanAdrenalineAndHandcuffs && foundSomethingOtherThanAdrenaline) {
                       break;
                     }
                   }
@@ -1378,40 +1118,43 @@ class _ItemsTableState extends State<ItemsTable> {
                 }
               }),
 
-          icon: Image.asset(
-            'assets/images/items/adrenaline.png',
-            height: imageHeight,
-            width: imageWidth,
-          ),
+          icon: Image.asset('assets/images/items/adrenaline.png', height: imageHeight, width: imageWidth),
         );
       case burnerPhone:
         return IconButton(
-          tooltip:
-              'BURNER PHONE\n\nA MYSTERIOUS VOICE GIVES YOU AN INSIGHT INTO THE FUTURE.',
+          tooltip: 'BURNER PHONE\n\nA MYSTERIOUS VOICE GIVES YOU AN INSIGHT INTO THE FUTURE.',
           onPressed:
               () => setState(() {
-                if (!adrenalineHandler(pItems, index, pCharges)) {}
+                if (adrenalineHandler(pItems, index, pCharges)) {
+                  context.read<ShellOrderState>()._burnerPhonePrediction();
+
+                  print('Burned Shell: ' + context.read<ShellOrderState>()._burnedShell.toString());
+
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: SizedBox(
+                        height: MediaQuery.of(context).size.height,
+                        child: Padding(
+                          padding: const EdgeInsets.fromLTRB(0, 70, 0, 70),
+                          child: Row(mainAxisAlignment: MainAxisAlignment.center, children: burnerPhoneItemsScreen()),
+                        ),
+                      ),
+                    ),
+                  );
+                }
               }),
 
-          icon: Image.asset(
-            'assets/images/items/burnerPhone.png',
-            height: imageHeight,
-            width: imageWidth,
-          ),
+          icon: Image.asset('assets/images/items/burnerPhone.png', height: imageHeight, width: imageWidth),
         );
       case handsaw:
         return IconButton(
           tooltip: 'HANDSAW\n\nSHOTGUN DEALS 2 DAMAGE.',
           onPressed:
               () => setState(() {
-                if (!adrenalineHandler(pItems, index, pCharges)) {}
+                if (adrenalineHandler(pItems, index, pCharges)) {}
               }),
 
-          icon: Image.asset(
-            'assets/images/items/handsaw.png',
-            height: imageHeight,
-            width: imageWidth,
-          ),
+          icon: Image.asset('assets/images/items/handsaw.png', height: imageHeight, width: imageWidth),
         );
       case handcuffs:
         return IconButton(
@@ -1437,16 +1180,11 @@ class _ItemsTableState extends State<ItemsTable> {
                 }
               }),
 
-          icon: Image.asset(
-            'assets/images/items/handcuffs.png',
-            height: imageHeight,
-            width: imageWidth,
-          ),
+          icon: Image.asset('assets/images/items/handcuffs.png', height: imageHeight, width: imageWidth),
         );
       case expiredMedicine:
         return IconButton(
-          tooltip:
-              'EXPIRED MEDICINE\n\n50% CHANCE OF GAINING 2 CHARGES. IF NOT, LOSE 1 CHARGE.',
+          tooltip: 'EXPIRED MEDICINE\n\n50% CHANCE OF GAINING 2 CHARGES. IF NOT, LOSE 1 CHARGE.',
           onPressed:
               () => setState(() {
                 if (adrenalinePointerPCharges != pCharges) {
@@ -1470,26 +1208,17 @@ class _ItemsTableState extends State<ItemsTable> {
                 }
               }),
 
-          icon: Image.asset(
-            'assets/images/items/expiredMedicine.png',
-            height: imageHeight,
-            width: imageWidth,
-          ),
+          icon: Image.asset('assets/images/items/expiredMedicine.png', height: imageHeight, width: imageWidth),
         );
       case magnifyingGlass:
         return IconButton(
-          tooltip:
-              'MAGNIFYING GLASS\n\nCHECK THE CURRENT ROUND IN THE CHAMBER.',
+          tooltip: 'MAGNIFYING GLASS\n\nCHECK THE CURRENT ROUND IN THE CHAMBER.',
           onPressed:
               () => setState(() {
-                if (!adrenalineHandler(pItems, index, pCharges)) {}
+                if (adrenalineHandler(pItems, index, pCharges)) {}
               }),
 
-          icon: Image.asset(
-            'assets/images/items/magnifyingGlass.png',
-            height: imageHeight,
-            width: imageWidth,
-          ),
+          icon: Image.asset('assets/images/items/magnifyingGlass.png', height: imageHeight, width: imageWidth),
         );
       case remote:
         return IconButton(
@@ -1509,21 +1238,13 @@ class _ItemsTableState extends State<ItemsTable> {
                 }
               }),
 
-          icon: Image.asset(
-            'assets/images/items/remote.png',
-            height: imageHeight,
-            width: imageWidth,
-          ),
+          icon: Image.asset('assets/images/items/remote.png', height: imageHeight, width: imageWidth),
         );
       default:
         return IconButton(
           onPressed: () => {},
 
-          icon: Image.asset(
-            'assets/images/items/itemSpace.png',
-            height: imageHeight,
-            width: imageWidth,
-          ),
+          icon: Image.asset('assets/images/items/itemSpace.png', height: imageHeight, width: imageWidth),
         );
     }
   }
@@ -1535,11 +1256,7 @@ class _ItemsTableState extends State<ItemsTable> {
             () => setState(() {
               removeCharges(pCharges, 1);
             }),
-        child: Image.asset(
-          'assets/images/items/charge.png',
-          height: chargeIconSize,
-          width: chargeIconSize,
-        ),
+        child: Image.asset('assets/images/items/charge.png', height: chargeIconSize, width: chargeIconSize),
       );
     } else {
       return GestureDetector(
@@ -1547,11 +1264,7 @@ class _ItemsTableState extends State<ItemsTable> {
             () => setState(() {
               addCharges(pCharges, 1);
             }),
-        child: Image.asset(
-          'assets/images/items/itemSpace.png',
-          height: chargeIconSize,
-          width: chargeIconSize,
-        ),
+        child: Image.asset('assets/images/items/itemSpace.png', height: chargeIconSize, width: chargeIconSize),
       );
     }
   }
@@ -1613,15 +1326,9 @@ class _ItemsTableState extends State<ItemsTable> {
     const double turnDirectionSize = 45;
 
     if (turnDirectionClockwise) {
-      return Image.asset(
-        'assets/images/items/turnsDirectionClockwise.png',
-        height: turnDirectionSize,
-      );
+      return Image.asset('assets/images/items/turnsDirectionClockwise.png', height: turnDirectionSize);
     } else {
-      return Image.asset(
-        'assets/images/items/turnsDirectionCounterClockwise.png',
-        height: turnDirectionSize,
-      );
+      return Image.asset('assets/images/items/turnsDirectionCounterClockwise.png', height: turnDirectionSize);
     }
   }
 
@@ -1632,8 +1339,18 @@ class _ItemsTableState extends State<ItemsTable> {
       adrenalinePointerPItems = [];
       adrenalineCaster = 0;
       return true;
+    } else {
+      return false;
     }
-    return false;
+
+    // if (adrenalinePointerPCharges != pCharges) {
+    //   pItems[index] = 0;
+    //   adrenalinePointerPCharges = [];
+    //   adrenalinePointerPItems = [];
+    //   adrenalineCaster = 0;
+    //   return true;
+    // }
+    // return false;
   }
 
   int boolToInt(bool flag) {
@@ -1646,9 +1363,7 @@ class _ItemsTableState extends State<ItemsTable> {
 
   void handcuffsHandler(int nReceiver) {
     setState(() {
-      if (handcuffsTrigger &&
-          nHandcuffsSender != nReceiver &&
-          handcuffedPlayers[nReceiver - 1] != 1) {
+      if (handcuffsTrigger && nHandcuffsSender != nReceiver && handcuffedPlayers[nReceiver - 1] != 1) {
         handcuffsTrigger = false;
         switch (nReceiver) {
           case 1:
@@ -1723,22 +1438,99 @@ class _ItemsTableState extends State<ItemsTable> {
 
   Image renderLastShell() {
     if (context.read<ShellOrderState>()._lastShell == 1) {
-      return Image.asset(
-        'assets/images/shellExtraction/live.png',
-        width: 90,
-        fit: BoxFit.contain,
-      );
+      return Image.asset('assets/images/shellExtraction/live.png', width: 90, fit: BoxFit.contain);
     } else if (context.read<ShellOrderState>()._lastShell == 0) {
-      return Image.asset(
-        'assets/images/shellExtraction/blank.png',
-        width: 90,
-        fit: BoxFit.contain,
+      return Image.asset('assets/images/shellExtraction/blank.png', width: 90, fit: BoxFit.contain);
+    } else {
+      return Image.asset('assets/images/items/itemSpace.png', width: 90, fit: BoxFit.contain);
+    }
+  }
+
+  Image renderShell(int shellType) {
+    if (shellType == 1) {
+      return Image.asset('assets/images/shellExtraction/live.png', fit: BoxFit.contain);
+    } else if (shellType == 0) {
+      return Image.asset('assets/images/shellExtraction/blank.png', fit: BoxFit.contain);
+    } else {
+      return Image.asset('assets/images/items/itemSpace.png', fit: BoxFit.contain);
+    }
+  }
+
+  List<Widget> burnerPhoneItemsScreen() {
+    if (context.read<ShellOrderState>()._burnedShell != -1) {
+      return [
+        Text((context.read<ShellOrderState>()._burnedShell + 1).toString(), style: TextStyle(fontSize: 90)),
+        SizedBox(width: 20),
+        Expanded(
+          child: Image.asset(
+            context.read<ShellOrderState>()._shellSequence[context.read<ShellOrderState>()._burnedShell]
+                ? 'assets/images/shellExtraction/live.png'
+                : 'assets/images/shellExtraction/blank.png',
+            fit: BoxFit.fitWidth,
+          ),
+        ),
+      ];
+    } else {
+      return [
+        Expanded(
+          child: AutoSizeText(
+            context.read<ShellOrderState>()._dealerSpeechBubble,
+            style: TextStyle(color: Colors.white, fontSize: 50),
+            maxLines: 1,
+          ),
+        ),
+      ];
+    }
+  }
+
+  FloatingActionButton switchReloadAndEject() {
+    if (context.read<ShellOrderState>()._shellSequence.isEmpty) {
+      return FloatingActionButton(
+        heroTag: 'roloadButton',
+        onPressed: () {
+          setState(() {
+            context.read<ShellOrderState>()._reload();
+            itemsGenerator(context.read<ShellOrderState>().itemsNumber);
+
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: SizedBox(
+                  height: MediaQuery.of(context).size.height,
+                  child: Padding(
+                    padding: const EdgeInsets.all(70.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: List.generate(context.read<ShellOrderState>()._shellHiddenSequence.length, (index) {
+                        return Expanded(
+                          child: renderShell(context.read<ShellOrderState>()._shellHiddenSequence.elementAt(index)),
+                        );
+                      }),
+                    ),
+                  ),
+                ),
+              ),
+            );
+          });
+        },
+        backgroundColor: Colors.grey,
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Image.asset('assets/images/shellExtraction/reload.png'),
+        ),
       );
     } else {
-      return Image.asset(
-        'assets/images/items/itemSpace.png',
-        width: 90,
-        fit: BoxFit.contain,
+      return FloatingActionButton(
+        heroTag: 'ejectButton',
+        onPressed: () {
+          setState(() {
+            context.read<ShellOrderState>()._eject();
+          });
+        },
+        backgroundColor: Colors.grey,
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Image.asset('assets/images/shellExtraction/eject.png'),
+        ),
       );
     }
   }
@@ -1784,22 +1576,14 @@ class _ItemsTableState extends State<ItemsTable> {
                         onTap: () => handcuffsHandler(1),
                         child: AbsorbPointer(
                           absorbing:
-                              (handcuffsTrigger ||
-                                  handcuffedPlayers.elementAt(0) != 0) &&
+                              (handcuffsTrigger || handcuffedPlayers.elementAt(0) != 0) &&
                               adrenalinePointerPCharges.isEmpty,
                           child: SizedBox(
                             width: playerInventoryWidth,
                             child: Center(
                               child: Wrap(
-                                children: List.generate(p1items.length, (
-                                  index,
-                                ) {
-                                  return insertItems(
-                                    p1items,
-                                    p1charges,
-                                    1,
-                                    index,
-                                  );
+                                children: List.generate(p1items.length, (index) {
+                                  return insertItems(p1items, p1charges, 1, index);
                                 }),
                               ),
                             ),
@@ -1844,22 +1628,14 @@ class _ItemsTableState extends State<ItemsTable> {
                         onTap: () => handcuffsHandler(2),
                         child: AbsorbPointer(
                           absorbing:
-                              (handcuffsTrigger ||
-                                  handcuffedPlayers.elementAt(1) != 0) &&
+                              (handcuffsTrigger || handcuffedPlayers.elementAt(1) != 0) &&
                               adrenalinePointerPCharges.isEmpty,
                           child: SizedBox(
                             width: playerInventoryWidth,
                             child: Center(
                               child: Wrap(
-                                children: List.generate(p2items.length, (
-                                  index,
-                                ) {
-                                  return insertItems(
-                                    p2items,
-                                    p2charges,
-                                    2,
-                                    index,
-                                  );
+                                children: List.generate(p2items.length, (index) {
+                                  return insertItems(p2items, p2charges, 2, index);
                                 }),
                               ),
                             ),
@@ -1876,10 +1652,7 @@ class _ItemsTableState extends State<ItemsTable> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: turnDirectionRenderer(),
-                    ),
+                    Padding(padding: const EdgeInsets.all(8.0), child: turnDirectionRenderer()),
                     Wrap(
                       children: [
                         Padding(
@@ -1891,111 +1664,16 @@ class _ItemsTableState extends State<ItemsTable> {
                                 () => setState(() {
                                   itemsGenerator(1);
                                 }),
-                            child: Text(
-                              'I',
-                              style: TextStyle(
-                                fontSize: 22,
-                                color: Colors.black,
-                              ),
-                            ),
+                            child: Text('I', style: TextStyle(fontSize: 22, color: Colors.black)),
                           ),
                         ),
-                        // Padding(
-                        //   padding: const EdgeInsets.all(4.0),
-                        //   child: FloatingActionButton(
-                        //     heroTag: '2Items',
-                        //     backgroundColor: Colors.grey,
-                        //     onPressed: () => itemsGenerator(2),
-                        //     child: Text(
-                        //       'II',
-                        //       style: TextStyle(
-                        //         fontSize: 22,
-                        //         color: Colors.black,
-                        //       ),
-                        //     ),
-                        //   ),
-                        // ),
-                        // Padding(
-                        //   padding: const EdgeInsets.all(4.0),
-                        //   child: FloatingActionButton(
-                        //     heroTag: '3Items',
-                        //     backgroundColor: Colors.grey,
-                        //     onPressed: () => itemsGenerator(3),
-                        //     child: Text(
-                        //       'III',
-                        //       style: TextStyle(
-                        //         fontSize: 22,
-                        //         color: Colors.black,
-                        //       ),
-                        //     ),
-                        //   ),
-                        // ),
-                        // Padding(
-                        //   padding: const EdgeInsets.all(4.0),
-                        //   child: FloatingActionButton(
-                        //     heroTag: '4Items',
-                        //     backgroundColor: Colors.grey,
-                        //     onPressed: () => itemsGenerator(4),
-                        //     child: Text(
-                        //       'IV',
-                        //       style: TextStyle(
-                        //         fontSize: 22,
-                        //         color: Colors.black,
-                        //       ),
-                        //     ),
-                        //   ),
-                        // ),
                       ],
                     ),
                     Wrap(
                       alignment: WrapAlignment.center,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(4.0),
-                          child: FloatingActionButton(
-                            heroTag: 'roloadButton',
-                            onPressed: () {
-                              setState(() {
-                                context.read<ShellOrderState>()._reload();
-                              });
-
-                              print(
-                                context.read<ShellOrderState>()._shellSequence,
-                              );
-                            },
-                            backgroundColor: Colors.grey,
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Image.asset(
-                                'assets/images/shellExtraction/reload.png',
-                              ),
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(4.0),
-                          child: FloatingActionButton(
-                            heroTag: 'ejectButton',
-                            onPressed: () {
-                              setState(() {
-                                context.read<ShellOrderState>()._eject();
-                              });
-                            },
-                            backgroundColor: Colors.grey,
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Image.asset(
-                                'assets/images/shellExtraction/eject.png',
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
+                      children: [Padding(padding: const EdgeInsets.all(4.0), child: switchReloadAndEject())],
                     ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: renderLastShell(),
-                    ),
+                    Padding(padding: const EdgeInsets.all(8.0), child: renderLastShell()),
                   ],
                 ),
               ),
@@ -2018,22 +1696,14 @@ class _ItemsTableState extends State<ItemsTable> {
                         onTap: () => handcuffsHandler(3),
                         child: AbsorbPointer(
                           absorbing:
-                              (handcuffsTrigger ||
-                                  handcuffedPlayers.elementAt(2) != 0) &&
+                              (handcuffsTrigger || handcuffedPlayers.elementAt(2) != 0) &&
                               adrenalinePointerPCharges.isEmpty,
                           child: SizedBox(
                             width: playerInventoryWidth,
                             child: Center(
                               child: Wrap(
-                                children: List.generate(p3items.length, (
-                                  index,
-                                ) {
-                                  return insertItems(
-                                    p3items,
-                                    p3charges,
-                                    3,
-                                    index,
-                                  );
+                                children: List.generate(p3items.length, (index) {
+                                  return insertItems(p3items, p3charges, 3, index);
                                 }),
                               ),
                             ),
@@ -2078,22 +1748,14 @@ class _ItemsTableState extends State<ItemsTable> {
                         onTap: () => handcuffsHandler(4),
                         child: AbsorbPointer(
                           absorbing:
-                              (handcuffsTrigger ||
-                                  handcuffedPlayers.elementAt(3) != 0) &&
+                              (handcuffsTrigger || handcuffedPlayers.elementAt(3) != 0) &&
                               adrenalinePointerPCharges.isEmpty,
                           child: SizedBox(
                             width: playerInventoryWidth,
                             child: Center(
                               child: Wrap(
-                                children: List.generate(p4items.length, (
-                                  index,
-                                ) {
-                                  return insertItems(
-                                    p4items,
-                                    p4charges,
-                                    4,
-                                    index,
-                                  );
+                                children: List.generate(p4items.length, (index) {
+                                  return insertItems(p4items, p4charges, 4, index);
                                 }),
                               ),
                             ),
@@ -2127,9 +1789,7 @@ class _ItemsTableState extends State<ItemsTable> {
             child: Container(
               decoration: BoxDecoration(
                 border: Border.all(color: statusBorderManager(), width: 12),
-                borderRadius: BorderRadius.circular(
-                  MediaQuery.of(context).size.width * 0.05,
-                ),
+                borderRadius: BorderRadius.circular(MediaQuery.of(context).size.width * 0.05),
               ),
             ),
           ),

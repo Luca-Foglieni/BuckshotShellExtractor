@@ -31,6 +31,7 @@ dependencies:
   flutter:
     sdk: flutter
   provider: ^6.1.5
+  auto_size_text: ^3.0.0
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -89,6 +90,9 @@ flutter:
 
     - assets/images/items/turnsDirectionClockwise.png
     - assets/images/items/turnsDirectionCounterClockwise.png
+
+    - assets/images/items/live.png
+    - assets/images/items/blank.png
 
   fonts:
     - family: VCR_OSD_MONO
