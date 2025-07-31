@@ -1,5 +1,5 @@
 name: buckshot_shell_extractor
-description: "A new Flutter project."
+description: "Creates a random order of blanks and live rounds."
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: "none" # Remove this line if you wish to publish to pub.dev
@@ -30,6 +30,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  provider: ^6.1.5
+  auto_size_text: ^3.0.0
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -70,6 +72,7 @@ flutter:
 
     - assets/images/shellExtraction/beer.png
     - assets/images/shellExtraction/beers.png
+    - assets/images/shellExtraction/cheers.png
 
     - assets/images/items/inverter.png
     - assets/images/items/beer.png
@@ -88,6 +91,9 @@ flutter:
 
     - assets/images/items/turnsDirectionClockwise.png
     - assets/images/items/turnsDirectionCounterClockwise.png
+
+    - assets/images/items/live.png
+    - assets/images/items/blank.png
 
   fonts:
     - family: VCR_OSD_MONO

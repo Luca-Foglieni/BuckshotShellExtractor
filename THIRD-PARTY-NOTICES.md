@@ -35,6 +35,9 @@ is a merged version of this two icons:
 <img src="assets/images/shellExtraction/beer.png" width="50">
 <a href="https://www.flaticon.com/free-icons/beer-can" title="beer can icons">Beer can icons created by Freepik - Flaticon</a>
 
+<img src="assets/images/shellExtraction/cheers.png" width="50">
+<a href="https://www.flaticon.com/free-icons/beer" title="beer icons">Beer icons created by Freepik - Flaticon</a>
+
 <img src="assets/images/shellExtraction/beers.png" width="50">
 <a href="https://www.flaticon.com/free-icons/beer-can" title="beer can icons">Beer can icons created by Freepik - Flaticon</a>
 

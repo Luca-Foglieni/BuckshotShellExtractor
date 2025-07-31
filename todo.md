@@ -13,3 +13,11 @@
 - Turn up the multimedia volume of the phone when a player takes damage
 
 # Planned
+
+- Refactoring of manual, automatic and dealerless items modes to unify them.
+
+- Add more haptic feedback on more buttons.
+
+- Add a new main page to better select the gamemode.
+
+- Refactoring of adrenaline logic.
