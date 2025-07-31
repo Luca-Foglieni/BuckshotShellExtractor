@@ -16,10 +16,6 @@
 
 - Refactoring of manual and automatic items modes to unify them.
 
-- Add a way to play without the Dealer.
-
-- Make so that reload and eject buttons are contestual and not always present even when they can't be used.
-
 - Add more haptic feedback on more buttons.
 
 - Add a new main page to better select the gamemode.

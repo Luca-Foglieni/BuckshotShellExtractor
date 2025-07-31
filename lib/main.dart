@@ -963,6 +963,9 @@ class _ItemsTableState extends State<ItemsTable> {
 
   static const Color statusHandcuffs = Color.fromRGBO(3, 168, 244, 0.4);
 
+  // snackbar text
+  String shellSnackBarText = '';
+
   //number of different items
   int distinctItems = 10;
 
@@ -1048,7 +1051,11 @@ class _ItemsTableState extends State<ItemsTable> {
           tooltip: 'BEER\n\nRACKS THE SHOTGUN. EJECTS CURRENT SHELL.',
           onPressed:
               () => setState(() {
-                if (adrenalineHandler(pItems, index, pCharges)) {}
+                if (adrenalineHandler(pItems, index, pCharges)) {
+                  shellSnackBarText = 'EJECTED';
+                  showCurrentShellSnackBar();
+                  context.read<ShellOrderState>()._eject();
+                }
               }),
 
           icon: Image.asset('assets/images/items/beer.png', height: imageHeight, width: imageWidth),
@@ -1132,11 +1139,19 @@ class _ItemsTableState extends State<ItemsTable> {
 
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
+                      backgroundColor: Color.fromRGBO(10, 10, 10, 1),
                       content: SizedBox(
                         height: MediaQuery.of(context).size.height,
-                        child: Padding(
-                          padding: const EdgeInsets.fromLTRB(0, 70, 0, 70),
-                          child: Row(mainAxisAlignment: MainAxisAlignment.center, children: burnerPhoneItemsScreen()),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            AutoSizeText(
+                              'THE VOICE TELLS YOU',
+                              style: TextStyle(fontSize: 3000, color: Colors.white),
+                              maxLines: 1,
+                            ),
+                            Row(mainAxisAlignment: MainAxisAlignment.center, children: burnerPhoneItemsScreen()),
+                          ],
                         ),
                       ),
                     ),
@@ -1215,7 +1230,10 @@ class _ItemsTableState extends State<ItemsTable> {
           tooltip: 'MAGNIFYING GLASS\n\nCHECK THE CURRENT ROUND IN THE CHAMBER.',
           onPressed:
               () => setState(() {
-                if (adrenalineHandler(pItems, index, pCharges)) {}
+                if (adrenalineHandler(pItems, index, pCharges)) {
+                  shellSnackBarText = 'NEXT SHELL';
+                  showCurrentShellSnackBar();
+                }
               }),
 
           icon: Image.asset('assets/images/items/magnifyingGlass.png', height: imageHeight, width: imageWidth),
@@ -1459,7 +1477,7 @@ class _ItemsTableState extends State<ItemsTable> {
   List<Widget> burnerPhoneItemsScreen() {
     if (context.read<ShellOrderState>()._burnedShell != -1) {
       return [
-        Text((context.read<ShellOrderState>()._burnedShell + 1).toString(), style: TextStyle(fontSize: 90)),
+        AutoSizeText((context.read<ShellOrderState>()._burnedShell + 1).toString(), style: TextStyle(fontSize: 90)),
         SizedBox(width: 20),
         Expanded(
           child: Image.asset(
@@ -1483,10 +1501,10 @@ class _ItemsTableState extends State<ItemsTable> {
     }
   }
 
-  FloatingActionButton switchReloadAndEject() {
+  ElevatedButton switchReloadAndEject() {
     if (context.read<ShellOrderState>()._shellSequence.isEmpty) {
-      return FloatingActionButton(
-        heroTag: 'roloadButton',
+      return ElevatedButton(
+        // heroTag: 'roloadButton',
         onPressed: () {
           setState(() {
             context.read<ShellOrderState>()._reload();
@@ -1494,6 +1512,7 @@ class _ItemsTableState extends State<ItemsTable> {
 
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
+                backgroundColor: Color.fromRGBO(10, 10, 10, 1),
                 content: SizedBox(
                   height: MediaQuery.of(context).size.height,
                   child: Padding(
@@ -1512,27 +1531,56 @@ class _ItemsTableState extends State<ItemsTable> {
             );
           });
         },
-        backgroundColor: Colors.grey,
+        style: ElevatedButton.styleFrom(backgroundColor: Colors.grey),
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Image.asset('assets/images/shellExtraction/reload.png'),
         ),
       );
     } else {
-      return FloatingActionButton(
-        heroTag: 'ejectButton',
+      return ElevatedButton(
+        // heroTag: 'ejectButton',
         onPressed: () {
           setState(() {
+            shellSnackBarText = 'SHOT';
+            showCurrentShellSnackBar();
             context.read<ShellOrderState>()._eject();
           });
         },
-        backgroundColor: Colors.grey,
+
+        style: ElevatedButton.styleFrom(backgroundColor: Colors.grey),
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Image.asset('assets/images/shellExtraction/eject.png'),
         ),
       );
     }
+  }
+
+  void showCurrentShellSnackBar() {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        backgroundColor: Color.fromRGBO(10, 10, 10, 1),
+        content: SizedBox(
+          height: MediaQuery.of(context).size.height,
+          child: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                AutoSizeText(shellSnackBarText, style: TextStyle(fontSize: 3000), maxLines: 1),
+                Image.asset(
+                  context.read<ShellOrderState>()._shellSequence.elementAt(0)
+                      ? 'assets/images/shellExtraction/live.png'
+                      : 'assets/images/shellExtraction/blank.png',
+                  fit: BoxFit.fitWidth,
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
   }
 
   @override
@@ -1648,34 +1696,19 @@ class _ItemsTableState extends State<ItemsTable> {
               ),
               // items buttons
               Align(
+                alignment: Alignment.centerLeft,
+                child: Padding(padding: const EdgeInsets.all(24.0), child: turnDirectionRenderer()),
+              ),
+              Align(
                 alignment: Alignment.center,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Padding(padding: const EdgeInsets.all(8.0), child: turnDirectionRenderer()),
-                    Wrap(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(4.0),
-                          child: FloatingActionButton(
-                            heroTag: '1Items',
-                            backgroundColor: Colors.grey,
-                            onPressed:
-                                () => setState(() {
-                                  itemsGenerator(1);
-                                }),
-                            child: Text('I', style: TextStyle(fontSize: 22, color: Colors.black)),
-                          ),
-                        ),
-                      ],
-                    ),
-                    Wrap(
-                      alignment: WrapAlignment.center,
-                      children: [Padding(padding: const EdgeInsets.all(4.0), child: switchReloadAndEject())],
-                    ),
-                    Padding(padding: const EdgeInsets.all(8.0), child: renderLastShell()),
-                  ],
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: SizedBox(width: 150, height: 65, child: switchReloadAndEject()),
                 ),
+              ),
+              Align(
+                alignment: Alignment.centerRight,
+                child: Padding(padding: const EdgeInsets.all(4.0), child: renderLastShell()),
               ),
 
               //Player 3
