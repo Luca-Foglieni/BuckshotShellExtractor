@@ -14,11 +14,10 @@
 
 # Planned
 
-- Refactoring of manual and automatic items modes to unify them.
+- Refactoring of manual, automatic and dealerless items modes to unify them.
 
 - Add more haptic feedback on more buttons.
 
 - Add a new main page to better select the gamemode.
 
 - Refactoring of adrenaline logic.
-
