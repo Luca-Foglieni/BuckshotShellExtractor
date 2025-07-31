@@ -12,7 +12,7 @@
 
 - Turn up the multimedia volume of the phone when a player takes damage.
 
-- Make so that when the shotgun is empty it's instantly reloaded, eliminating the need for a dedicated reload button.
+- Make so that when the shotgun is empty it's instantly reloaded when in dealerless mode, eliminating the need for a dedicated reload button.
 
 # Planned
 
