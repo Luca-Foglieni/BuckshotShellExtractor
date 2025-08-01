@@ -23,3 +23,5 @@
 - Add a new main page to better select the gamemode.
 
 - Refactoring of adrenaline logic.
+
+- Make it more clear when the shown shell is shot or not to avoid confusion.

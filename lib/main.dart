@@ -16,6 +16,42 @@ void main() async {
   runApp(ChangeNotifierProvider(create: (_) => ShellOrderState(), child: MyApp()));
 }
 
+// app theme
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Buckshot Shell Extractor',
+      theme: ThemeData(
+        primaryColor: Color.fromRGBO(20, 4, 1, 1),
+        tooltipTheme: TooltipThemeData(textStyle: TextStyle(fontFamily: 'VCR_OSD_MONO', color: Colors.white)),
+        textTheme: TextTheme(
+          headlineSmall: TextStyle(fontFamily: 'VCR_OSD_MONO', color: Colors.white),
+          headlineMedium: TextStyle(fontFamily: 'VCR_OSD_MONO', color: Colors.white),
+          headlineLarge: TextStyle(fontFamily: 'VCR_OSD_MONO', color: Colors.white),
+          bodyLarge: TextStyle(fontFamily: 'VCR_OSD_MONO', color: Colors.white),
+          bodyMedium: TextStyle(fontFamily: 'VCR_OSD_MONO', color: Colors.white),
+          bodySmall: TextStyle(fontFamily: 'VCR_OSD_MONO', color: Colors.white),
+          displayLarge: TextStyle(fontFamily: 'VCR_OSD_MONO', color: Colors.white),
+          displayMedium: TextStyle(fontFamily: 'VCR_OSD_MONO', color: Colors.white),
+          displaySmall: TextStyle(fontFamily: 'VCR_OSD_MONO', color: Colors.white),
+          labelLarge: TextStyle(fontFamily: 'VCR_OSD_MONO', color: Colors.white),
+          labelMedium: TextStyle(fontFamily: 'VCR_OSD_MONO', color: Colors.white),
+          labelSmall: TextStyle(fontFamily: 'VCR_OSD_MONO', color: Colors.white),
+          titleLarge: TextStyle(fontFamily: 'VCR_OSD_MONO', color: Colors.white),
+          titleMedium: TextStyle(fontFamily: 'VCR_OSD_MONO', color: Colors.white),
+          titleSmall: TextStyle(fontFamily: 'VCR_OSD_MONO', color: Colors.white),
+        ),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.black),
+      ),
+      home: const MyHomePage(title: 'BUCKSHOT SHELL EXTRACTOR'),
+    );
+  }
+}
+
+// global variables and functions
 class ShellOrderState extends ChangeNotifier {
   final random = Random();
 
@@ -39,7 +75,7 @@ class ShellOrderState extends ChangeNotifier {
 
   int itemsNumber = 0;
 
-  String _dealerSpeechBubble = 'PLEASE SIGN THE WAIVER.';
+  String _dealerSpeechBubble = '';
 
   Timer? _resetTimer;
 
@@ -164,40 +200,7 @@ class ShellOrderState extends ChangeNotifier {
   }
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Buckshot Shell Extractor',
-      theme: ThemeData(
-        primaryColor: Color.fromRGBO(20, 4, 1, 1),
-        tooltipTheme: TooltipThemeData(textStyle: TextStyle(fontFamily: 'VCR_OSD_MONO', color: Colors.white)),
-        textTheme: TextTheme(
-          headlineSmall: TextStyle(fontFamily: 'VCR_OSD_MONO', color: Colors.white),
-          headlineMedium: TextStyle(fontFamily: 'VCR_OSD_MONO', color: Colors.white),
-          headlineLarge: TextStyle(fontFamily: 'VCR_OSD_MONO', color: Colors.white),
-          bodyLarge: TextStyle(fontFamily: 'VCR_OSD_MONO', color: Colors.white),
-          bodyMedium: TextStyle(fontFamily: 'VCR_OSD_MONO', color: Colors.white),
-          bodySmall: TextStyle(fontFamily: 'VCR_OSD_MONO', color: Colors.white),
-          displayLarge: TextStyle(fontFamily: 'VCR_OSD_MONO', color: Colors.white),
-          displayMedium: TextStyle(fontFamily: 'VCR_OSD_MONO', color: Colors.white),
-          displaySmall: TextStyle(fontFamily: 'VCR_OSD_MONO', color: Colors.white),
-          labelLarge: TextStyle(fontFamily: 'VCR_OSD_MONO', color: Colors.white),
-          labelMedium: TextStyle(fontFamily: 'VCR_OSD_MONO', color: Colors.white),
-          labelSmall: TextStyle(fontFamily: 'VCR_OSD_MONO', color: Colors.white),
-          titleLarge: TextStyle(fontFamily: 'VCR_OSD_MONO', color: Colors.white),
-          titleMedium: TextStyle(fontFamily: 'VCR_OSD_MONO', color: Colors.white),
-          titleSmall: TextStyle(fontFamily: 'VCR_OSD_MONO', color: Colors.white),
-        ),
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.black),
-      ),
-      home: const MyHomePage(title: 'BUCKSHOT SHELL EXTRACTOR'),
-    );
-  }
-}
-
+// mode selection screen
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
 
@@ -208,11 +211,10 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  late final Widget _dealerPage = DealerPage();
   late final Widget _itemsTablePage = ItemsTable();
   late final Widget _itemsTableManualPage = ItemsTableManual();
   late final Widget _itemsTableDealerLessPage = ItemsTableDealerLess();
-
-  // TODO: the state of the items page is not saved when you go back to the homepage
 
   @override
   Widget build(BuildContext context) {
@@ -220,7 +222,98 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         backgroundColor: Color.fromRGBO(10, 10, 10, 1),
         title: Text(widget.title),
-        titleTextStyle: TextStyle(fontFamily: 'VCR_OSD_MONO', fontSize: 22),
+        titleTextStyle: TextStyle(fontSize: 22),
+      ),
+      body: Container(color: Colors.black),
+      floatingActionButton: Stack(
+        children: <Widget>[
+          Positioned(
+            bottom: 0,
+            left: 30,
+            child: FloatingActionButton(
+              heroTag: 'gotoCardsPage',
+              onPressed: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => _itemsTablePage));
+              },
+              tooltip: 'ITEMS PAGE',
+              backgroundColor: Color.fromRGBO(255, 255, 253, 1),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Image.asset('assets/images/shellExtraction/beer.png'),
+              ),
+            ),
+          ),
+          Positioned(
+            bottom: 64,
+            left: 30,
+            child: FloatingActionButton(
+              heroTag: 'gotoDealerLessCardsPage',
+              onPressed: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => _itemsTableDealerLessPage));
+              },
+              tooltip: 'DEALERLESS ITEMS PAGE',
+              backgroundColor: Color.fromRGBO(255, 255, 253, 1),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Image.asset('assets/images/shellExtraction/cheers.png'),
+              ),
+            ),
+          ),
+          Positioned(
+            bottom: 128,
+            left: 30,
+            child: FloatingActionButton(
+              heroTag: 'gotoManualCardsPage',
+              onPressed: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => _itemsTableManualPage));
+              },
+              tooltip: 'MANUAL ITEMS PAGE',
+              backgroundColor: Color.fromRGBO(255, 255, 253, 1),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Image.asset('assets/images/shellExtraction/beers.png'),
+              ),
+            ),
+          ),
+          Positioned(
+            bottom: 192,
+            left: 30,
+            child: FloatingActionButton(
+              heroTag: 'gotoDealerPage',
+              onPressed: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => _dealerPage));
+              },
+              tooltip: 'DEALER PAGE',
+              backgroundColor: Color.fromRGBO(255, 255, 253, 1),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                // child: Image.asset('assets/images/shellExtraction/.png'),
+                child: Text('DEALER'),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// dealer page
+class DealerPage extends StatefulWidget {
+  const DealerPage({super.key});
+
+  @override
+  State<DealerPage> createState() => _DealerPageState();
+}
+
+class _DealerPageState extends State<DealerPage> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Color.fromRGBO(10, 10, 10, 1),
+        title: Text('DEALER'),
+        titleTextStyle: TextStyle(fontSize: 22),
       ),
       body: Container(
         color: Colors.black,
@@ -286,7 +379,6 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ),
       ),
-
       floatingActionButton: Stack(
         children: <Widget>[
           // right side
@@ -372,56 +464,6 @@ class _MyHomePageState extends State<MyHomePage> {
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Image.asset('assets/images/shellExtraction/coin.png'),
-              ),
-            ),
-          ),
-
-          // left side
-          Positioned(
-            bottom: 0,
-            left: 30,
-            child: FloatingActionButton(
-              heroTag: 'gotoCardsPage',
-              onPressed: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => _itemsTablePage));
-              },
-              tooltip: 'ITEMS PAGE',
-              backgroundColor: Color.fromRGBO(255, 255, 253, 1),
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Image.asset('assets/images/shellExtraction/beer.png'),
-              ),
-            ),
-          ),
-          Positioned(
-            bottom: 128,
-            left: 30,
-            child: FloatingActionButton(
-              heroTag: 'gotoManualCardsPage',
-              onPressed: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => _itemsTableManualPage));
-              },
-              tooltip: 'MANUAL ITEMS PAGE',
-              backgroundColor: Color.fromRGBO(255, 255, 253, 1),
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Image.asset('assets/images/shellExtraction/beers.png'),
-              ),
-            ),
-          ),
-          Positioned(
-            bottom: 64,
-            left: 30,
-            child: FloatingActionButton(
-              heroTag: 'gotoDealerLessCardsPage',
-              onPressed: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => _itemsTableDealerLessPage));
-              },
-              tooltip: 'DEALERLESS ITEMS PAGE',
-              backgroundColor: Color.fromRGBO(255, 255, 253, 1),
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Image.asset('assets/images/shellExtraction/cheers.png'),
               ),
             ),
           ),
@@ -1348,7 +1390,8 @@ class _ItemsTableDealerLessState extends State<ItemsTableDealerLess> {
       case inverter:
         return IconButton(
           tooltip: 'INVERTER\n\nSWAPS THE POLARITY OF THE CURRENT SHELL IN THE CHAMBER.',
-          onPressed:
+          onPressed: () => itemTooltipSnackbar(1),
+          onLongPress:
               () => setState(() {
                 if (adrenalineHandler(pItems, index, pCharges)) {
                   print('before Inverter: ' + context.read<ShellOrderState>()._shellSequence.elementAt(0).toString());
@@ -1356,7 +1399,6 @@ class _ItemsTableDealerLessState extends State<ItemsTableDealerLess> {
                   print('after Inverter: ' + context.read<ShellOrderState>()._shellSequence.elementAt(0).toString());
                 }
               }),
-
           icon: Image.asset('assets/images/items/inverter.png', height: imageHeight, width: imageWidth),
         );
 
@@ -1367,7 +1409,7 @@ class _ItemsTableDealerLessState extends State<ItemsTableDealerLess> {
               () => setState(() {
                 if (adrenalineHandler(pItems, index, pCharges)) {
                   shellSnackBarText = 'EJECTED';
-                  showCurrentShellSnackBar();
+                  shellLeavingTheChamberSnackbar();
                   context.read<ShellOrderState>()._eject();
                 }
               }),
@@ -1455,7 +1497,7 @@ class _ItemsTableDealerLessState extends State<ItemsTableDealerLess> {
                     SnackBar(
                       backgroundColor: Color.fromRGBO(10, 10, 10, 1),
                       content: SizedBox(
-                        height: MediaQuery.of(context).size.height,
+                        // height: MediaQuery.of(context).size.height,
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
@@ -1546,7 +1588,30 @@ class _ItemsTableDealerLessState extends State<ItemsTableDealerLess> {
               () => setState(() {
                 if (adrenalineHandler(pItems, index, pCharges)) {
                   shellSnackBarText = 'NEXT SHELL';
-                  showCurrentShellSnackBar();
+
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      backgroundColor: Color.fromRGBO(10, 10, 10, 1),
+                      content: SizedBox(
+                        // height: MediaQuery.of(context).size.height,
+                        child: Padding(
+                          padding: const EdgeInsets.all(20.0),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              AutoSizeText(shellSnackBarText, style: TextStyle(fontSize: 3000), maxLines: 1),
+                              Image.asset(
+                                context.read<ShellOrderState>()._shellSequence.elementAt(0)
+                                    ? 'assets/images/shellExtraction/live.png'
+                                    : 'assets/images/shellExtraction/blank.png',
+                                fit: BoxFit.fitWidth,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  );
                 }
               }),
 
@@ -1857,7 +1922,7 @@ class _ItemsTableDealerLessState extends State<ItemsTableDealerLess> {
         onPressed: () {
           setState(() {
             shellSnackBarText = 'SHOT';
-            showCurrentShellSnackBar();
+            shellLeavingTheChamberSnackbar();
             context.read<ShellOrderState>()._eject();
           });
         },
@@ -1871,7 +1936,7 @@ class _ItemsTableDealerLessState extends State<ItemsTableDealerLess> {
     }
   }
 
-  void showCurrentShellSnackBar() {
+  void shellLeavingTheChamberSnackbar() {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         backgroundColor: Color.fromRGBO(10, 10, 10, 1),
@@ -1889,6 +1954,78 @@ class _ItemsTableDealerLessState extends State<ItemsTableDealerLess> {
                       : 'assets/images/shellExtraction/blank.png',
                   fit: BoxFit.fitWidth,
                 ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  void itemTooltipSnackbar(int itemType) {
+    String itemName = '';
+    String itemImagePath = '';
+
+    switch (itemType) {
+      case 1:
+        itemName = 'INVERTER';
+        itemImagePath = 'assets/images/items/inverter.png';
+        break;
+      case 2:
+        itemName = 'BEER';
+        itemImagePath = 'assets/images/items/beer.png';
+        break;
+      case 3:
+        itemName = 'CIGARETTE PACK';
+        itemImagePath = 'assets/images/items/cigarettePack.png';
+        break;
+      case 4:
+        itemName = 'ADRENALINE';
+        itemImagePath = 'assets/images/items/adrenaline.png';
+        break;
+      case 5:
+        itemName = 'BURNER PHONE';
+        itemImagePath = 'assets/images/items/burnerPhone.png';
+        break;
+      case 6:
+        itemName = 'HANDSAW';
+        itemImagePath = 'assets/images/items/handSaw.png';
+        break;
+      case 7:
+        itemName = 'HANDCUFFS';
+        itemImagePath = 'assets/images/items/handcuffs.png';
+        break;
+      case 8:
+        itemName = 'EXPIRED MEDICINE';
+        itemImagePath = 'assets/images/items/expiredMedicine.png';
+        break;
+      case 9:
+        itemName = 'MAGNIFYING GLASS';
+        itemImagePath = 'assets/images/items/magnifyingGlass.png';
+        break;
+      case 10:
+        itemName = 'REMOTE';
+        itemImagePath = 'assets/images/items/remote.png';
+        break;
+      default:
+    }
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        backgroundColor: Color.fromRGBO(10, 10, 10, 1),
+        duration: Duration(days: 1),
+        content: SizedBox(
+          height: MediaQuery.of(context).size.height,
+          child: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                AutoSizeText(itemName, style: TextStyle(fontSize: 3000), maxLines: 1),
+                SizedBox(height: 50),
+                Image.asset(itemImagePath),
+                SizedBox(height: 50),
+                ElevatedButton(onPressed: () => {}, child: Text('USE')),
               ],
             ),
           ),
