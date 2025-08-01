@@ -223,45 +223,77 @@ class _ModeSelectionScreenState extends State<ModeSelectionScreen> {
             children: [
               AutoSizeText('PLEASE SIGN THE WAIVER.', style: TextStyle(fontSize: 3000), maxLines: 1),
               SizedBox(height: 40),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8.0),
-                child: SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      HapticFeedback.mediumImpact();
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => _dealerPage));
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.white,
-                      foregroundColor: Colors.black,
-                      padding: EdgeInsets.symmetric(vertical: 20),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+              Row(
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 8.0),
+                      child: SizedBox(
+                        child: ElevatedButton(
+                          onPressed: () {
+                            HapticFeedback.mediumImpact();
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => _dealerPage));
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.white,
+                            foregroundColor: Colors.black,
+                            padding: EdgeInsets.symmetric(vertical: 20),
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                          ),
+                          child: Text('DEALER', style: TextStyle(fontSize: 18)),
+                        ),
+                      ),
                     ),
-                    child: Text('DEALER', style: TextStyle(fontSize: 18)),
                   ),
-                ),
-              ),
-              SizedBox(height: 20),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8.0),
-                child: SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      HapticFeedback.mediumImpact();
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => _itemsTablePage));
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.white,
-                      foregroundColor: Colors.black,
-                      padding: EdgeInsets.symmetric(vertical: 20),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                  SizedBox(width: 20),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8.0),
+                    child: SizedBox(
+                      child: ElevatedButton(
+                        onPressed: () {
+                          HapticFeedback.mediumImpact();
+                          setState(() {
+                            context.read<ShellOrderState>().dealerLessMode =
+                                !context.read<ShellOrderState>().dealerLessMode;
+                          });
+                          print(context.read<ShellOrderState>().dealerLessMode);
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.white,
+                          foregroundColor: Colors.black,
+                          padding: EdgeInsets.symmetric(vertical: 20),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(3000)),
+                        ),
+                        child: Text(
+                          context.read<ShellOrderState>().dealerLessMode ? 'NO' : 'YES',
+                          style: TextStyle(fontSize: 18),
+                        ),
+                      ),
                     ),
-                    child: Text('AUTOMATIC TABLE', style: TextStyle(fontSize: 18)),
                   ),
-                ),
+                ],
               ),
+              SizedBox(height: 30),
+              // Padding(
+              //   padding: const EdgeInsets.symmetric(vertical: 8.0),
+              //   child: SizedBox(
+              //     width: double.infinity,
+              //     child: ElevatedButton(
+              //       onPressed: () {
+              //         HapticFeedback.mediumImpact();
+              //         Navigator.push(context, MaterialPageRoute(builder: (context) => _itemsTablePage));
+              //       },
+              //       style: ElevatedButton.styleFrom(
+              //         backgroundColor: Colors.white,
+              //         foregroundColor: Colors.black,
+              //         padding: EdgeInsets.symmetric(vertical: 20),
+              //         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+              //       ),
+              //       child: Text('AUTOMATIC TABLE (with dealer)', style: TextStyle(fontSize: 18)),
+              //     ),
+              //   ),
+              // ),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 8.0),
                 child: SizedBox(
@@ -277,7 +309,7 @@ class _ModeSelectionScreenState extends State<ModeSelectionScreen> {
                       padding: EdgeInsets.symmetric(vertical: 20),
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                     ),
-                    child: Text('AUTOMATIC TABLE (DL)', style: TextStyle(fontSize: 18)),
+                    child: Text('AUTOMATIC TABLE', style: TextStyle(fontSize: 18)),
                   ),
                 ),
               ),
@@ -553,6 +585,8 @@ class _DealerPageState extends State<DealerPage> {
     );
   }
 }
+
+// TODO: remove deprecated mode
 
 // items page for 4 or less players
 class ItemsTable extends StatefulWidget {
@@ -1167,6 +1201,8 @@ class _ItemsTableState extends State<ItemsTable> {
                   ),
                 ),
               ),
+
+              // center buttons
               Align(
                 alignment: Alignment.center,
                 child: Row(
@@ -1453,6 +1489,8 @@ class _ItemsTableDealerLessState extends State<ItemsTableDealerLess> {
   IconButton insertItems(List<int> pItems, List<bool> pCharges, int playerNumber, int index) {
     //function that renders the inventory of the players
 
+    bool dealerLessMode = context.read<ShellOrderState>().dealerLessMode;
+
     const int inverter = 1;
     const int beer = 2;
     const int cigarettePack = 3;
@@ -1474,7 +1512,9 @@ class _ItemsTableDealerLessState extends State<ItemsTableDealerLess> {
           onPressed:
               () => setState(() {
                 if (adrenalineHandler(pItems, index, pCharges)) {
-                  context.read<ShellOrderState>()._inverter();
+                  if (dealerLessMode) {
+                    context.read<ShellOrderState>()._inverter();
+                  }
                 }
               }),
           icon: Image.asset('assets/images/items/inverter.png', height: imageHeight, width: imageWidth),
@@ -1486,9 +1526,11 @@ class _ItemsTableDealerLessState extends State<ItemsTableDealerLess> {
           onPressed:
               () => setState(() {
                 if (adrenalineHandler(pItems, index, pCharges)) {
-                  shellSnackBarText = 'EJECTED';
-                  shellLeavingTheChamberSnackbar();
-                  context.read<ShellOrderState>()._eject();
+                  if (dealerLessMode) {
+                    shellSnackBarText = 'EJECTED';
+                    shellLeavingTheChamberSnackbar();
+                    context.read<ShellOrderState>()._eject();
+                  }
                 }
               }),
 
@@ -1567,27 +1609,29 @@ class _ItemsTableDealerLessState extends State<ItemsTableDealerLess> {
           onPressed:
               () => setState(() {
                 if (adrenalineHandler(pItems, index, pCharges)) {
-                  context.read<ShellOrderState>()._burnerPhonePrediction();
+                  if (dealerLessMode) {
+                    context.read<ShellOrderState>()._burnerPhonePrediction();
 
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      backgroundColor: Color.fromRGBO(10, 10, 10, 1),
-                      content: SizedBox(
-                        // height: MediaQuery.of(context).size.height,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            AutoSizeText(
-                              'THE VOICE TELLS YOU',
-                              style: TextStyle(fontSize: 3000, color: Colors.white),
-                              maxLines: 1,
-                            ),
-                            Row(mainAxisAlignment: MainAxisAlignment.center, children: burnerPhoneItemsScreen()),
-                          ],
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        backgroundColor: Color.fromRGBO(10, 10, 10, 1),
+                        content: SizedBox(
+                          // height: MediaQuery.of(context).size.height,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              AutoSizeText(
+                                'THE VOICE TELLS YOU',
+                                style: TextStyle(fontSize: 3000, color: Colors.white),
+                                maxLines: 1,
+                              ),
+                              Row(mainAxisAlignment: MainAxisAlignment.center, children: burnerPhoneItemsScreen()),
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                  );
+                    );
+                  }
                 }
               }),
 
@@ -1663,31 +1707,33 @@ class _ItemsTableDealerLessState extends State<ItemsTableDealerLess> {
           onPressed:
               () => setState(() {
                 if (adrenalineHandler(pItems, index, pCharges)) {
-                  shellSnackBarText = 'NEXT SHELL';
+                  if (dealerLessMode) {
+                    shellSnackBarText = 'NEXT SHELL';
 
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      backgroundColor: Color.fromRGBO(10, 10, 10, 1),
-                      content: SizedBox(
-                        // height: MediaQuery.of(context).size.height,
-                        child: Padding(
-                          padding: const EdgeInsets.all(20.0),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              AutoSizeText(shellSnackBarText, style: TextStyle(fontSize: 3000), maxLines: 1),
-                              Image.asset(
-                                context.read<ShellOrderState>()._shellSequence.elementAt(0)
-                                    ? 'assets/images/shellExtraction/live.png'
-                                    : 'assets/images/shellExtraction/blank.png',
-                                fit: BoxFit.fitWidth,
-                              ),
-                            ],
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        backgroundColor: Color.fromRGBO(10, 10, 10, 1),
+                        content: SizedBox(
+                          // height: MediaQuery.of(context).size.height,
+                          child: Padding(
+                            padding: const EdgeInsets.all(20.0),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                AutoSizeText(shellSnackBarText, style: TextStyle(fontSize: 3000), maxLines: 1),
+                                Image.asset(
+                                  context.read<ShellOrderState>()._shellSequence.elementAt(0)
+                                      ? 'assets/images/shellExtraction/live.png'
+                                      : 'assets/images/shellExtraction/blank.png',
+                                  fit: BoxFit.fitWidth,
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  );
+                    );
+                  }
                 }
               }),
 
@@ -2110,6 +2156,83 @@ class _ItemsTableDealerLessState extends State<ItemsTableDealerLess> {
     );
   }
 
+  List<Widget> typeOfButtonHanlder() {
+    if (context.read<ShellOrderState>().dealerLessMode) {
+      return [
+        Align(
+          alignment: Alignment.centerLeft,
+          child: Padding(padding: const EdgeInsets.all(24.0), child: turnDirectionRenderer()),
+        ),
+        Align(
+          alignment: Alignment.center,
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: SizedBox(width: 150, height: 65, child: switchReloadAndEject()),
+          ),
+        ),
+        Align(
+          alignment: Alignment.centerRight,
+          child: Padding(padding: const EdgeInsets.all(4.0), child: renderLastShell()),
+        ),
+      ];
+    } else {
+      return [
+        Align(
+          alignment: Alignment.center,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Padding(padding: const EdgeInsets.fromLTRB(0, 0, 25, 0), child: turnDirectionRenderer()),
+              Wrap(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(4.0),
+                    child: FloatingActionButton(
+                      heroTag: '1Items',
+                      backgroundColor: Colors.grey,
+                      onPressed:
+                          () => setState(() {
+                            itemsGenerator(1);
+                          }),
+                      child: Text('I', style: TextStyle(fontSize: 22, color: Colors.black)),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(4.0),
+                    child: FloatingActionButton(
+                      heroTag: '2Items',
+                      backgroundColor: Colors.grey,
+                      onPressed: () => itemsGenerator(2),
+                      child: Text('II', style: TextStyle(fontSize: 22, color: Colors.black)),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(4.0),
+                    child: FloatingActionButton(
+                      heroTag: '3Items',
+                      backgroundColor: Colors.grey,
+                      onPressed: () => itemsGenerator(3),
+                      child: Text('III', style: TextStyle(fontSize: 22, color: Colors.black)),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(4.0),
+                    child: FloatingActionButton(
+                      heroTag: '4Items',
+                      backgroundColor: Colors.grey,
+                      onPressed: () => itemsGenerator(4),
+                      child: Text('IV', style: TextStyle(fontSize: 22, color: Colors.black)),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ];
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -2221,22 +2344,9 @@ class _ItemsTableDealerLessState extends State<ItemsTableDealerLess> {
                   ),
                 ),
               ),
+
               // items buttons
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Padding(padding: const EdgeInsets.all(24.0), child: turnDirectionRenderer()),
-              ),
-              Align(
-                alignment: Alignment.center,
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: SizedBox(width: 150, height: 65, child: switchReloadAndEject()),
-                ),
-              ),
-              Align(
-                alignment: Alignment.centerRight,
-                child: Padding(padding: const EdgeInsets.all(4.0), child: renderLastShell()),
-              ),
+              ...typeOfButtonHanlder(),
 
               //Player 3
               Align(
