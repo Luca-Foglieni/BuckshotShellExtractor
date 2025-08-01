@@ -1471,8 +1471,7 @@ class _ItemsTableDealerLessState extends State<ItemsTableDealerLess> {
       case inverter:
         return IconButton(
           tooltip: 'INVERTER\n\nSWAPS THE POLARITY OF THE CURRENT SHELL IN THE CHAMBER.',
-          onPressed: () => itemTooltipSnackbar(1),
-          onLongPress:
+          onPressed:
               () => setState(() {
                 if (adrenalineHandler(pItems, index, pCharges)) {
                   context.read<ShellOrderState>()._inverter();
