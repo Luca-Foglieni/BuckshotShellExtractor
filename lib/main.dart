@@ -46,7 +46,7 @@ class MyApp extends StatelessWidget {
         ),
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.black),
       ),
-      home: const MyHomePage(title: 'BUCKSHOT SHELL EXTRACTOR'),
+      home: const ModeSelectionScreen(title: 'BUCKSHOT SHELL EXTRACTOR'),
     );
   }
 }
@@ -55,10 +55,14 @@ class MyApp extends StatelessWidget {
 class ShellOrderState extends ChangeNotifier {
   final random = Random();
 
+  bool dealerLessMode = true;
+
+  // extracted number of shells
   int _shellNumber = 0;
 
   final List<bool> _shellSequence = [];
 
+  // number of the type of the shells
   int _nLives = 0;
   int _nBlanks = 0;
 
@@ -109,31 +113,17 @@ class ShellOrderState extends ChangeNotifier {
       }
     } while (_oneLive == false || _oneBlank == false);
 
-    print('Sequence: ' + _shellSequence.toString());
-
-    print(_nLives);
-
-    print(_nBlanks);
-
     for (var i = 0; i < _nLives; i++) {
       _shellHiddenSequence.add(1);
     }
-
-    print('L: ' + _shellHiddenSequence.toString());
 
     for (var i = 0; i < _nBlanks; i++) {
       _shellHiddenSequence.add(0);
     }
 
-    print('B: ' + _shellHiddenSequence.toString());
-
-    print('shellNumber: ' + _shellNumber.toString());
-
     for (var i = _nBlanks + _nLives; i < 8; i++) {
       _shellHiddenSequence.add(-1);
     }
-
-    print('N: ' + _shellHiddenSequence.toString());
 
     _burnedShell = -1;
 
@@ -201,16 +191,16 @@ class ShellOrderState extends ChangeNotifier {
 }
 
 // mode selection screen
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
+class ModeSelectionScreen extends StatefulWidget {
+  const ModeSelectionScreen({super.key, required this.title});
 
   final String title;
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<ModeSelectionScreen> createState() => _ModeSelectionScreenState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _ModeSelectionScreenState extends State<ModeSelectionScreen> {
   late final Widget _dealerPage = DealerPage();
   late final Widget _itemsTablePage = ItemsTable();
   late final Widget _itemsTableManualPage = ItemsTableManual();
@@ -222,78 +212,168 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         backgroundColor: Color.fromRGBO(10, 10, 10, 1),
         title: Text(widget.title),
-        titleTextStyle: TextStyle(fontSize: 22),
+        titleTextStyle: TextStyle(fontSize: 22, fontFamily: 'VCR_OSD_MONO'),
       ),
-      body: Container(color: Colors.black),
-      floatingActionButton: Stack(
-        children: <Widget>[
-          Positioned(
-            bottom: 0,
-            left: 30,
-            child: FloatingActionButton(
-              heroTag: 'gotoCardsPage',
-              onPressed: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => _itemsTablePage));
-              },
-              tooltip: 'ITEMS PAGE',
-              backgroundColor: Color.fromRGBO(255, 255, 253, 1),
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Image.asset('assets/images/shellExtraction/beer.png'),
+      backgroundColor: Colors.black,
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(40.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              AutoSizeText('PLEASE SIGN THE WAIVER.', style: TextStyle(fontSize: 3000), maxLines: 1),
+              SizedBox(height: 40),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                child: SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      HapticFeedback.mediumImpact();
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => _dealerPage));
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      foregroundColor: Colors.black,
+                      padding: EdgeInsets.symmetric(vertical: 20),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                    ),
+                    child: Text('DEALER', style: TextStyle(fontSize: 18)),
+                  ),
+                ),
               ),
-            ),
-          ),
-          Positioned(
-            bottom: 64,
-            left: 30,
-            child: FloatingActionButton(
-              heroTag: 'gotoDealerLessCardsPage',
-              onPressed: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => _itemsTableDealerLessPage));
-              },
-              tooltip: 'DEALERLESS ITEMS PAGE',
-              backgroundColor: Color.fromRGBO(255, 255, 253, 1),
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Image.asset('assets/images/shellExtraction/cheers.png'),
+              SizedBox(height: 20),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                child: SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      HapticFeedback.mediumImpact();
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => _itemsTablePage));
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      foregroundColor: Colors.black,
+                      padding: EdgeInsets.symmetric(vertical: 20),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                    ),
+                    child: Text('AUTOMATIC TABLE', style: TextStyle(fontSize: 18)),
+                  ),
+                ),
               ),
-            ),
-          ),
-          Positioned(
-            bottom: 128,
-            left: 30,
-            child: FloatingActionButton(
-              heroTag: 'gotoManualCardsPage',
-              onPressed: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => _itemsTableManualPage));
-              },
-              tooltip: 'MANUAL ITEMS PAGE',
-              backgroundColor: Color.fromRGBO(255, 255, 253, 1),
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Image.asset('assets/images/shellExtraction/beers.png'),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                child: SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      HapticFeedback.mediumImpact();
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => _itemsTableDealerLessPage));
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      foregroundColor: Colors.black,
+                      padding: EdgeInsets.symmetric(vertical: 20),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                    ),
+                    child: Text('AUTOMATIC TABLE (DL)', style: TextStyle(fontSize: 18)),
+                  ),
+                ),
               ),
-            ),
-          ),
-          Positioned(
-            bottom: 192,
-            left: 30,
-            child: FloatingActionButton(
-              heroTag: 'gotoDealerPage',
-              onPressed: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => _dealerPage));
-              },
-              tooltip: 'DEALER PAGE',
-              backgroundColor: Color.fromRGBO(255, 255, 253, 1),
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                // child: Image.asset('assets/images/shellExtraction/.png'),
-                child: Text('DEALER'),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                child: SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      HapticFeedback.mediumImpact();
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => _itemsTableManualPage));
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      foregroundColor: Colors.black,
+                      padding: EdgeInsets.symmetric(vertical: 20),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                    ),
+                    child: Text('MANUAL TABLE', style: TextStyle(fontSize: 18)),
+                  ),
+                ),
               ),
-            ),
+            ],
           ),
-        ],
+        ),
       ),
+
+      // floatingActionButton: Stack(
+      //   children: <Widget>[
+      //     Positioned(
+      //       bottom: 0,
+      //       left: 30,
+      //       child: FloatingActionButton(
+      //         heroTag: 'gotoCardsPage',
+      //         onPressed: () {
+      //           Navigator.push(context, MaterialPageRoute(builder: (context) => _itemsTablePage));
+      //         },
+      //         tooltip: 'ITEMS PAGE',
+      //         backgroundColor: Color.fromRGBO(255, 255, 253, 1),
+      //         child: Padding(
+      //           padding: const EdgeInsets.all(8.0),
+      //           child: Image.asset('assets/images/shellExtraction/beer.png'),
+      //         ),
+      //       ),
+      //     ),
+      //     Positioned(
+      //       bottom: 64,
+      //       left: 30,
+      //       child: FloatingActionButton(
+      //         heroTag: 'gotoDealerLessCardsPage',
+      //         onPressed: () {
+      //           Navigator.push(context, MaterialPageRoute(builder: (context) => _itemsTableDealerLessPage));
+      //         },
+      //         tooltip: 'DEALERLESS ITEMS PAGE',
+      //         backgroundColor: Color.fromRGBO(255, 255, 253, 1),
+      //         child: Padding(
+      //           padding: const EdgeInsets.all(8.0),
+      //           child: Image.asset('assets/images/shellExtraction/cheers.png'),
+      //         ),
+      //       ),
+      //     ),
+      //     Positioned(
+      //       bottom: 128,
+      //       left: 30,
+      //       child: FloatingActionButton(
+      //         heroTag: 'gotoManualCardsPage',
+      //         onPressed: () {
+      //           Navigator.push(context, MaterialPageRoute(builder: (context) => _itemsTableManualPage));
+      //         },
+      //         tooltip: 'MANUAL ITEMS PAGE',
+      //         backgroundColor: Color.fromRGBO(255, 255, 253, 1),
+      //         child: Padding(
+      //           padding: const EdgeInsets.all(8.0),
+      //           child: Image.asset('assets/images/shellExtraction/beers.png'),
+      //         ),
+      //       ),
+      //     ),
+      //     Positioned(
+      //       bottom: 192,
+      //       left: 30,
+      //       child: FloatingActionButton(
+      //         heroTag: 'gotoDealerPage',
+      //         onPressed: () {
+      //           Navigator.push(context, MaterialPageRoute(builder: (context) => _dealerPage));
+      //         },
+      //         tooltip: 'DEALER PAGE',
+      //         backgroundColor: Color.fromRGBO(255, 255, 253, 1),
+      //         child: Padding(
+      //           padding: const EdgeInsets.all(8.0),
+      //           // child: Image.asset('assets/images/shellExtraction/.png'),
+      //           child: Text('DEALER'),
+      //         ),
+      //       ),
+      //     ),
+      //   ],
+      // ),
     );
   }
 }
@@ -313,7 +393,8 @@ class _DealerPageState extends State<DealerPage> {
       appBar: AppBar(
         backgroundColor: Color.fromRGBO(10, 10, 10, 1),
         title: Text('DEALER'),
-        titleTextStyle: TextStyle(fontSize: 22),
+        titleTextStyle: TextStyle(fontSize: 22, fontFamily: 'VCR_OSD_MONO'),
+        foregroundColor: Colors.white,
       ),
       body: Container(
         color: Colors.black,
@@ -1394,9 +1475,7 @@ class _ItemsTableDealerLessState extends State<ItemsTableDealerLess> {
           onLongPress:
               () => setState(() {
                 if (adrenalineHandler(pItems, index, pCharges)) {
-                  print('before Inverter: ' + context.read<ShellOrderState>()._shellSequence.elementAt(0).toString());
                   context.read<ShellOrderState>()._inverter();
-                  print('after Inverter: ' + context.read<ShellOrderState>()._shellSequence.elementAt(0).toString());
                 }
               }),
           icon: Image.asset('assets/images/items/inverter.png', height: imageHeight, width: imageWidth),
@@ -1490,8 +1569,6 @@ class _ItemsTableDealerLessState extends State<ItemsTableDealerLess> {
               () => setState(() {
                 if (adrenalineHandler(pItems, index, pCharges)) {
                   context.read<ShellOrderState>()._burnerPhonePrediction();
-
-                  print('Burned Shell: ' + context.read<ShellOrderState>()._burnedShell.toString());
 
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
