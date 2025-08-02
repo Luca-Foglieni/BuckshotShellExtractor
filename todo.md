@@ -22,6 +22,10 @@
 
 - Make so that you can't use handcuffs when all alive players are already cuffed (now it only works when all the players are alive).
 
+- Block the use of items in dead player inventories (exept when adrenaline is used).
+
+- Block the use of items when the shell sequence is empty.
+
 - Add more haptic feedback on more buttons.
 
 - Refactoring of adrenaline logic.
