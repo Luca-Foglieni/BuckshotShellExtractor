@@ -656,6 +656,7 @@ class _ItemsTableState extends State<ItemsTablePage> {
                 }
               }),
           icon: Image.asset('assets/images/items/inverter.png', height: imageHeight, width: imageWidth),
+          highlightColor: Colors.grey,
         );
 
       case beer:
@@ -663,16 +664,21 @@ class _ItemsTableState extends State<ItemsTablePage> {
           tooltip: 'BEER\n\nRACKS THE SHOTGUN. EJECTS CURRENT SHELL.',
           onPressed:
               () => setState(() {
-                if (adrenalineHandler(pItems, index, pCharges)) {
-                  if (dealerLessMode) {
-                    shellSnackBarText = 'EJECTED';
-                    shellEjectingSnackbar();
-                    context.read<ShellOrderState>()._eject();
+                if (automaticMode) {
+                  if (adrenalineHandler(pItems, index, pCharges)) {
+                    if (dealerLessMode) {
+                      shellSnackBarText = 'EJECTED';
+                      shellEjectingSnackbar();
+                      context.read<ShellOrderState>()._eject();
+                    }
                   }
+                } else {
+                  pItems[index] = 0;
                 }
               }),
 
           icon: Image.asset('assets/images/items/beer.png', height: imageHeight, width: imageWidth),
+          highlightColor: Colors.grey,
         );
       case cigarettePack:
         return IconButton(
@@ -697,6 +703,7 @@ class _ItemsTableState extends State<ItemsTablePage> {
               }),
 
           icon: Image.asset('assets/images/items/cigarettePack.png', height: imageHeight, width: imageWidth),
+          highlightColor: Colors.grey,
         );
       case adrenaline:
         return IconButton(
@@ -748,43 +755,27 @@ class _ItemsTableState extends State<ItemsTablePage> {
               }),
 
           icon: Image.asset('assets/images/items/adrenaline.png', height: imageHeight, width: imageWidth),
+          highlightColor: Colors.grey,
         );
       case burnerPhone:
         return IconButton(
           tooltip: 'BURNER PHONE\n\nA MYSTERIOUS VOICE GIVES YOU AN INSIGHT INTO THE FUTURE.',
           onPressed:
               () => setState(() {
-                if (adrenalineHandler(pItems, index, pCharges)) {
-                  if (dealerLessMode) {
-                    context.read<ShellOrderState>()._burnerPhonePrediction();
-                    ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        backgroundColor: Color.fromRGBO(10, 10, 10, 1),
-                        content: SizedBox(
-                          // height: MediaQuery.of(context).size.height,
-                          child: Padding(
-                            padding: const EdgeInsets.all(20.0),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                AutoSizeText(
-                                  'THE VOICE TELLS YOU',
-                                  style: TextStyle(fontSize: 3000, color: Colors.white),
-                                  maxLines: 1,
-                                ),
-                                Row(mainAxisAlignment: MainAxisAlignment.center, children: burnerPhoneItemsScreen()),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    );
+                if (automaticMode) {
+                  if (adrenalineHandler(pItems, index, pCharges)) {
+                    if (dealerLessMode) {
+                      context.read<ShellOrderState>()._burnerPhonePrediction();
+                      burnerPhoneSnackBar();
+                    }
                   }
+                } else {
+                  pItems[index] = 0;
                 }
               }),
 
           icon: Image.asset('assets/images/items/burnerPhone.png', height: imageHeight, width: imageWidth),
+          highlightColor: Colors.grey,
         );
       case handsaw:
         return IconButton(
@@ -825,6 +816,7 @@ class _ItemsTableState extends State<ItemsTablePage> {
               }),
 
           icon: Image.asset('assets/images/items/handcuffs.png', height: imageHeight, width: imageWidth),
+          highlightColor: Colors.grey,
         );
       case expiredMedicine:
         return IconButton(
@@ -857,44 +849,27 @@ class _ItemsTableState extends State<ItemsTablePage> {
               }),
 
           icon: Image.asset('assets/images/items/expiredMedicine.png', height: imageHeight, width: imageWidth),
+          highlightColor: Colors.grey,
         );
       case magnifyingGlass:
         return IconButton(
           tooltip: 'MAGNIFYING GLASS\n\nCHECK THE CURRENT ROUND IN THE CHAMBER.',
           onPressed:
               () => setState(() {
-                if (adrenalineHandler(pItems, index, pCharges)) {
-                  if (dealerLessMode) {
-                    shellSnackBarText = 'NEXT SHELL';
-                    ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        backgroundColor: Color.fromRGBO(10, 10, 10, 1),
-                        content: SizedBox(
-                          // height: MediaQuery.of(context).size.height,
-                          child: Padding(
-                            padding: const EdgeInsets.all(20.0),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                AutoSizeText(shellSnackBarText, style: TextStyle(fontSize: 3000), maxLines: 1),
-                                Image.asset(
-                                  context.read<ShellOrderState>()._shellSequence.elementAt(0)
-                                      ? 'assets/images/shellExtraction/live.png'
-                                      : 'assets/images/shellExtraction/blank.png',
-                                  fit: BoxFit.fitWidth,
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    );
+                if (automaticMode) {
+                  if (adrenalineHandler(pItems, index, pCharges)) {
+                    if (dealerLessMode) {
+                      shellSnackBarText = 'NEXT SHELL';
+                      magnifyingGlassSnackBar();
+                    }
                   }
+                } else {
+                  pItems[index] = 0;
                 }
               }),
 
           icon: Image.asset('assets/images/items/magnifyingGlass.png', height: imageHeight, width: imageWidth),
+          highlightColor: Colors.grey,
         );
       case remote:
         return IconButton(
@@ -915,6 +890,7 @@ class _ItemsTableState extends State<ItemsTablePage> {
               }),
 
           icon: Image.asset('assets/images/items/remote.png', height: imageHeight, width: imageWidth),
+          highlightColor: Colors.grey,
         );
       default:
         return IconButton(
@@ -1242,13 +1218,13 @@ class _ItemsTableState extends State<ItemsTablePage> {
     );
   }
 
-  void notEjectingSnackbar() {
+  void magnifyingGlassSnackBar() {
     ScaffoldMessenger.of(context).hideCurrentSnackBar();
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         backgroundColor: Color.fromRGBO(10, 10, 10, 1),
         content: SizedBox(
-          height: MediaQuery.of(context).size.height,
+          // height: MediaQuery.of(context).size.height,
           child: Padding(
             padding: const EdgeInsets.all(20.0),
             child: Column(
@@ -1261,6 +1237,28 @@ class _ItemsTableState extends State<ItemsTablePage> {
                       : 'assets/images/shellExtraction/blank.png',
                   fit: BoxFit.fitWidth,
                 ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  void burnerPhoneSnackBar() {
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        backgroundColor: Color.fromRGBO(10, 10, 10, 1),
+        content: SizedBox(
+          // height: MediaQuery.of(context).size.height,
+          child: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                AutoSizeText('THE VOICE TELLS YOU', style: TextStyle(fontSize: 3000, color: Colors.white), maxLines: 1),
+                Row(mainAxisAlignment: MainAxisAlignment.center, children: burnerPhoneItemsScreen()),
               ],
             ),
           ),
@@ -1421,10 +1419,30 @@ class _ItemsTableState extends State<ItemsTablePage> {
     } else if (context.read<ShellOrderState>().dealerLessMode && !context.read<ShellOrderState>().automaticMode) {
       return [
         Align(
+          alignment: Alignment.centerLeft,
+          child: Padding(
+            padding: const EdgeInsets.all(4),
+            child: Wrap(
+              children: [
+                IconButton(
+                  onPressed: () => {shellSnackBarText = "NEXT SHELL", magnifyingGlassSnackBar()},
+                  icon: Image.asset('assets/images/items/magnifyingGlass.png', width: 40),
+                  highlightColor: Colors.grey,
+                ),
+                IconButton(
+                  onPressed: () => {context.read<ShellOrderState>()._burnerPhonePrediction(), burnerPhoneSnackBar()},
+                  icon: Image.asset('assets/images/items/burnerPhone.png', width: 40),
+                  highlightColor: Colors.grey,
+                ),
+              ],
+            ),
+          ),
+        ),
+        Align(
           alignment: Alignment.center,
           child: Padding(
             padding: const EdgeInsets.all(16.0),
-            child: SizedBox(width: 150, height: 65, child: switchReloadAndEject()),
+            child: SizedBox(width: 120, height: 65, child: switchReloadAndEject()),
           ),
         ),
         Align(
