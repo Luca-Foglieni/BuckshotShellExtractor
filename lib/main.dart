@@ -1038,9 +1038,9 @@ class _ItemsTableState extends State<ItemsTablePage> {
     }
   }
 
-  void handcuffsHandler(int nReceiver) {
+  void handcuffsHandler(int nReceiver, List<bool> pCharges) {
     setState(() {
-      if (handcuffsTrigger && nHandcuffsSender != nReceiver && handcuffedPlayers[nReceiver - 1] < 1) {
+      if (handcuffsTrigger && nHandcuffsSender != nReceiver && handcuffedPlayers[nReceiver - 1] < 1 && isAlive(pCharges)) {
         handcuffsTrigger = false;
         switch (nReceiver) {
           case 1:
@@ -1572,7 +1572,7 @@ class _ItemsTableState extends State<ItemsTablePage> {
                         ),
                       ),
                       GestureDetector(
-                        onTap: () => handcuffsHandler(1),
+                        onTap: () => handcuffsHandler(1, p1charges),
                         child: AbsorbPointer(
                           absorbing:
                               (handcuffsTrigger || handcuffedPlayers.elementAt(0) != 0) &&
@@ -1624,7 +1624,7 @@ class _ItemsTableState extends State<ItemsTablePage> {
                         ),
                       ),
                       GestureDetector(
-                        onTap: () => handcuffsHandler(2),
+                        onTap: () => handcuffsHandler(2, p2charges),
                         child: AbsorbPointer(
                           absorbing:
                               (handcuffsTrigger || handcuffedPlayers.elementAt(1) != 0) &&
@@ -1664,7 +1664,7 @@ class _ItemsTableState extends State<ItemsTablePage> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       GestureDetector(
-                        onTap: () => handcuffsHandler(3),
+                        onTap: () => handcuffsHandler(3, p3charges),
                         child: AbsorbPointer(
                           absorbing:
                               (handcuffsTrigger || handcuffedPlayers.elementAt(2) != 0) &&
@@ -1716,7 +1716,7 @@ class _ItemsTableState extends State<ItemsTablePage> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       GestureDetector(
-                        onTap: () => handcuffsHandler(4),
+                        onTap: () => handcuffsHandler(4, p4charges),
                         child: AbsorbPointer(
                           absorbing:
                               (handcuffsTrigger || handcuffedPlayers.elementAt(3) != 0) &&

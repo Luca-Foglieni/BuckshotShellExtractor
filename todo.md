@@ -18,8 +18,6 @@
 
 # Planned
 
-- Make so that when handcuffs are used, you can't cuff dead players.
-
 - Make so that you can't use handcuffs when all alive players are already cuffed (now it only works when all the players are alive).
 
 - Block the use of items in dead player inventories (exept when adrenaline is used).
