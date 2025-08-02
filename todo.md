@@ -22,8 +22,6 @@
 
 - Block the use of items when the shell sequence is empty.
 
-- Add more haptic feedback on more buttons.
-
 - Refactoring of adrenaline logic.
 
 - Redesign Dealer page.
