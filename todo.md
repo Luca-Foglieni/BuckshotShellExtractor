@@ -8,7 +8,8 @@
 
 - Turn up the multimedia volume of the phone when a player takes damage.
 
-- Add fullscreen item showcase and description on press and directly use an item on long press.
+- Add a settings page
+  - Add press or long press setting toggle for the item description.
 
 # Planned
 
