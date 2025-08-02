@@ -44,6 +44,7 @@ class MyApp extends StatelessWidget {
           titleMedium: TextStyle(fontFamily: 'VCR_OSD_MONO', color: Colors.white),
           titleSmall: TextStyle(fontFamily: 'VCR_OSD_MONO', color: Colors.white),
         ),
+
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.black),
       ),
       home: const ModeSelectionScreen(title: 'BUCKSHOT SHELL EXTRACTOR'),
@@ -86,7 +87,6 @@ class ShellOrderState extends ChangeNotifier {
   Timer? _resetTimer;
 
   void _reload() {
-    HapticFeedback.selectionClick();
     _shellNumber = 2 + random.nextInt(7);
     _lastShell = -1;
 
@@ -160,7 +160,6 @@ class ShellOrderState extends ChangeNotifier {
   }
 
   void _eject() {
-    HapticFeedback.heavyImpact();
     if (_shellSequence.isNotEmpty) {
       if (_shellSequence[0]) {
         _lastShell = 1;
@@ -227,7 +226,11 @@ class _ModeSelectionScreenState extends State<ModeSelectionScreen> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              AutoSizeText('PLEASE SIGN THE WAIVER.', style: TextStyle(fontSize: 3000), maxLines: 1),
+              AutoSizeText(
+                'PLEASE SIGN THE WAIVER.',
+                style: TextStyle(fontSize: 3000, color: Colors.white),
+                maxLines: 1,
+              ),
 
               SizedBox(height: 40),
 
@@ -429,6 +432,7 @@ class _DealerPageState extends State<DealerPage> {
               heroTag: 'reload',
               onPressed:
                   () => setState(() {
+                    HapticFeedback.selectionClick();
                     context.read<ShellOrderState>()._reload();
                   }),
               tooltip: 'RELOAD',
@@ -446,6 +450,7 @@ class _DealerPageState extends State<DealerPage> {
               heroTag: 'eject',
               onPressed:
                   () => setState(() {
+                    HapticFeedback.heavyImpact();
                     context.read<ShellOrderState>()._eject();
                   }),
               tooltip: 'EJECT',
@@ -463,6 +468,7 @@ class _DealerPageState extends State<DealerPage> {
               heroTag: 'burnerPhone',
               onPressed:
                   () => setState(() {
+                    HapticFeedback.selectionClick();
                     context.read<ShellOrderState>()._burnerPhonePrediction();
                   }),
               tooltip: 'BURNER PHONE',
@@ -480,6 +486,7 @@ class _DealerPageState extends State<DealerPage> {
               heroTag: 'inverter',
               onPressed:
                   () => setState(() {
+                    HapticFeedback.selectionClick();
                     context.read<ShellOrderState>()._inverter();
                   }),
               tooltip: 'INVERTER',
@@ -497,6 +504,7 @@ class _DealerPageState extends State<DealerPage> {
               heroTag: 'coinFlip',
               onPressed:
                   () => setState(() {
+                    HapticFeedback.selectionClick();
                     context.read<ShellOrderState>()._coinFlip();
                   }),
               tooltip: 'COIN FLIP',
@@ -567,8 +575,9 @@ class _ItemsTableState extends State<ItemsTablePage> {
 
   static const Color statusHandcuffs = Color.fromRGBO(3, 168, 244, 0.4);
 
-  // snackbar text
+  // snackbar variables
   String shellSnackBarText = '';
+  static const Color snackBarColor = Color.fromRGBO(20, 20, 20, 1);
 
   //number of different items
   int distinctItems = 10;
@@ -578,6 +587,8 @@ class _ItemsTableState extends State<ItemsTablePage> {
 
   //game turn direction
   bool turnDirectionClockwise = true;
+
+  static const Color iconButtonHighlightColor = Colors.grey;
 
   void itemsGenerator(int numberOfItems) {
     //function that actually add the number of items selected in the inventory (list) of every player
@@ -617,9 +628,8 @@ class _ItemsTableState extends State<ItemsTablePage> {
     });
   }
 
+  //function that renders the inventory of the players
   IconButton insertItems(List<int> pItems, List<bool> pCharges, int playerNumber, int index) {
-    //function that renders the inventory of the players
-
     bool dealerLessMode = context.read<ShellOrderState>().dealerLessMode;
     bool automaticMode = context.read<ShellOrderState>().automaticMode;
 
@@ -640,8 +650,8 @@ class _ItemsTableState extends State<ItemsTablePage> {
     switch (pItems[index]) {
       case inverter:
         return IconButton(
-          tooltip: 'INVERTER\n\nSWAPS THE POLARITY OF THE CURRENT SHELL IN THE CHAMBER.',
-          onPressed:
+          // tooltip: 'INVERTER\n\nSWAPS THE POLARITY OF THE CURRENT SHELL IN THE CHAMBER.',
+          onLongPress:
               () => setState(() {
                 if (automaticMode) {
                   if (useItem(pItems, index, pCharges)) {
@@ -653,13 +663,15 @@ class _ItemsTableState extends State<ItemsTablePage> {
                   useItem(pItems, index, pCharges);
                 }
               }),
+          onPressed: () => itemTooltipSnackbar(1),
           icon: Image.asset('assets/images/items/inverter.png', height: imageHeight, width: imageWidth),
+          highlightColor: iconButtonHighlightColor,
         );
 
       case beer:
         return IconButton(
-          tooltip: 'BEER\n\nRACKS THE SHOTGUN. EJECTS CURRENT SHELL.',
-          onPressed:
+          // tooltip: 'BEER\n\nRACKS THE SHOTGUN. EJECTS CURRENT SHELL.',
+          onLongPress:
               () => setState(() {
                 if (automaticMode) {
                   if (useItem(pItems, index, pCharges)) {
@@ -673,13 +685,15 @@ class _ItemsTableState extends State<ItemsTablePage> {
                   useItem(pItems, index, pCharges);
                 }
               }),
-
+          onPressed: () => itemTooltipSnackbar(2),
           icon: Image.asset('assets/images/items/beer.png', height: imageHeight, width: imageWidth),
+          highlightColor: iconButtonHighlightColor,
         );
+
       case cigarettePack:
         return IconButton(
-          tooltip: 'CIGARETTE PACK\n\nTAKES THE EDGE OFF. REGAIN 1 CHARGE.',
-          onPressed:
+          // tooltip: 'CIGARETTE PACK\n\nTAKES THE EDGE OFF. REGAIN 1 CHARGE.',
+          onLongPress:
               () => setState(() {
                 if (automaticMode) {
                   if (adrenalinePointerPCharges != pCharges) {
@@ -697,13 +711,15 @@ class _ItemsTableState extends State<ItemsTablePage> {
                   useItem(pItems, index, pCharges);
                 }
               }),
-
+          onPressed: () => itemTooltipSnackbar(3),
           icon: Image.asset('assets/images/items/cigarettePack.png', height: imageHeight, width: imageWidth),
+          highlightColor: iconButtonHighlightColor,
         );
+
       case adrenaline:
         return IconButton(
-          tooltip: 'ADRENALINE\n\nSTEAL AN ITEM AND USE IT IMMEDIATELY. ',
-          onPressed:
+          // tooltip: 'ADRENALINE\n\nSTEAL AN ITEM AND USE IT IMMEDIATELY.',
+          onLongPress:
               () => setState(() {
                 if (automaticMode) {
                   if (adrenalinePointerPCharges.isEmpty) {
@@ -753,13 +769,15 @@ class _ItemsTableState extends State<ItemsTablePage> {
                   useItem(pItems, index, pCharges);
                 }
               }),
-
+          onPressed: () => itemTooltipSnackbar(4),
           icon: Image.asset('assets/images/items/adrenaline.png', height: imageHeight, width: imageWidth),
+          highlightColor: iconButtonHighlightColor,
         );
+
       case burnerPhone:
         return IconButton(
-          tooltip: 'BURNER PHONE\n\nA MYSTERIOUS VOICE GIVES YOU AN INSIGHT INTO THE FUTURE.',
-          onPressed:
+          // tooltip: 'BURNER PHONE\n\nA MYSTERIOUS VOICE GIVES YOU AN INSIGHT INTO THE FUTURE.',
+          onLongPress:
               () => setState(() {
                 if (automaticMode) {
                   if (useItem(pItems, index, pCharges)) {
@@ -772,13 +790,15 @@ class _ItemsTableState extends State<ItemsTablePage> {
                   useItem(pItems, index, pCharges);
                 }
               }),
-
+          onPressed: () => itemTooltipSnackbar(5),
           icon: Image.asset('assets/images/items/burnerPhone.png', height: imageHeight, width: imageWidth),
+          highlightColor: iconButtonHighlightColor,
         );
+
       case handsaw:
         return IconButton(
-          tooltip: 'HANDSAW\n\nSHOTGUN DEALS 2 DAMAGE.',
-          onPressed:
+          // tooltip: 'HANDSAW\n\nSHOTGUN DEALS 2 DAMAGE.',
+          onLongPress:
               () => setState(() {
                 if (automaticMode) {
                   if (useItem(pItems, index, pCharges)) {}
@@ -786,13 +806,15 @@ class _ItemsTableState extends State<ItemsTablePage> {
                   useItem(pItems, index, pCharges);
                 }
               }),
-
+          onPressed: () => itemTooltipSnackbar(6),
           icon: Image.asset('assets/images/items/handsaw.png', height: imageHeight, width: imageWidth),
+          highlightColor: iconButtonHighlightColor,
         );
+
       case handcuffs:
-        return ItemButton(
-          tooltip: 'HANDCUFFS\n\nSELECTED OPPONENT SKIPS THEIR NEXT TURN.',
-          onPressed:
+        return IconButton(
+          // tooltip: 'HANDCUFFS\n\nSELECTED OPPONENT SKIPS THEIR NEXT TURN.',
+          onLongPress:
               () => setState(() {
                 if (automaticMode) {
                   if (adrenalinePointerPCharges != pCharges &&
@@ -821,13 +843,15 @@ class _ItemsTableState extends State<ItemsTablePage> {
                   useItem(pItems, index, pCharges);
                 }
               }),
-
+          onPressed: () => itemTooltipSnackbar(7),
           icon: Image.asset('assets/images/items/handcuffs.png', height: imageHeight, width: imageWidth),
+          highlightColor: iconButtonHighlightColor,
         );
+
       case expiredMedicine:
-        return ItemButton(
-          tooltip: 'EXPIRED MEDICINE\n\n50% CHANCE OF GAINING 2 CHARGES. IF NOT, LOSE 1 CHARGE.',
-          onPressed:
+        return IconButton(
+          // tooltip: 'EXPIRED MEDICINE\n\n50% CHANCE OF GAINING 2 CHARGES. IF NOT, LOSE 1 CHARGE.',
+          onLongPress:
               () => setState(() {
                 if (automaticMode) {
                   if (adrenalinePointerPCharges != pCharges) {
@@ -850,13 +874,15 @@ class _ItemsTableState extends State<ItemsTablePage> {
                   useItem(pItems, index, pCharges);
                 }
               }),
-
+          onPressed: () => itemTooltipSnackbar(8),
           icon: Image.asset('assets/images/items/expiredMedicine.png', height: imageHeight, width: imageWidth),
+          highlightColor: iconButtonHighlightColor,
         );
+
       case magnifyingGlass:
-        return ItemButton(
-          tooltip: 'MAGNIFYING GLASS\n\nCHECK THE CURRENT ROUND IN THE CHAMBER.',
-          onPressed:
+        return IconButton(
+          // tooltip: 'MAGNIFYING GLASS\n\nCHECK THE CURRENT ROUND IN THE CHAMBER.',
+          onLongPress:
               () => setState(() {
                 if (automaticMode) {
                   if (useItem(pItems, index, pCharges)) {
@@ -869,13 +895,15 @@ class _ItemsTableState extends State<ItemsTablePage> {
                   useItem(pItems, index, pCharges);
                 }
               }),
-
+          onPressed: () => itemTooltipSnackbar(9),
           icon: Image.asset('assets/images/items/magnifyingGlass.png', height: imageHeight, width: imageWidth),
+          highlightColor: iconButtonHighlightColor,
         );
+
       case remote:
-        return ItemButton(
-          tooltip: 'REMOTE\n\nSWAPS THE CURRENT TURN ORDER.',
-          onPressed:
+        return IconButton(
+          // tooltip: 'REMOTE\n\nSWAPS THE CURRENT TURN ORDER.',
+          onLongPress:
               () => setState(() {
                 if (automaticMode) {
                   if (useItem(pItems, index, pCharges)) {
@@ -889,24 +917,20 @@ class _ItemsTableState extends State<ItemsTablePage> {
                   useItem(pItems, index, pCharges);
                 }
               }),
-
+          onPressed: () => itemTooltipSnackbar(10),
           icon: Image.asset('assets/images/items/remote.png', height: imageHeight, width: imageWidth),
-          highlightColor: Colors.grey,
+          highlightColor: iconButtonHighlightColor,
         );
+
       default:
         return IconButton(
           onPressed: () => {},
-
           icon: Image.asset('assets/images/items/itemSpace.png', height: imageHeight, width: imageWidth),
         );
     }
   }
 
-  // void useItem(List<int> pItems, int index) {
-  //   pItems[index] = 0;
-  //   HapticFeedback.heavyImpact();
-  // }
-
+  // player charges handling functions
   GestureDetector insertPlayerCharges(List<bool> pCharges, int index) {
     if (pCharges.elementAt(index) == true) {
       return GestureDetector(
@@ -1008,23 +1032,6 @@ class _ItemsTableState extends State<ItemsTablePage> {
       return true;
     } else {
       return false;
-    }
-
-    // if (adrenalinePointerPCharges != pCharges) {
-    //   pItems[index] = 0;
-    //   adrenalinePointerPCharges = [];
-    //   adrenalinePointerPItems = [];
-    //   adrenalineCaster = 0;
-    //   return true;
-    // }
-    // return false;
-  }
-
-  int boolToInt(bool flag) {
-    if (flag) {
-      return 1;
-    } else {
-      return 0;
     }
   }
 
@@ -1129,7 +1136,7 @@ class _ItemsTableState extends State<ItemsTablePage> {
   List<Widget> magnifyingGlassItemsScreen() {
     if (context.read<ShellOrderState>()._shellSequence.isNotEmpty) {
       return [
-        AutoSizeText(shellSnackBarText, style: TextStyle(fontSize: 3000), maxLines: 1),
+        AutoSizeText(shellSnackBarText, style: TextStyle(fontSize: 3000, color: Colors.white), maxLines: 1),
         Image.asset(
           context.read<ShellOrderState>()._shellSequence.elementAt(0)
               ? 'assets/images/shellExtraction/live.png'
@@ -1145,7 +1152,10 @@ class _ItemsTableState extends State<ItemsTablePage> {
   List<Widget> burnerPhoneItemsScreen() {
     if (context.read<ShellOrderState>()._burnedShell != -1) {
       return [
-        AutoSizeText((context.read<ShellOrderState>()._burnedShell + 1).toString(), style: TextStyle(fontSize: 90)),
+        AutoSizeText(
+          (context.read<ShellOrderState>()._burnedShell + 1).toString(),
+          style: TextStyle(fontSize: 90, color: Colors.white),
+        ),
         SizedBox(width: 20),
         Expanded(
           child: Image.asset(
@@ -1180,7 +1190,7 @@ class _ItemsTableState extends State<ItemsTablePage> {
 
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                backgroundColor: Color.fromRGBO(10, 10, 10, 1),
+                backgroundColor: snackBarColor,
                 content: SizedBox(
                   height: MediaQuery.of(context).size.height,
                   child: Padding(
@@ -1229,7 +1239,7 @@ class _ItemsTableState extends State<ItemsTablePage> {
     ScaffoldMessenger.of(context).hideCurrentSnackBar();
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        backgroundColor: Color.fromRGBO(10, 10, 10, 1),
+        backgroundColor: snackBarColor,
         content: SizedBox(
           height: MediaQuery.of(context).size.height,
           child: Padding(
@@ -1237,7 +1247,7 @@ class _ItemsTableState extends State<ItemsTablePage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                AutoSizeText(shellSnackBarText, style: TextStyle(fontSize: 3000), maxLines: 1),
+                AutoSizeText(shellSnackBarText, style: TextStyle(fontSize: 3000, color: Colors.white), maxLines: 1),
                 Image.asset(
                   context.read<ShellOrderState>()._shellSequence.elementAt(0)
                       ? 'assets/images/shellExtraction/live.png'
@@ -1256,7 +1266,7 @@ class _ItemsTableState extends State<ItemsTablePage> {
     ScaffoldMessenger.of(context).hideCurrentSnackBar();
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        backgroundColor: Color.fromRGBO(10, 10, 10, 1),
+        backgroundColor: snackBarColor,
         content: SizedBox(
           // height: MediaQuery.of(context).size.height,
           child: Padding(
@@ -1272,7 +1282,7 @@ class _ItemsTableState extends State<ItemsTablePage> {
     ScaffoldMessenger.of(context).hideCurrentSnackBar();
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        backgroundColor: Color.fromRGBO(10, 10, 10, 1),
+        backgroundColor: snackBarColor,
         content: SizedBox(
           // height: MediaQuery.of(context).size.height,
           child: Padding(
@@ -1293,54 +1303,66 @@ class _ItemsTableState extends State<ItemsTablePage> {
   void itemTooltipSnackbar(int itemType) {
     String itemName = '';
     String itemImagePath = '';
+    String itemDescription = '';
 
     switch (itemType) {
       case 1:
         itemName = 'INVERTER';
         itemImagePath = 'assets/images/items/inverter.png';
+        itemDescription = 'SWAPS THE POLARITY OF THE CURRENT SHELL IN THE CHAMBER.';
         break;
       case 2:
         itemName = 'BEER';
         itemImagePath = 'assets/images/items/beer.png';
+        itemDescription = 'RACKS THE SHOTGUN. EJECTS CURRENT SHELL.';
         break;
       case 3:
         itemName = 'CIGARETTE PACK';
         itemImagePath = 'assets/images/items/cigarettePack.png';
+        itemDescription = 'TAKES THE EDGE OFF. REGAIN 1 CHARGE.';
         break;
       case 4:
         itemName = 'ADRENALINE';
         itemImagePath = 'assets/images/items/adrenaline.png';
+        itemDescription = 'STEAL AN ITEM AND USE IT IMMEDIATELY.';
         break;
       case 5:
         itemName = 'BURNER PHONE';
         itemImagePath = 'assets/images/items/burnerPhone.png';
+        itemDescription = 'A MYSTERIOUS VOICE GIVES YOU AN INSIGHT INTO THE FUTURE.';
         break;
       case 6:
         itemName = 'HANDSAW';
-        itemImagePath = 'assets/images/items/handSaw.png';
+        itemImagePath = 'assets/images/items/handsaw.png';
+        itemDescription = 'SHOTGUN DEALS 2 DAMAGE.';
         break;
       case 7:
         itemName = 'HANDCUFFS';
         itemImagePath = 'assets/images/items/handcuffs.png';
+        itemDescription = 'SELECTED OPPONENT SKIPS THEIR NEXT TURN.';
         break;
       case 8:
         itemName = 'EXPIRED MEDICINE';
         itemImagePath = 'assets/images/items/expiredMedicine.png';
+        itemDescription = '50% CHANCE OF GAINING 2 CHARGES. IF NOT, LOSE 1 CHARGE.';
         break;
       case 9:
         itemName = 'MAGNIFYING GLASS';
         itemImagePath = 'assets/images/items/magnifyingGlass.png';
+        itemDescription = 'CHECK THE CURRENT ROUND IN THE CHAMBER.';
         break;
       case 10:
         itemName = 'REMOTE';
         itemImagePath = 'assets/images/items/remote.png';
+        itemDescription = 'SWAPS THE CURRENT TURN ORDER.';
         break;
       default:
     }
 
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        backgroundColor: Color.fromRGBO(10, 10, 10, 1),
+        backgroundColor: snackBarColor,
         duration: Duration(days: 1),
         content: SizedBox(
           height: MediaQuery.of(context).size.height,
@@ -1349,11 +1371,20 @@ class _ItemsTableState extends State<ItemsTablePage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                AutoSizeText(itemName, style: TextStyle(fontSize: 3000), maxLines: 1),
+                // AutoSizeText(itemName, style: TextStyle(fontSize: 200, color: Colors.white), maxLines: 1),
+                Text(itemName, style: TextStyle(fontSize: 50, color: Colors.white)),
+                SizedBox(height: 20),
+                Image.asset(
+                  itemImagePath,
+                  height: MediaQuery.of(context).size.width / 1.5,
+                  width: MediaQuery.of(context).size.width / 1.5,
+                ),
                 SizedBox(height: 50),
-                Image.asset(itemImagePath),
-                SizedBox(height: 50),
-                ElevatedButton(onPressed: () => {}, child: Text('USE')),
+                Text(itemDescription, style: TextStyle(fontSize: 20, color: Colors.white)),
+
+                // AutoSizeText(itemDescription, style: TextStyle(fontSize: 20, color: Colors.white), maxLines: 2),
+
+                // ElevatedButton(onPressed: () => {}, child: Text('USE')),
               ],
             ),
           ),
@@ -1527,6 +1558,14 @@ class _ItemsTableState extends State<ItemsTablePage> {
       ];
     } else {
       return [Text('APOCRYPHAL BUTTON SEQUENCE')];
+    }
+  }
+
+  int boolToInt(bool flag) {
+    if (flag) {
+      return 1;
+    } else {
+      return 0;
     }
   }
 
@@ -1764,14 +1803,4 @@ class _ItemsTableState extends State<ItemsTablePage> {
       ],
     );
   }
-}
-
-class ItemButton extends IconButton {
-  ItemButton({
-    required super.onPressed,
-    super.onLongPress,
-    super.tooltip,
-    required super.icon,
-    super.highlightColor = Colors.grey,
-  });
 }
