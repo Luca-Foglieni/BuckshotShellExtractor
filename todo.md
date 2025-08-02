@@ -14,10 +14,16 @@
 
 - Make so that when the shotgun is empty it's instantly reloaded when in dealerless mode, eliminating the need for a dedicated reload button.
 
+- Add fullscreen item showcase and description on press and directly use an item on long press.
+
 # Planned
 
-- Refactoring of manual, automatic and dealerless items modes to unify them.
+- Make so that when handcuffs are used, you can't cuff dead players.
+
+- Make so that you can't use handcuffs when all alive players are already cuffed (now it only works when all the players are alive).
 
 - Add more haptic feedback on more buttons.
 
 - Refactoring of adrenaline logic.
+
+- Redesign Dealer page
