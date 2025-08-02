@@ -150,7 +150,6 @@ class ShellOrderState extends ChangeNotifier {
   }
 
   void _burnerPhonePrediction() {
-    HapticFeedback.mediumImpact();
     if (_shellSequence.length <= 2) {
       _dealerSpeechBubble = 'HOW UNFORTUNATE...';
       _resetDealerSpeechBubble(3);
@@ -645,17 +644,16 @@ class _ItemsTableState extends State<ItemsTablePage> {
           onPressed:
               () => setState(() {
                 if (automaticMode) {
-                  if (adrenalineHandler(pItems, index, pCharges)) {
+                  if (useItem(pItems, index, pCharges)) {
                     if (dealerLessMode) {
                       context.read<ShellOrderState>()._inverter();
                     }
                   }
                 } else {
-                  pItems[index] = 0;
+                  useItem(pItems, index, pCharges);
                 }
               }),
           icon: Image.asset('assets/images/items/inverter.png', height: imageHeight, width: imageWidth),
-          highlightColor: Colors.grey,
         );
 
       case beer:
@@ -664,7 +662,7 @@ class _ItemsTableState extends State<ItemsTablePage> {
           onPressed:
               () => setState(() {
                 if (automaticMode) {
-                  if (adrenalineHandler(pItems, index, pCharges)) {
+                  if (useItem(pItems, index, pCharges)) {
                     if (dealerLessMode) {
                       shellSnackBarText = 'EJECTED';
                       shellEjectingSnackbar();
@@ -672,12 +670,11 @@ class _ItemsTableState extends State<ItemsTablePage> {
                     }
                   }
                 } else {
-                  pItems[index] = 0;
+                  useItem(pItems, index, pCharges);
                 }
               }),
 
           icon: Image.asset('assets/images/items/beer.png', height: imageHeight, width: imageWidth),
-          highlightColor: Colors.grey,
         );
       case cigarettePack:
         return IconButton(
@@ -691,18 +688,17 @@ class _ItemsTableState extends State<ItemsTablePage> {
                     } else {
                       addCharges(adrenalinePointerPCharges, 1);
                     }
-                    pItems[index] = 0;
+                    useItem(pItems, index, pCharges);
                     adrenalinePointerPCharges = [];
                     adrenalinePointerPItems = [];
                     adrenalineCaster = 0;
                   }
                 } else {
-                  pItems[index] = 0;
+                  useItem(pItems, index, pCharges);
                 }
               }),
 
           icon: Image.asset('assets/images/items/cigarettePack.png', height: imageHeight, width: imageWidth),
-          highlightColor: Colors.grey,
         );
       case adrenaline:
         return IconButton(
@@ -749,16 +745,16 @@ class _ItemsTableState extends State<ItemsTablePage> {
                       adrenalinePointerPCharges = pCharges;
                       adrenalinePointerPItems = pItems;
                       adrenalineCaster = playerNumber;
+                      HapticFeedback.heavyImpact();
                       pItems[index] = 0;
                     }
                   }
                 } else {
-                  pItems[index] = 0;
+                  useItem(pItems, index, pCharges);
                 }
               }),
 
           icon: Image.asset('assets/images/items/adrenaline.png', height: imageHeight, width: imageWidth),
-          highlightColor: Colors.grey,
         );
       case burnerPhone:
         return IconButton(
@@ -766,19 +762,18 @@ class _ItemsTableState extends State<ItemsTablePage> {
           onPressed:
               () => setState(() {
                 if (automaticMode) {
-                  if (adrenalineHandler(pItems, index, pCharges)) {
+                  if (useItem(pItems, index, pCharges)) {
                     if (dealerLessMode) {
                       context.read<ShellOrderState>()._burnerPhonePrediction();
                       burnerPhoneSnackBar();
                     }
                   }
                 } else {
-                  pItems[index] = 0;
+                  useItem(pItems, index, pCharges);
                 }
               }),
 
           icon: Image.asset('assets/images/items/burnerPhone.png', height: imageHeight, width: imageWidth),
-          highlightColor: Colors.grey,
         );
       case handsaw:
         return IconButton(
@@ -786,17 +781,16 @@ class _ItemsTableState extends State<ItemsTablePage> {
           onPressed:
               () => setState(() {
                 if (automaticMode) {
-                  if (adrenalineHandler(pItems, index, pCharges)) {}
+                  if (useItem(pItems, index, pCharges)) {}
                 } else {
-                  pItems[index] = 0;
+                  useItem(pItems, index, pCharges);
                 }
               }),
 
           icon: Image.asset('assets/images/items/handsaw.png', height: imageHeight, width: imageWidth),
-          highlightColor: Colors.grey,
         );
       case handcuffs:
-        return IconButton(
+        return ItemButton(
           tooltip: 'HANDCUFFS\n\nSELECTED OPPONENT SKIPS THEIR NEXT TURN.',
           onPressed:
               () => setState(() {
@@ -812,10 +806,7 @@ class _ItemsTableState extends State<ItemsTablePage> {
                                   boolToInt(isAlive(p4charges))) -
                               1) {
                     pItems[index] = 0;
-                    // print('1: ' + p1alive.toString());
-                    // print('2: ' + p2alive.toString());
-                    // print('3: ' + p3alive.toString());
-                    // print('4: ' + p4alive.toString());
+                    HapticFeedback.heavyImpact();
                     handcuffsTrigger = true;
                     if (adrenalineCaster != 0) {
                       nHandcuffsSender = adrenalineCaster;
@@ -827,15 +818,14 @@ class _ItemsTableState extends State<ItemsTablePage> {
                     adrenalineCaster = 0;
                   }
                 } else {
-                  pItems[index] = 0;
+                  useItem(pItems, index, pCharges);
                 }
               }),
 
           icon: Image.asset('assets/images/items/handcuffs.png', height: imageHeight, width: imageWidth),
-          highlightColor: Colors.grey,
         );
       case expiredMedicine:
-        return IconButton(
+        return ItemButton(
           tooltip: 'EXPIRED MEDICINE\n\n50% CHANCE OF GAINING 2 CHARGES. IF NOT, LOSE 1 CHARGE.',
           onPressed:
               () => setState(() {
@@ -854,46 +844,41 @@ class _ItemsTableState extends State<ItemsTablePage> {
                         removeCharges(adrenalinePointerPCharges, 1);
                       }
                     }
-                    pItems[index] = 0;
-                    adrenalinePointerPCharges = [];
-                    adrenalinePointerPItems = [];
-                    adrenalineCaster = 0;
+                    useItem(pItems, index, pCharges);
                   }
                 } else {
-                  pItems[index] = 0;
+                  useItem(pItems, index, pCharges);
                 }
               }),
 
           icon: Image.asset('assets/images/items/expiredMedicine.png', height: imageHeight, width: imageWidth),
-          highlightColor: Colors.grey,
         );
       case magnifyingGlass:
-        return IconButton(
+        return ItemButton(
           tooltip: 'MAGNIFYING GLASS\n\nCHECK THE CURRENT ROUND IN THE CHAMBER.',
           onPressed:
               () => setState(() {
                 if (automaticMode) {
-                  if (adrenalineHandler(pItems, index, pCharges)) {
+                  if (useItem(pItems, index, pCharges)) {
                     if (dealerLessMode) {
                       shellSnackBarText = 'NEXT SHELL';
                       magnifyingGlassSnackBar();
                     }
                   }
                 } else {
-                  pItems[index] = 0;
+                  useItem(pItems, index, pCharges);
                 }
               }),
 
           icon: Image.asset('assets/images/items/magnifyingGlass.png', height: imageHeight, width: imageWidth),
-          highlightColor: Colors.grey,
         );
       case remote:
-        return IconButton(
+        return ItemButton(
           tooltip: 'REMOTE\n\nSWAPS THE CURRENT TURN ORDER.',
           onPressed:
               () => setState(() {
                 if (automaticMode) {
-                  if (adrenalineHandler(pItems, index, pCharges)) {
+                  if (useItem(pItems, index, pCharges)) {
                     if (turnDirectionClockwise) {
                       turnDirectionClockwise = false;
                     } else {
@@ -901,7 +886,7 @@ class _ItemsTableState extends State<ItemsTablePage> {
                     }
                   }
                 } else {
-                  pItems[index] = 0;
+                  useItem(pItems, index, pCharges);
                 }
               }),
 
@@ -916,6 +901,11 @@ class _ItemsTableState extends State<ItemsTablePage> {
         );
     }
   }
+
+  // void useItem(List<int> pItems, int index) {
+  //   pItems[index] = 0;
+  //   HapticFeedback.heavyImpact();
+  // }
 
   GestureDetector insertPlayerCharges(List<bool> pCharges, int index) {
     if (pCharges.elementAt(index) == true) {
@@ -942,7 +932,6 @@ class _ItemsTableState extends State<ItemsTablePage> {
 
     setState(() {
       for (int i = 0; i < pCharges.length; i++) {
-        // print(i);
         if (counter == nCharges) {
           break;
         }
@@ -1009,9 +998,10 @@ class _ItemsTableState extends State<ItemsTablePage> {
     }
   }
 
-  bool adrenalineHandler(List<int> pItems, int index, List<bool> pCharges) {
+  bool useItem(List<int> pItems, int index, List<bool> pCharges) {
     if (adrenalinePointerPCharges != pCharges) {
       pItems[index] = 0;
+      HapticFeedback.heavyImpact();
       adrenalinePointerPCharges = [];
       adrenalinePointerPItems = [];
       adrenalineCaster = 0;
@@ -1040,7 +1030,10 @@ class _ItemsTableState extends State<ItemsTablePage> {
 
   void handcuffsHandler(int nReceiver, List<bool> pCharges) {
     setState(() {
-      if (handcuffsTrigger && nHandcuffsSender != nReceiver && handcuffedPlayers[nReceiver - 1] < 1 && isAlive(pCharges)) {
+      if (handcuffsTrigger &&
+          nHandcuffsSender != nReceiver &&
+          handcuffedPlayers[nReceiver - 1] < 1 &&
+          isAlive(pCharges)) {
         handcuffsTrigger = false;
         switch (nReceiver) {
           case 1:
@@ -1133,6 +1126,22 @@ class _ItemsTableState extends State<ItemsTablePage> {
     }
   }
 
+  List<Widget> magnifyingGlassItemsScreen() {
+    if (context.read<ShellOrderState>()._shellSequence.isNotEmpty) {
+      return [
+        AutoSizeText(shellSnackBarText, style: TextStyle(fontSize: 3000), maxLines: 1),
+        Image.asset(
+          context.read<ShellOrderState>()._shellSequence.elementAt(0)
+              ? 'assets/images/shellExtraction/live.png'
+              : 'assets/images/shellExtraction/blank.png',
+          fit: BoxFit.fitWidth,
+        ),
+      ];
+    } else {
+      return [AutoSizeText('THE CHAMBER IS EMPTY', style: TextStyle(color: Colors.white, fontSize: 3000), maxLines: 1)];
+    }
+  }
+
   List<Widget> burnerPhoneItemsScreen() {
     if (context.read<ShellOrderState>()._burnedShell != -1) {
       return [
@@ -1152,7 +1161,7 @@ class _ItemsTableState extends State<ItemsTablePage> {
         Expanded(
           child: AutoSizeText(
             context.read<ShellOrderState>()._dealerSpeechBubble,
-            style: TextStyle(color: Colors.white, fontSize: 50),
+            style: TextStyle(color: Colors.white, fontSize: 3000),
             maxLines: 1,
           ),
         ),
@@ -1252,18 +1261,7 @@ class _ItemsTableState extends State<ItemsTablePage> {
           // height: MediaQuery.of(context).size.height,
           child: Padding(
             padding: const EdgeInsets.all(20.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                AutoSizeText(shellSnackBarText, style: TextStyle(fontSize: 3000), maxLines: 1),
-                Image.asset(
-                  context.read<ShellOrderState>()._shellSequence.elementAt(0)
-                      ? 'assets/images/shellExtraction/live.png'
-                      : 'assets/images/shellExtraction/blank.png',
-                  fit: BoxFit.fitWidth,
-                ),
-              ],
-            ),
+            child: Column(mainAxisAlignment: MainAxisAlignment.center, children: magnifyingGlassItemsScreen()),
           ),
         ),
       ),
@@ -1440,6 +1438,7 @@ class _ItemsTableState extends State<ItemsTablePage> {
           ),
         ),
       ];
+
       // manual dealerless mode
     } else if (context.read<ShellOrderState>().dealerLessMode && !context.read<ShellOrderState>().automaticMode) {
       return [
@@ -1450,11 +1449,7 @@ class _ItemsTableState extends State<ItemsTablePage> {
             child: Wrap(
               children: [
                 IconButton(
-                  onPressed:
-                      () => {
-                        shellSnackBarText = "NEXT SHELL",
-                        if (context.read<ShellOrderState>()._shellSequence.isNotEmpty) {magnifyingGlassSnackBar()},
-                      },
+                  onPressed: () => {shellSnackBarText = "NEXT SHELL", magnifyingGlassSnackBar()},
                   icon: Image.asset('assets/images/items/magnifyingGlass.png', width: 40),
                   highlightColor: Colors.grey,
                 ),
@@ -1479,6 +1474,7 @@ class _ItemsTableState extends State<ItemsTablePage> {
           child: Padding(padding: const EdgeInsets.all(4.0), child: renderLastShell()),
         ),
       ];
+
       //manual mode with external dealer
     } else if (!context.read<ShellOrderState>().dealerLessMode && !context.read<ShellOrderState>().automaticMode) {
       return [
@@ -1768,4 +1764,14 @@ class _ItemsTableState extends State<ItemsTablePage> {
       ],
     );
   }
+}
+
+class ItemButton extends IconButton {
+  ItemButton({
+    required super.onPressed,
+    super.onLongPress,
+    super.tooltip,
+    required super.icon,
+    super.highlightColor = Colors.grey,
+  });
 }
