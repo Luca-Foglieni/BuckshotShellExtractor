@@ -26,6 +26,6 @@
 
 - Refactoring of adrenaline logic.
 
-- Redesign Dealer page
+- Redesign Dealer page.
 
-- Retake app screenshots after the redesign
+- Retake app screenshots after the redesign.
