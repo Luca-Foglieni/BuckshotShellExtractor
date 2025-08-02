@@ -532,11 +532,6 @@ class _ItemsTableState extends State<ItemsTablePage> {
   List<int> p3items = [0, 0, 0, 0, 0, 0, 0, 0];
   List<int> p4items = [0, 0, 0, 0, 0, 0, 0, 0];
 
-  bool p1alive = true;
-  bool p2alive = true;
-  bool p3alive = true;
-  bool p4alive = true;
-
   List<bool> p1charges = [true, true, true, true, true, true];
   List<bool> p2charges = [true, true, true, true, true, true];
   List<bool> p3charges = [true, true, true, true, true, true];
@@ -649,10 +644,14 @@ class _ItemsTableState extends State<ItemsTablePage> {
           tooltip: 'INVERTER\n\nSWAPS THE POLARITY OF THE CURRENT SHELL IN THE CHAMBER.',
           onPressed:
               () => setState(() {
-                if (adrenalineHandler(pItems, index, pCharges)) {
-                  if (dealerLessMode) {
-                    context.read<ShellOrderState>()._inverter();
+                if (automaticMode) {
+                  if (adrenalineHandler(pItems, index, pCharges)) {
+                    if (dealerLessMode) {
+                      context.read<ShellOrderState>()._inverter();
+                    }
                   }
+                } else {
+                  pItems[index] = 0;
                 }
               }),
           icon: Image.asset('assets/images/items/inverter.png', height: imageHeight, width: imageWidth),
@@ -742,7 +741,11 @@ class _ItemsTableState extends State<ItemsTablePage> {
                                 boolToInt(handcuffedPlayers.elementAt(1) != 0) +
                                 boolToInt(handcuffedPlayers.elementAt(2) != 0) +
                                 boolToInt(handcuffedPlayers.elementAt(3) != 0)) <
-                            3) {
+                            (boolToInt(isAlive(p1charges)) +
+                                    boolToInt(isAlive(p2charges)) +
+                                    boolToInt(isAlive(p3charges)) +
+                                    boolToInt(isAlive(p4charges))) -
+                                1) {
                       adrenalinePointerPCharges = pCharges;
                       adrenalinePointerPItems = pItems;
                       adrenalineCaster = playerNumber;
@@ -782,10 +785,15 @@ class _ItemsTableState extends State<ItemsTablePage> {
           tooltip: 'HANDSAW\n\nSHOTGUN DEALS 2 DAMAGE.',
           onPressed:
               () => setState(() {
-                if (adrenalineHandler(pItems, index, pCharges)) {}
+                if (automaticMode) {
+                  if (adrenalineHandler(pItems, index, pCharges)) {}
+                } else {
+                  pItems[index] = 0;
+                }
               }),
 
           icon: Image.asset('assets/images/items/handsaw.png', height: imageHeight, width: imageWidth),
+          highlightColor: Colors.grey,
         );
       case handcuffs:
         return IconButton(
@@ -798,8 +806,16 @@ class _ItemsTableState extends State<ItemsTablePage> {
                               boolToInt(handcuffedPlayers.elementAt(1) != 0) +
                               boolToInt(handcuffedPlayers.elementAt(2) != 0) +
                               boolToInt(handcuffedPlayers.elementAt(3) != 0)) <
-                          3) {
+                          (boolToInt(isAlive(p1charges)) +
+                                  boolToInt(isAlive(p2charges)) +
+                                  boolToInt(isAlive(p3charges)) +
+                                  boolToInt(isAlive(p4charges))) -
+                              1) {
                     pItems[index] = 0;
+                    // print('1: ' + p1alive.toString());
+                    // print('2: ' + p2alive.toString());
+                    // print('3: ' + p3alive.toString());
+                    // print('4: ' + p4alive.toString());
                     handcuffsTrigger = true;
                     if (adrenalineCaster != 0) {
                       nHandcuffsSender = adrenalineCaster;
@@ -974,6 +990,15 @@ class _ItemsTableState extends State<ItemsTablePage> {
     }
   }
 
+  bool isAlive(List<bool> pCharges) {
+    for (bool charge in pCharges) {
+      if (charge) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   Image turnDirectionRenderer() {
     const double turnDirectionSize = 45;
 
@@ -1015,7 +1040,7 @@ class _ItemsTableState extends State<ItemsTablePage> {
 
   void handcuffsHandler(int nReceiver) {
     setState(() {
-      if (handcuffsTrigger && nHandcuffsSender != nReceiver && handcuffedPlayers[nReceiver - 1] != 1) {
+      if (handcuffsTrigger && nHandcuffsSender != nReceiver && handcuffedPlayers[nReceiver - 1] < 1) {
         handcuffsTrigger = false;
         switch (nReceiver) {
           case 1:
@@ -1425,7 +1450,11 @@ class _ItemsTableState extends State<ItemsTablePage> {
             child: Wrap(
               children: [
                 IconButton(
-                  onPressed: () => {shellSnackBarText = "NEXT SHELL", magnifyingGlassSnackBar()},
+                  onPressed:
+                      () => {
+                        shellSnackBarText = "NEXT SHELL",
+                        if (context.read<ShellOrderState>()._shellSequence.isNotEmpty) {magnifyingGlassSnackBar()},
+                      },
                   icon: Image.asset('assets/images/items/magnifyingGlass.png', width: 40),
                   highlightColor: Colors.grey,
                 ),
