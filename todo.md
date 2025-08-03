@@ -14,6 +14,8 @@
 
 - Redesign Dealer page.
 
+- Refactoring of adrenaline logic.
+
 # Planned
 
-- Refactoring of adrenaline logic.
+- Make the app responsive (specifically to target tablets)
