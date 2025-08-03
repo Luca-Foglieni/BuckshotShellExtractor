@@ -654,9 +654,11 @@ class _ItemsTableState extends State<ItemsTablePage> {
           onLongPress:
               () => setState(() {
                 if (automaticMode) {
-                  if (useItem(pItems, index, pCharges)) {
-                    if (dealerLessMode) {
-                      context.read<ShellOrderState>()._inverter();
+                  if (isAlive(pCharges) || adrenalinePointerPCharges.isNotEmpty) {
+                    if (useItem(pItems, index, pCharges)) {
+                      if (dealerLessMode) {
+                        context.read<ShellOrderState>()._inverter();
+                      }
                     }
                   }
                 } else {
@@ -674,11 +676,13 @@ class _ItemsTableState extends State<ItemsTablePage> {
           onLongPress:
               () => setState(() {
                 if (automaticMode) {
-                  if (useItem(pItems, index, pCharges)) {
-                    if (dealerLessMode) {
-                      shellSnackBarText = 'EJECTED';
-                      shellEjectingSnackbar();
-                      context.read<ShellOrderState>()._eject();
+                  if (isAlive(pCharges) || adrenalinePointerPCharges.isNotEmpty) {
+                    if (useItem(pItems, index, pCharges)) {
+                      if (dealerLessMode) {
+                        shellSnackBarText = 'EJECTED';
+                        shellEjectingSnackbar();
+                        context.read<ShellOrderState>()._eject();
+                      }
                     }
                   }
                 } else {
@@ -696,16 +700,18 @@ class _ItemsTableState extends State<ItemsTablePage> {
           onLongPress:
               () => setState(() {
                 if (automaticMode) {
-                  if (adrenalinePointerPCharges != pCharges) {
-                    if (adrenalinePointerPCharges.isEmpty) {
-                      addCharges(pCharges, 1);
-                    } else {
-                      addCharges(adrenalinePointerPCharges, 1);
+                  if (isAlive(pCharges) || adrenalinePointerPCharges.isNotEmpty) {
+                    if (adrenalinePointerPCharges != pCharges) {
+                      if (adrenalinePointerPCharges.isEmpty) {
+                        addCharges(pCharges, 1);
+                      } else {
+                        addCharges(adrenalinePointerPCharges, 1);
+                      }
+                      useItem(pItems, index, pCharges);
+                      adrenalinePointerPCharges = [];
+                      adrenalinePointerPItems = [];
+                      adrenalineCaster = 0;
                     }
-                    useItem(pItems, index, pCharges);
-                    adrenalinePointerPCharges = [];
-                    adrenalinePointerPItems = [];
-                    adrenalineCaster = 0;
                   }
                 } else {
                   useItem(pItems, index, pCharges);
@@ -722,47 +728,49 @@ class _ItemsTableState extends State<ItemsTablePage> {
           onLongPress:
               () => setState(() {
                 if (automaticMode) {
-                  if (adrenalinePointerPCharges.isEmpty) {
-                    bool foundSomethingOtherThanAdrenalineAndHandcuffs = false;
-                    bool foundSomethingOtherThanAdrenaline = false;
-                    for (int i = 0; i < pItems.length; i++) {
-                      if ((p1items[i] != 4 && p1items[i] != 7 && p1items[i] != 0 && playerNumber != 1) ||
-                          (p2items[i] != 4 && p2items[i] != 7 && p2items[i] != 0 && playerNumber != 2) ||
-                          (p3items[i] != 4 && p3items[i] != 7 && p3items[i] != 0 && playerNumber != 3) ||
-                          (p4items[i] != 4 && p4items[i] != 7 && p4items[i] != 0 && playerNumber != 4)) {
-                        foundSomethingOtherThanAdrenalineAndHandcuffs = true;
+                  if (isAlive(pCharges) || adrenalinePointerPCharges.isNotEmpty) {
+                    if (adrenalinePointerPCharges.isEmpty) {
+                      bool foundSomethingOtherThanAdrenalineAndHandcuffs = false;
+                      bool foundSomethingOtherThanAdrenaline = false;
+                      for (int i = 0; i < pItems.length; i++) {
+                        if ((p1items[i] != 4 && p1items[i] != 7 && p1items[i] != 0 && playerNumber != 1) ||
+                            (p2items[i] != 4 && p2items[i] != 7 && p2items[i] != 0 && playerNumber != 2) ||
+                            (p3items[i] != 4 && p3items[i] != 7 && p3items[i] != 0 && playerNumber != 3) ||
+                            (p4items[i] != 4 && p4items[i] != 7 && p4items[i] != 0 && playerNumber != 4)) {
+                          foundSomethingOtherThanAdrenalineAndHandcuffs = true;
+                        }
+                        if ((p1items[i] != 4 && p1items[i] != 0 && playerNumber != 1) ||
+                            (p2items[i] != 4 && p2items[i] != 0 && playerNumber != 2) ||
+                            (p3items[i] != 4 && p3items[i] != 0 && playerNumber != 3) ||
+                            (p4items[i] != 4 && p4items[i] != 0 && playerNumber != 4)) {
+                          foundSomethingOtherThanAdrenaline = true;
+                        }
+                        if (foundSomethingOtherThanAdrenalineAndHandcuffs && foundSomethingOtherThanAdrenaline) {
+                          break;
+                        }
                       }
-                      if ((p1items[i] != 4 && p1items[i] != 0 && playerNumber != 1) ||
-                          (p2items[i] != 4 && p2items[i] != 0 && playerNumber != 2) ||
-                          (p3items[i] != 4 && p3items[i] != 0 && playerNumber != 3) ||
-                          (p4items[i] != 4 && p4items[i] != 0 && playerNumber != 4)) {
-                        foundSomethingOtherThanAdrenaline = true;
+                      if (foundSomethingOtherThanAdrenalineAndHandcuffs) {
+                        adrenalinePointerPCharges = pCharges;
+                        adrenalinePointerPCharges = pCharges;
+                        adrenalinePointerPItems = pItems;
+                        adrenalineCaster = playerNumber;
+                        pItems[index] = 0;
+                      } else if (foundSomethingOtherThanAdrenaline &&
+                          (boolToInt(handcuffedPlayers.elementAt(0) != 0) +
+                                  boolToInt(handcuffedPlayers.elementAt(1) != 0) +
+                                  boolToInt(handcuffedPlayers.elementAt(2) != 0) +
+                                  boolToInt(handcuffedPlayers.elementAt(3) != 0)) <
+                              (boolToInt(isAlive(p1charges)) +
+                                      boolToInt(isAlive(p2charges)) +
+                                      boolToInt(isAlive(p3charges)) +
+                                      boolToInt(isAlive(p4charges))) -
+                                  1) {
+                        adrenalinePointerPCharges = pCharges;
+                        adrenalinePointerPItems = pItems;
+                        adrenalineCaster = playerNumber;
+                        HapticFeedback.heavyImpact();
+                        pItems[index] = 0;
                       }
-                      if (foundSomethingOtherThanAdrenalineAndHandcuffs && foundSomethingOtherThanAdrenaline) {
-                        break;
-                      }
-                    }
-                    if (foundSomethingOtherThanAdrenalineAndHandcuffs) {
-                      adrenalinePointerPCharges = pCharges;
-                      adrenalinePointerPCharges = pCharges;
-                      adrenalinePointerPItems = pItems;
-                      adrenalineCaster = playerNumber;
-                      pItems[index] = 0;
-                    } else if (foundSomethingOtherThanAdrenaline &&
-                        (boolToInt(handcuffedPlayers.elementAt(0) != 0) +
-                                boolToInt(handcuffedPlayers.elementAt(1) != 0) +
-                                boolToInt(handcuffedPlayers.elementAt(2) != 0) +
-                                boolToInt(handcuffedPlayers.elementAt(3) != 0)) <
-                            (boolToInt(isAlive(p1charges)) +
-                                    boolToInt(isAlive(p2charges)) +
-                                    boolToInt(isAlive(p3charges)) +
-                                    boolToInt(isAlive(p4charges))) -
-                                1) {
-                      adrenalinePointerPCharges = pCharges;
-                      adrenalinePointerPItems = pItems;
-                      adrenalineCaster = playerNumber;
-                      HapticFeedback.heavyImpact();
-                      pItems[index] = 0;
                     }
                   }
                 } else {
@@ -780,10 +788,12 @@ class _ItemsTableState extends State<ItemsTablePage> {
           onLongPress:
               () => setState(() {
                 if (automaticMode) {
-                  if (useItem(pItems, index, pCharges)) {
-                    if (dealerLessMode) {
-                      context.read<ShellOrderState>()._burnerPhonePrediction();
-                      burnerPhoneSnackBar();
+                  if (isAlive(pCharges) || adrenalinePointerPCharges.isNotEmpty) {
+                    if (useItem(pItems, index, pCharges)) {
+                      if (dealerLessMode) {
+                        context.read<ShellOrderState>()._burnerPhonePrediction();
+                        burnerPhoneSnackBar();
+                      }
                     }
                   }
                 } else {
@@ -801,7 +811,9 @@ class _ItemsTableState extends State<ItemsTablePage> {
           onLongPress:
               () => setState(() {
                 if (automaticMode) {
-                  if (useItem(pItems, index, pCharges)) {}
+                  if (isAlive(pCharges) || adrenalinePointerPCharges.isNotEmpty) {
+                    if (useItem(pItems, index, pCharges)) {}
+                  }
                 } else {
                   useItem(pItems, index, pCharges);
                 }
@@ -817,27 +829,29 @@ class _ItemsTableState extends State<ItemsTablePage> {
           onLongPress:
               () => setState(() {
                 if (automaticMode) {
-                  if (adrenalinePointerPCharges != pCharges &&
-                      (boolToInt(handcuffedPlayers.elementAt(0) != 0) +
-                              boolToInt(handcuffedPlayers.elementAt(1) != 0) +
-                              boolToInt(handcuffedPlayers.elementAt(2) != 0) +
-                              boolToInt(handcuffedPlayers.elementAt(3) != 0)) <
-                          (boolToInt(isAlive(p1charges)) +
-                                  boolToInt(isAlive(p2charges)) +
-                                  boolToInt(isAlive(p3charges)) +
-                                  boolToInt(isAlive(p4charges))) -
-                              1) {
-                    pItems[index] = 0;
-                    HapticFeedback.heavyImpact();
-                    handcuffsTrigger = true;
-                    if (adrenalineCaster != 0) {
-                      nHandcuffsSender = adrenalineCaster;
-                    } else {
-                      nHandcuffsSender = playerNumber;
+                  if (isAlive(pCharges) || adrenalinePointerPCharges.isNotEmpty) {
+                    if (adrenalinePointerPCharges != pCharges &&
+                        (boolToInt(handcuffedPlayers.elementAt(0) != 0) +
+                                boolToInt(handcuffedPlayers.elementAt(1) != 0) +
+                                boolToInt(handcuffedPlayers.elementAt(2) != 0) +
+                                boolToInt(handcuffedPlayers.elementAt(3) != 0)) <
+                            (boolToInt(isAlive(p1charges)) +
+                                    boolToInt(isAlive(p2charges)) +
+                                    boolToInt(isAlive(p3charges)) +
+                                    boolToInt(isAlive(p4charges))) -
+                                1) {
+                      pItems[index] = 0;
+                      HapticFeedback.heavyImpact();
+                      handcuffsTrigger = true;
+                      if (adrenalineCaster != 0) {
+                        nHandcuffsSender = adrenalineCaster;
+                      } else {
+                        nHandcuffsSender = playerNumber;
+                      }
+                      adrenalinePointerPCharges = [];
+                      adrenalinePointerPItems = [];
+                      adrenalineCaster = 0;
                     }
-                    adrenalinePointerPCharges = [];
-                    adrenalinePointerPItems = [];
-                    adrenalineCaster = 0;
                   }
                 } else {
                   useItem(pItems, index, pCharges);
@@ -854,21 +868,23 @@ class _ItemsTableState extends State<ItemsTablePage> {
           onLongPress:
               () => setState(() {
                 if (automaticMode) {
-                  if (adrenalinePointerPCharges != pCharges) {
-                    if (adrenalinePointerPCharges.isEmpty) {
-                      if (random.nextBool()) {
-                        addCharges(pCharges, 2);
+                  if (isAlive(pCharges) || adrenalinePointerPCharges.isNotEmpty) {
+                    if (adrenalinePointerPCharges != pCharges) {
+                      if (adrenalinePointerPCharges.isEmpty) {
+                        if (random.nextBool()) {
+                          addCharges(pCharges, 2);
+                        } else {
+                          removeCharges(pCharges, 1);
+                        }
                       } else {
-                        removeCharges(pCharges, 1);
+                        if (random.nextBool()) {
+                          addCharges(adrenalinePointerPCharges, 2);
+                        } else {
+                          removeCharges(adrenalinePointerPCharges, 1);
+                        }
                       }
-                    } else {
-                      if (random.nextBool()) {
-                        addCharges(adrenalinePointerPCharges, 2);
-                      } else {
-                        removeCharges(adrenalinePointerPCharges, 1);
-                      }
+                      useItem(pItems, index, pCharges);
                     }
-                    useItem(pItems, index, pCharges);
                   }
                 } else {
                   useItem(pItems, index, pCharges);
@@ -885,14 +901,16 @@ class _ItemsTableState extends State<ItemsTablePage> {
           onLongPress:
               () => setState(() {
                 if (automaticMode) {
-                  if (useItem(pItems, index, pCharges)) {
-                    if (dealerLessMode) {
-                      shellSnackBarText = 'NEXT SHELL';
-                      magnifyingGlassSnackBar();
+                  if (isAlive(pCharges) || adrenalinePointerPCharges.isNotEmpty) {
+                    if (useItem(pItems, index, pCharges)) {
+                      if (dealerLessMode) {
+                        shellSnackBarText = 'NEXT SHELL';
+                        magnifyingGlassSnackBar();
+                      }
                     }
+                  } else {
+                    useItem(pItems, index, pCharges);
                   }
-                } else {
-                  useItem(pItems, index, pCharges);
                 }
               }),
           onPressed: () => itemTooltipSnackbar(9),
@@ -906,11 +924,13 @@ class _ItemsTableState extends State<ItemsTablePage> {
           onLongPress:
               () => setState(() {
                 if (automaticMode) {
-                  if (useItem(pItems, index, pCharges)) {
-                    if (turnDirectionClockwise) {
-                      turnDirectionClockwise = false;
-                    } else {
-                      turnDirectionClockwise = true;
+                  if (isAlive(pCharges) || adrenalinePointerPCharges.isNotEmpty) {
+                    if (useItem(pItems, index, pCharges)) {
+                      if (turnDirectionClockwise) {
+                        turnDirectionClockwise = false;
+                      } else {
+                        turnDirectionClockwise = true;
+                      }
                     }
                   }
                 } else {
