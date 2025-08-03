@@ -655,7 +655,7 @@ class _ItemsTableState extends State<ItemsTablePage> {
               () => setState(() {
                 if (automaticMode) {
                   if ((isAlive(pCharges) || adrenalinePointerPCharges.isNotEmpty) &&
-                      context.read<ShellOrderState>()._shellSequence.isNotEmpty) {
+                      (context.read<ShellOrderState>()._shellSequence.isNotEmpty || !dealerLessMode)) {
                     if (useItem(pItems, index, pCharges)) {
                       if (dealerLessMode) {
                         context.read<ShellOrderState>()._inverter();
@@ -679,7 +679,7 @@ class _ItemsTableState extends State<ItemsTablePage> {
               () => setState(() {
                 if (automaticMode) {
                   if ((isAlive(pCharges) || adrenalinePointerPCharges.isNotEmpty) &&
-                      context.read<ShellOrderState>()._shellSequence.isNotEmpty) {
+                      (context.read<ShellOrderState>()._shellSequence.isNotEmpty || !dealerLessMode)) {
                     if (useItem(pItems, index, pCharges)) {
                       if (dealerLessMode) {
                         shellSnackBarText = 'EJECTED';
@@ -705,7 +705,7 @@ class _ItemsTableState extends State<ItemsTablePage> {
               () => setState(() {
                 if (automaticMode) {
                   if ((isAlive(pCharges) || adrenalinePointerPCharges.isNotEmpty) &&
-                      context.read<ShellOrderState>()._shellSequence.isNotEmpty) {
+                      (context.read<ShellOrderState>()._shellSequence.isNotEmpty || !dealerLessMode)) {
                     if (adrenalinePointerPCharges != pCharges) {
                       if (adrenalinePointerPCharges.isEmpty) {
                         addCharges(pCharges, 1);
@@ -735,7 +735,7 @@ class _ItemsTableState extends State<ItemsTablePage> {
               () => setState(() {
                 if (automaticMode) {
                   if ((isAlive(pCharges) || adrenalinePointerPCharges.isNotEmpty) &&
-                      context.read<ShellOrderState>()._shellSequence.isNotEmpty) {
+                      (context.read<ShellOrderState>()._shellSequence.isNotEmpty || !dealerLessMode)) {
                     if (adrenalinePointerPCharges.isEmpty) {
                       bool foundSomethingOtherThanAdrenalineAndHandcuffs = false;
                       bool foundSomethingOtherThanAdrenaline = false;
@@ -797,7 +797,7 @@ class _ItemsTableState extends State<ItemsTablePage> {
               () => setState(() {
                 if (automaticMode) {
                   if ((isAlive(pCharges) || adrenalinePointerPCharges.isNotEmpty) &&
-                      context.read<ShellOrderState>()._shellSequence.isNotEmpty) {
+                      (context.read<ShellOrderState>()._shellSequence.isNotEmpty || !dealerLessMode)) {
                     if (useItem(pItems, index, pCharges)) {
                       if (dealerLessMode) {
                         context.read<ShellOrderState>()._burnerPhonePrediction();
@@ -822,7 +822,7 @@ class _ItemsTableState extends State<ItemsTablePage> {
               () => setState(() {
                 if (automaticMode) {
                   if ((isAlive(pCharges) || adrenalinePointerPCharges.isNotEmpty) &&
-                      context.read<ShellOrderState>()._shellSequence.isNotEmpty) {
+                      (context.read<ShellOrderState>()._shellSequence.isNotEmpty || !dealerLessMode)) {
                     if (useItem(pItems, index, pCharges)) {}
                   }
                 } else {
@@ -842,7 +842,7 @@ class _ItemsTableState extends State<ItemsTablePage> {
               () => setState(() {
                 if (automaticMode) {
                   if ((isAlive(pCharges) || adrenalinePointerPCharges.isNotEmpty) &&
-                      context.read<ShellOrderState>()._shellSequence.isNotEmpty) {
+                      (context.read<ShellOrderState>()._shellSequence.isNotEmpty || !dealerLessMode)) {
                     if (adrenalinePointerPCharges != pCharges &&
                         (boolToInt(handcuffedPlayers.elementAt(0) != 0) +
                                 boolToInt(handcuffedPlayers.elementAt(1) != 0) +
@@ -883,7 +883,7 @@ class _ItemsTableState extends State<ItemsTablePage> {
               () => setState(() {
                 if (automaticMode) {
                   if ((isAlive(pCharges) || adrenalinePointerPCharges.isNotEmpty) &&
-                      context.read<ShellOrderState>()._shellSequence.isNotEmpty) {
+                      (context.read<ShellOrderState>()._shellSequence.isNotEmpty || !dealerLessMode)) {
                     if (adrenalinePointerPCharges != pCharges) {
                       if (adrenalinePointerPCharges.isEmpty) {
                         if (random.nextBool()) {
@@ -918,17 +918,17 @@ class _ItemsTableState extends State<ItemsTablePage> {
               () => setState(() {
                 if (automaticMode) {
                   if ((isAlive(pCharges) || adrenalinePointerPCharges.isNotEmpty) &&
-                      context.read<ShellOrderState>()._shellSequence.isNotEmpty) {
+                      (context.read<ShellOrderState>()._shellSequence.isNotEmpty || !dealerLessMode)) {
                     if (useItem(pItems, index, pCharges)) {
                       if (dealerLessMode) {
                         shellSnackBarText = 'NEXT SHELL';
                         magnifyingGlassSnackBar();
                       }
                     }
-                  } else {
-                    // manual mode
-                    useItem(pItems, index, pCharges);
                   }
+                } else {
+                  // manual mode
+                  useItem(pItems, index, pCharges);
                 }
               }),
           onPressed: () => itemTooltipSnackbar(9),
@@ -943,7 +943,7 @@ class _ItemsTableState extends State<ItemsTablePage> {
               () => setState(() {
                 if (automaticMode) {
                   if ((isAlive(pCharges) || adrenalinePointerPCharges.isNotEmpty) &&
-                      context.read<ShellOrderState>()._shellSequence.isNotEmpty) {
+                      (context.read<ShellOrderState>()._shellSequence.isNotEmpty || !dealerLessMode)) {
                     if (useItem(pItems, index, pCharges)) {
                       if (turnDirectionClockwise) {
                         turnDirectionClockwise = false;
@@ -1430,7 +1430,7 @@ class _ItemsTableState extends State<ItemsTablePage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 // AutoSizeText(itemName, style: TextStyle(fontSize: 200, color: Colors.white), maxLines: 1),
-                Text(itemName, style: TextStyle(fontSize: 50, color: Colors.white)),
+                Text(itemName, style: TextStyle(fontSize: 45, color: Colors.white)),
                 SizedBox(height: 20),
                 Image.asset(
                   itemImagePath,

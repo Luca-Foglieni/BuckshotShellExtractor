@@ -9,10 +9,11 @@
 - Turn up the multimedia volume of the phone when a player takes damage.
 
 - Add a settings page
+
   - Add press or long press setting toggle for the item description.
+
+- Redesign Dealer page.
 
 # Planned
 
 - Refactoring of adrenaline logic.
-
-- Redesign Dealer page.
