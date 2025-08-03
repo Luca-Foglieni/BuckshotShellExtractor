@@ -13,12 +13,6 @@
 
 # Planned
 
-- Block the use of items in dead player inventories (exept when adrenaline is used).
-
-- Block the use of items when the shell sequence is empty.
-
-- Automatically uncuff dead players
-
 - Refactoring of adrenaline logic.
 
 - Redesign Dealer page.
