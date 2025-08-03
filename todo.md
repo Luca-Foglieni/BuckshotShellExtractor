@@ -17,6 +17,8 @@
 
 - Block the use of items when the shell sequence is empty.
 
+- Automatically uncuff dead players
+
 - Refactoring of adrenaline logic.
 
 - Redesign Dealer page.
