@@ -6,11 +6,11 @@
 
 - Make items that cannot be used right now greyed out.
 
-- Turn up the multimedia volume of the phone when a player takes damage.
-
-- Add a settings page
+- Add a settings page: 
 
   - Add press or long press setting toggle for the item description.
+
+  - Turn up the multimedia volume of the phone when a player takes damage.
 
 - Redesign Dealer page.
 
@@ -19,3 +19,5 @@
 # Planned
 
 - Make the app responsive (specifically to target tablets)
+
+- Make the code more modular. 
