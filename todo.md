@@ -21,3 +21,5 @@
 - Make the app responsive (specifically to target tablets)
 
 - Make the code more modular. 
+
+- Add the number of items drawn in the shell sequence screen after a reload. 
