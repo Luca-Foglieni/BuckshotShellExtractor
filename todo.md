@@ -25,3 +25,5 @@
 - Add the number of items drawn in the shell sequence screen after a reload.
 
 - Remove the full screen in the main menu. 
+
+- Fix the handcuffs not being removed when player 3 died. 
