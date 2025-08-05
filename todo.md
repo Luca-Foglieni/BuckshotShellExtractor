@@ -22,4 +22,6 @@
 
 - Make the code more modular. 
 
-- Add the number of items drawn in the shell sequence screen after a reload. 
+- Add the number of items drawn in the shell sequence screen after a reload.
+
+- Remove the full screen in the main menu. 
