@@ -1031,12 +1031,12 @@ class _ItemsTableState extends State<ItemsTablePage> {
       handcuffsHandler(1, p1charges);
     } else if (!isAlive(p2charges)) {
       handcuffsHandler(2, p2charges);
-      handcuffsHandler(2, p1charges);
+      handcuffsHandler(2, p2charges);
     } else if (!isAlive(p3charges)) {
-      handcuffsHandler(3, p1charges);
+      handcuffsHandler(3, p3charges);
       handcuffsHandler(3, p3charges);
     } else if (!isAlive(p4charges)) {
-      handcuffsHandler(4, p1charges);
+      handcuffsHandler(4, p4charges);
       handcuffsHandler(4, p4charges);
     }
   }
