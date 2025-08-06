@@ -18,10 +18,10 @@
 
 - Refactoring of adrenaline logic.
 
+- Make the pages more modular.
+
 # Planned
 
 - Make the app responsive (specifically to target tablets)
-
-- Make the pages more modular.
 
 - Remove the full screen in the main menu.
