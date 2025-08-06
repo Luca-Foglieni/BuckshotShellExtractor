@@ -1024,7 +1024,7 @@ class _ItemsTableState extends State<ItemsTablePage> {
     });
   }
 
-  //TODO: there must be a better way to do this
+  //TODO: find a better way to do this
   void deadPlayerHandcuffsRemover() {
     if (!isAlive(p1charges)) {
       handcuffsHandler(1, p1charges);
@@ -1240,7 +1240,6 @@ class _ItemsTableState extends State<ItemsTablePage> {
   ElevatedButton switchReloadAndEject() {
     if (context.read<ShellOrderState>()._shellSequence.isEmpty) {
       return ElevatedButton(
-        // heroTag: 'roloadButton',
         onPressed: () {
           setState(() {
             context.read<ShellOrderState>()._reload();
@@ -1255,11 +1254,19 @@ class _ItemsTableState extends State<ItemsTablePage> {
                     padding: const EdgeInsets.all(70.0),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
-                      children: List.generate(context.read<ShellOrderState>()._shellHiddenSequence.length, (index) {
-                        return Expanded(
-                          child: renderShell(context.read<ShellOrderState>()._shellHiddenSequence.elementAt(index)),
-                        );
-                      }),
+                      children: [
+                        AutoSizeText(
+                          context.read<ShellOrderState>()._dealerSpeechBubble,
+                          style: TextStyle(fontSize: 3000),
+                          maxLines: 1,
+                        ),
+                        SizedBox(height: 30),
+                        ...List.generate(context.read<ShellOrderState>()._shellHiddenSequence.length, (index) {
+                          return Expanded(
+                            child: renderShell(context.read<ShellOrderState>()._shellHiddenSequence.elementAt(index)),
+                          );
+                        }),
+                      ],
                     ),
                   ),
                 ),

@@ -1,6 +1,6 @@
 # In discussion
 
-- Add an indicator for a dead player (a skull in the empty charge meter?). 
+- Add an indicator for a dead player (a skull in the empty charge meter?).
 
 - Add handsaw double damage interaction.
 
@@ -8,7 +8,7 @@
 
 - Make items that cannot be used right now greyed out.
 
-- Add a settings page: 
+- Add a settings page:
 
   - Add press or long press setting toggle for the item description.
 
@@ -22,10 +22,6 @@
 
 - Make the app responsive (specifically to target tablets)
 
-- Make the pages more modular. 
+- Make the pages more modular.
 
-- Add the number of items drawn in the shell sequence screen after a reload.
-
-- Remove the full screen in the main menu. 
-
-- Fix the handcuffs not being removed when player 3 died. 
+- Remove the full screen in the main menu.
