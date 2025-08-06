@@ -1,5 +1,7 @@
 # In discussion
 
+- Add an indicator for a dead player (a skull in the empty charge meter?). 
+
 - Add handsaw double damage interaction.
 
 - Make the charges indicator directional.
