@@ -267,7 +267,6 @@ class _ModeSelectionScreenState extends State<ModeSelectionScreen> {
                       child: ElevatedButton(
                         onPressed: () {
                           HapticFeedback.mediumImpact();
-                          context.read<ShellOrderState>().automaticMode = false;
                           setState(() {
                             context.read<ShellOrderState>().dealerLessMode =
                                 !context.read<ShellOrderState>().dealerLessMode;
@@ -1029,13 +1028,16 @@ class _ItemsTableState extends State<ItemsTablePage> {
     if (!isAlive(p1charges)) {
       handcuffsHandler(1, p1charges);
       handcuffsHandler(1, p1charges);
-    } else if (!isAlive(p2charges)) {
+    }
+    if (!isAlive(p2charges)) {
       handcuffsHandler(2, p2charges);
       handcuffsHandler(2, p2charges);
-    } else if (!isAlive(p3charges)) {
+    }
+    if (!isAlive(p3charges)) {
       handcuffsHandler(3, p3charges);
       handcuffsHandler(3, p3charges);
-    } else if (!isAlive(p4charges)) {
+    }
+    if (!isAlive(p4charges)) {
       handcuffsHandler(4, p4charges);
       handcuffsHandler(4, p4charges);
     }
@@ -1051,6 +1053,7 @@ class _ItemsTableState extends State<ItemsTablePage> {
     for (var i = 0; i < pCharges.length; i++) {
       pCharges[i] = false;
     }
+    deadPlayerHandcuffsRemover();
   }
 
   void invertCharges(List<bool> pCharges) {
